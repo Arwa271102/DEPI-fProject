@@ -1,0 +1,126 @@
+@model Sakanak.Web.Models.ViewModels.Landlord.ApartmentDetailsViewModel
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Apartment Details";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Listing Details</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface m-0">@Model.Address</h2>
+        <p class="text-on-surface-variant m-0">@Model.City</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a asp-action="EditApartment" asp-route-id="@Model.ApartmentId" class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg hover:bg-primary-container transition-all active:scale-95 no-underline">
+            <span class="material-symbols-outlined text-sm">edit</span>
+            <span class="font-title-sm">Edit Apartment</span>
+        </a>
+        <a asp-action="Dashboard" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+            <span class="font-title-sm">Back</span>
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+    <div class="lg:col-span-8 space-y-gutter">
+        <!-- Photo Gallery -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6">
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0">
+                <span class="material-symbols-outlined">photo_library</span>
+                Photo Gallery
+            </h3>
+            <div class="rounded-xl overflow-hidden">
+                @await Html.PartialAsync("_ApartmentPhotoGallery", Model.Photos.Select(p => p.Url).ToList())
+            </div>
+        </div>
+
+        <!-- Apartment Information -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6">
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0">
+                <span class="material-symbols-outlined">info</span>
+                Apartment Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Price</p>
+                    <p class="font-data-mono text-primary font-bold text-lg m-0">@Model.PricePerMonth.ToString("C0") <span class="text-sm font-normal text-on-surface-variant">/ month</span></p>
+                </div>
+                
+                <div>
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Capacity</p>
+                    <p class="font-body-md m-0">
+                        @if (Model.AvailableSeats > 0)
+                        {
+                            <span class="text-primary font-bold">@Model.AvailableSeats seats available</span>
+                        }
+                        else
+                        {
+                            <span class="text-error font-bold">Fully booked</span>
+                        }
+                        <span class="text-on-surface-variant ml-1">(@Model.TotalSeats total)</span>
+                    </p>
+                </div>
+                
+                <div class="md:col-span-2 border-t border-outline-variant pt-4">
+                    <p class="text-label-caps text-on-surface-variant mb-2 uppercase">Amenities</p>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach (var amenity in Model.Amenities)
+                        {
+                            <span class="bg-surface-container-low border border-outline-variant text-on-surface text-sm px-3 py-1 rounded-full">
+                                @amenity
+                            </span>
+                        }
+                    </div>
+                </div>
+                
+                @if (!string.IsNullOrWhiteSpace(Model.VirtualTourUrl))
+                {
+                    <div class="md:col-span-2 border-t border-outline-variant pt-4">
+                        <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Virtual Tour</p>
+                        <a href="@Model.VirtualTourUrl" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline flex items-center gap-1 break-all">
+                            <span class="material-symbols-outlined text-sm">360</span>
+                            @Model.VirtualTourUrl
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="lg:col-span-4 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6">
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0">
+                <span class="material-symbols-outlined">verified</span>
+                Approval Status
+            </h3>
+            
+            <div class="mb-6">
+                @await Html.PartialAsync("_StatusBadgePartial", Model.LatestRequestStatus)
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Listing Visibility</p>
+                    <p class="font-body-md text-on-surface m-0">@(Model.IsActive ? "Visible to students" : "Hidden from students")</p>
+                </div>
+                
+                <div>
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Submitted On</p>
+                    <p class="font-body-md text-on-surface m-0">@(Model.LatestRequestDate?.ToLocalTime().ToString("dd MMM yyyy") ?? "N/A")</p>
+                </div>
+                
+                <div>
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Resolved On</p>
+                    <p class="font-body-md text-on-surface m-0">@(Model.LatestResolvedAt?.ToLocalTime().ToString("dd MMM yyyy") ?? "Pending review")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-4 rounded-lg">
+                    <p class="text-label-caps text-on-surface-variant mb-1 uppercase">Admin Note</p>
+                    <p class="text-body-sm text-on-surface m-0 italic">@(string.IsNullOrWhiteSpace(Model.LatestRequestMessage) ? "No note provided." : Model.LatestRequestMessage)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

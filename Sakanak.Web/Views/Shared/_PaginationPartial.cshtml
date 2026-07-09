@@ -1,0 +1,74 @@
+@model Sakanak.Web.Models.ViewModels.Shared.PaginationViewModel
+
+@if (Model.TotalCount > 0)
+{
+    var startPage = Math.Max(1, Model.PageNumber - 2);
+    var endPage = Math.Min(Model.TotalPages, startPage + 4);
+    startPage = Math.Max(1, endPage - 4);
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+        <p class="text-sm text-slate-500 m-0">Showing <span class="font-bold text-slate-700">@Model.StartItem</span> to <span class="font-bold text-slate-700">@Model.EndItem</span> of <span class="font-bold text-slate-700">@Model.TotalCount</span> items</p>
+
+        <nav aria-label="Pagination" class="flex items-center gap-1">
+            @{
+                var previousRouteValues = new Dictionary<string, string?>(Model.RouteValues, StringComparer.OrdinalIgnoreCase)
+                {
+                    ["page"] = (Model.PageNumber - 1).ToString()
+                };
+                var nextRouteValues = new Dictionary<string, string?>(Model.RouteValues, StringComparer.OrdinalIgnoreCase)
+                {
+                    ["page"] = (Model.PageNumber + 1).ToString()
+                };
+            }
+
+            @if (Model.HasPrevious)
+            {
+                <a href="@Url.Action(Model.Action, Model.Controller, previousRouteValues)" class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors no-underline" aria-label="Previous">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </a>
+            }
+            else
+            {
+                <span class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-300 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </span>
+            }
+
+            <div class="flex items-center gap-1 hidden sm:flex">
+                @for (var i = startPage; i <= endPage; i++)
+                {
+                    var pageRouteValues = new Dictionary<string, string?>(Model.RouteValues, StringComparer.OrdinalIgnoreCase)
+                    {
+                        ["page"] = i.ToString()
+                    };
+
+                    if (i == Model.PageNumber)
+                    {
+                        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-deep-teal text-white font-bold text-sm">@i</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action(Model.Action, Model.Controller, pageRouteValues)" class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-deep-teal transition-colors text-sm font-medium no-underline">@i</a>
+                    }
+                }
+            </div>
+            
+            <div class="sm:hidden flex items-center justify-center px-2">
+                <span class="text-sm font-medium text-slate-600">Page @Model.PageNumber of @Model.TotalPages</span>
+            </div>
+
+            @if (Model.HasNext)
+            {
+                <a href="@Url.Action(Model.Action, Model.Controller, nextRouteValues)" class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors no-underline" aria-label="Next">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </a>
+            }
+            else
+            {
+                <span class="flex items-center justify-center w-8 h-8 rounded-lg text-slate-300 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </span>
+            }
+        </nav>
+    </div>
+}

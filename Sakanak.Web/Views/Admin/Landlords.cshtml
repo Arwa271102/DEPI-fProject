@@ -1,0 +1,130 @@
+@model Sakanak.Web.Models.ViewModels.Admin.LandlordsViewModel
+@{
+    ViewData["Title"] = "Landlords";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+@functions {
+    private string SortArrow(string sortBy)
+    {
+        if (!Model.SortBy.Equals(sortBy, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+        return Model.Descending ? "↓" : "↑";
+    }
+}
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Admin Management</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">Landlord Accounts</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">Review landlord status, spot risk quickly, and manage accounts.</p>
+    </div>
+    <a asp-action="Dashboard" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+    </a>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm animate-slide-up" style="animation-delay: 0.1s">
+    <div class="p-4 border-b border-slate-200 bg-slate-50">
+        <form method="get" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1 md:flex-none md:w-64">
+                <label class="block text-xs font-bold text-slate-500 mb-1">Search</label>
+                <input type="text" name="search" value="@Model.Search" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-deep-teal outline-none" placeholder="Name or email" />
+            </div>
+            <div class="flex-1 md:flex-none md:w-48">
+                <label class="block text-xs font-bold text-slate-500 mb-1">Status</label>
+                <select name="status" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-deep-teal outline-none">
+                    <option value="">All statuses</option>
+                    <option value="Active" selected="@(Model.StatusFilter == "Active" ? "selected" : null)">Active</option>
+                    <option value="Suspended" selected="@(Model.StatusFilter == "Suspended" ? "selected" : null)">Suspended</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <input type="hidden" name="sortBy" value="@Model.SortBy" />
+                <input type="hidden" name="desc" value="@Model.Descending.ToString().ToLowerInvariant()" />
+                <input type="hidden" name="pageSize" value="@Model.Pagination.PageSize" />
+                <button type="submit" class="bg-deep-teal text-white px-6 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity border-0 cursor-pointer">Filter</button>
+                <a asp-action="Landlords" class="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-50 transition-colors no-underline flex items-center justify-center">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="overflow-x-auto">
+        @if (Model.Landlords.Count == 0)
+        {
+            <div class="p-8 text-center text-slate-500">
+                <span class="material-symbols-outlined text-4xl mb-2 opacity-50">search_off</span>
+                <p class="m-0">No landlords match the current filters.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="Landlords" asp-route-search="@Model.Search" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="name" asp-route-desc="@(Model.SortBy.Equals("name", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Name <span class="text-deep-teal">@Html.Raw(SortArrow("name"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="Landlords" asp-route-search="@Model.Search" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="email" asp-route-desc="@(Model.SortBy.Equals("email", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Email <span class="text-deep-teal">@Html.Raw(SortArrow("email"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold">Phone</th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="Landlords" asp-route-search="@Model.Search" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="apartments" asp-route-desc="@(Model.SortBy.Equals("apartments", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Apartments <span class="text-deep-teal">@Html.Raw(SortArrow("apartments"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="Landlords" asp-route-search="@Model.Search" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="status" asp-route-desc="@(Model.SortBy.Equals("status", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Status <span class="text-deep-teal">@Html.Raw(SortArrow("status"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                @foreach (var landlord in Model.Landlords)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 flex-shrink-0 font-bold border border-slate-200">
+                                    @landlord.Name.Substring(0, 1)
+                                </div>
+                                <div>
+                                    <div class="font-bold text-on-surface">@landlord.Name</div>
+                                    <div class="text-[10px] text-slate-500">Joined @landlord.RegistrationDate.ToLocalTime().ToString("MMM yyyy")</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600">@landlord.Email</td>
+                        <td class="px-6 py-4 text-slate-600">@(string.IsNullOrWhiteSpace(landlord.PhoneNumber) ? "—" : landlord.PhoneNumber)</td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-on-surface">@landlord.TotalApartments</div>
+                            <div class="text-[10px] text-slate-500">@landlord.ActiveApartments active</div>
+                        </td>
+                        <td class="px-6 py-4">@await Html.PartialAsync("_StatusBadgePartial", landlord.Status)</td>
+                        <td class="px-6 py-4 text-right">
+                            <a asp-action="LandlordDetails" asp-route-id="@landlord.LandlordId" class="text-deep-teal bg-deep-teal/10 px-4 py-2 rounded-lg text-sm font-bold no-underline hover:bg-deep-teal/20 transition-colors inline-block">View</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+    
+    @if (Model.Landlords.Count > 0)
+    {
+        <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <partial name="_PaginationPartial" model="Model.Pagination" />
+        </div>
+    }
+</div>

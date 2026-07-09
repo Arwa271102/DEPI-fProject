@@ -1,0 +1,120 @@
+@model Sakanak.Web.Models.ViewModels.Student.ApartmentSearchViewModel
+@{
+    ViewData["Title"] = "Search Apartments";
+    Layout = "_TailwindStudentLayout";
+}
+
+<div class="animate-slide-up">
+    <!-- Header Section -->
+    <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="font-headline-h1 text-headline-h1 text-deep-teal mb-1">Apartment Discovery</h1>
+            <p class="text-slate-gray font-body-base m-0">Found @Model.TotalCount approved apartments matching your filters.</p>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <form method="get" class="flex items-center gap-3 bg-white border border-outline-variant rounded-xl px-2 py-1 transition-all focus-within:ring-2 focus-within:ring-deep-teal focus-within:border-deep-teal shadow-sm">
+                <span class="material-symbols-outlined text-slate-400 pl-2 pointer-events-none">sort</span>
+                <select name="sortBy" class="appearance-none bg-transparent border-none text-sm font-medium text-slate-gray focus:ring-0 cursor-pointer pr-8 py-1.5" onchange="this.form.submit()">
+                    <option value="CreatedDate" selected="@(Model.Search.SortBy == "CreatedDate" ? "selected" : null)">Sort by: Newest</option>
+                    <option value="Price" selected="@(Model.Search.SortBy == "Price" ? "selected" : null)">Sort by: Price</option>
+                    <option value="City" selected="@(Model.Search.SortBy == "City" ? "selected" : null)">Sort by: City</option>
+                    <option value="Seats" selected="@(Model.Search.SortBy == "Seats" ? "selected" : null)">Sort by: Seats</option>
+                </select>
+                
+                <div class="h-5 w-px bg-slate-200 mx-1"></div>
+                
+                <select name="desc" class="appearance-none bg-transparent border-none text-sm font-medium text-slate-gray focus:ring-0 cursor-pointer pr-8 py-1.5" onchange="this.form.submit()">
+                    <option value="true" selected="@(Model.Search.Descending ? "selected" : null)">High to Low</option>
+                    <option value="false" selected="@(!Model.Search.Descending ? "selected" : null)">Low to High</option>
+                </select>
+
+                <!-- Hidden inputs to preserve other filters -->
+                <input type="hidden" name="city" value="@Model.Search.City" />
+                <input type="hidden" name="minPrice" value="@Model.Search.MinPrice" />
+                <input type="hidden" name="maxPrice" value="@Model.Search.MaxPrice" />
+                <input type="hidden" name="minSeats" value="@Model.Search.MinSeats" />
+                <input type="hidden" name="maxSeats" value="@Model.Search.MaxSeats" />
+                <input type="hidden" name="availableFrom" value="@Model.Search.AvailableFrom?.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="pageSize" value="@Model.Search.PageSize" />
+                @foreach (var amenity in Model.Search.Amenities)
+                {
+                    <input type="hidden" name="amenities" value="@amenity" />
+                }
+            </form>
+
+            <button class="lg:hidden flex items-center gap-2 bg-white border border-outline-variant p-2.5 rounded-xl text-deep-teal hover:bg-slate-50 active:scale-95 transition-all shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilters">
+                <span class="material-symbols-outlined">filter_list</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Filters Collapse -->
+    <div class="collapse lg:hidden mb-6" id="mobileFilters">
+        <partial name="_FilterSidebar" model="Model" />
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="flex flex-col lg:flex-row gap-8">
+        
+        <!-- Filters Sidebar (Desktop) -->
+        <aside class="w-72 flex-shrink-0 hidden lg:block relative z-0">
+            <partial name="_FilterSidebar" model="Model" />
+        </aside>
+
+        <!-- Results Grid -->
+        <div class="flex-1 flex flex-col min-h-[500px]">
+            
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-medium text-slate-500">Showing @Model.Apartments.Count of @Model.TotalCount results</span>
+                <form method="get" class="flex items-center gap-2">
+                    <label class="text-[12px] font-bold text-slate-400 uppercase">Show:</label>
+                    <select name="pageSize" class="text-sm border border-slate-200 rounded-md py-1 pl-2 pr-6 focus:ring-deep-teal focus:border-deep-teal" onchange="this.form.submit()">
+                        <option value="12" selected="@(Model.Search.PageSize == 12 ? "selected" : null)">12</option>
+                        <option value="24" selected="@(Model.Search.PageSize == 24 ? "selected" : null)">24</option>
+                        <option value="48" selected="@(Model.Search.PageSize == 48 ? "selected" : null)">48</option>
+                    </select>
+                    <!-- Preserve filters -->
+                    <input type="hidden" name="city" value="@Model.Search.City" />
+                    <input type="hidden" name="minPrice" value="@Model.Search.MinPrice" />
+                    <input type="hidden" name="maxPrice" value="@Model.Search.MaxPrice" />
+                    <input type="hidden" name="minSeats" value="@Model.Search.MinSeats" />
+                    <input type="hidden" name="maxSeats" value="@Model.Search.MaxSeats" />
+                    <input type="hidden" name="availableFrom" value="@Model.Search.AvailableFrom?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="sortBy" value="@Model.Search.SortBy" />
+                    <input type="hidden" name="desc" value="@Model.Search.Descending.ToString().ToLowerInvariant()" />
+                    @foreach (var amenity in Model.Search.Amenities)
+                    {
+                        <input type="hidden" name="amenities" value="@amenity" />
+                    }
+                </form>
+            </div>
+
+            @if (Model.Apartments.Count == 0)
+            {
+                <div class="flex-1 flex flex-col items-center justify-center p-12 bg-white rounded-3xl border border-dashed border-slate-200 text-center">
+                    <span class="material-symbols-outlined text-[64px] text-slate-200 mb-4">search_off</span>
+                    <h3 class="text-lg font-bold text-slate-700 mb-2">No apartments found</h3>
+                    <p class="text-slate-500 text-sm max-w-sm mb-6">We couldn't find any apartments matching your current filters. Try adjusting your price range, city, or amenities.</p>
+                    <a asp-action="SearchApartments" class="px-6 py-2.5 bg-slate-100 text-deep-teal font-bold rounded-xl hover:bg-slate-200 transition-colors no-underline">
+                        Clear All Filters
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                    @foreach (var apartment in Model.Apartments)
+                    {
+                        <partial name="_ApartmentSearchResultCard" model="apartment" />
+                    }
+                </div>
+                
+                <div class="mt-auto pt-6 border-t border-slate-100">
+                    <partial name="_PaginationPartial" model="Model.Pagination" />
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

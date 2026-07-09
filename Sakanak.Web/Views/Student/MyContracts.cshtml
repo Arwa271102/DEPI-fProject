@@ -1,0 +1,164 @@
+@using Sakanak.Domain.Enums
+@model IReadOnlyList<Sakanak.BLL.DTOs.Contract.ContractDto>
+@{
+    ViewData["Title"] = "My Contracts";
+    Layout = "_TailwindStudentLayout";
+    var statusFilter = ViewBag.StatusFilter as ContractStatus?;
+}
+
+<div class="animate-slide-up">
+    <!-- Page Header -->
+    <div class="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+            <h2 class="font-headline-h1 text-headline-h1 text-primary m-0">My Contracts</h2>
+            <p class="font-body-base text-on-surface-variant mt-1 m-0">Review your lease agreements and contract status.</p>
+        </div>
+        <a asp-action="MyBookings" class="bg-surface-container-high text-on-surface px-gutter py-3 rounded-lg font-label-sm hover:bg-surface-variant transition-colors flex items-center gap-2 shadow-sm no-underline btn-interact">
+            <span class="material-symbols-outlined text-[20px]" data-icon="book_online">book_online</span>
+            My Bookings
+        </a>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="flex gap-8 mb-stack-lg border-b border-outline-variant overflow-x-auto no-scrollbar">
+        <a asp-action="MyContracts" class="font-label-sm pb-3 px-1 transition-all no-underline @(statusFilter is null ? "text-primary border-b-2 border-primary" : "text-on-surface-variant hover:text-primary")">All</a>
+        @foreach (var status in Enum.GetValues<ContractStatus>())
+        {
+            <a asp-action="MyContracts" asp-route-status="@status" class="font-label-sm pb-3 px-1 transition-all no-underline @(statusFilter == status ? "text-primary border-b-2 border-primary" : "text-on-surface-variant hover:text-primary")">@status</a>
+        }
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center py-20 text-center animate-fade-in bg-white rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mb-6 text-deep-teal">
+                <span class="material-symbols-outlined text-5xl">description</span>
+            </div>
+            <h3 class="text-headline-h2 text-primary m-0 mb-2">No contracts found</h3>
+            <p class="text-on-surface-variant max-w-sm mx-auto m-0 mb-8">You don't have any contracts matching the selected filters. Contracts appear here after you proceed with an accepted booking.</p>
+        </div>
+    }
+    else
+    {
+        <!-- Desktop Table View -->
+        <div class="hidden md:block bg-surface-student rounded-xl shadow-sm border border-outline-variant/50 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant/50">
+                        <th class="py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Apartment</th>
+                        <th class="py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Lease Dates</th>
+                        <th class="py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Submitted</th>
+                        <th class="py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/30">
+                    @foreach (var contract in Model)
+                    {
+                        var isPendingApproval = contract.Status == ContractStatus.PendingApproval.ToString();
+                        var isApproved = contract.Status == ContractStatus.Approved.ToString();
+                        var isRejected = contract.Status == ContractStatus.Rejected.ToString();
+                        var isActive = contract.Status == ContractStatus.Active.ToString();
+
+                        var statusColorClass = isApproved ? "text-success-green bg-success-green bg-opacity-10" :
+                                               isRejected ? "text-danger-red bg-danger-red bg-opacity-10" :
+                                               isPendingApproval ? "text-warning-amber bg-warning-amber bg-opacity-10" :
+                                               isActive ? "text-info-blue bg-info-blue bg-opacity-10" : "text-slate-gray bg-slate-gray bg-opacity-10";
+                        var statusIcon = isApproved ? "verified" :
+                                         isRejected ? "error" :
+                                         isPendingApproval ? "pending_actions" :
+                                         "description";
+
+                        <tr class="hover:bg-surface-container-lowest transition-colors group">
+                            <td class="py-4 px-6">
+                                <p class="font-bold text-primary m-0 line-clamp-1" title="@contract.ApartmentAddress">@contract.ApartmentAddress</p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <p class="text-sm text-on-surface m-0">@contract.StartDate.ToString("MMM dd, yyyy")</p>
+                                <p class="text-xs text-on-surface-variant m-0">to @contract.EndDate.ToString("MMM dd, yyyy")</p>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="inline-flex items-center gap-1 px-3 py-1 @statusColorClass rounded-full text-[10px] font-bold tracking-wider uppercase">
+                                    <span class="material-symbols-outlined text-[14px]">@statusIcon</span>
+                                    @contract.Status
+                                </div>
+                            </td>
+                            <td class="py-4 px-6 text-sm text-on-surface-variant">
+                                @contract.SubmittedAt.ToLocalTime().ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="py-4 px-6 text-right space-x-2">
+                                @if (contract.CanResubmit)
+                                {
+                                    <a asp-action="EditContract" asp-route-id="@contract.ContractId" class="inline-flex items-center justify-center px-4 py-2 border border-danger-red text-danger-red rounded-lg text-sm font-bold hover:bg-red-50 transition-colors no-underline">
+                                        Resubmit
+                                    </a>
+                                }
+                                <a asp-action="ContractDetails" asp-route-id="@contract.ContractId" class="inline-flex items-center justify-center px-4 py-2 bg-deep-teal text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity no-underline shadow-sm btn-interact">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden space-y-4">
+            @foreach (var contract in Model)
+            {
+                var isPendingApproval = contract.Status == ContractStatus.PendingApproval.ToString();
+                var isApproved = contract.Status == ContractStatus.Approved.ToString();
+                var isRejected = contract.Status == ContractStatus.Rejected.ToString();
+                var isActive = contract.Status == ContractStatus.Active.ToString();
+
+                var statusColorClass = isApproved ? "text-success-green bg-success-green bg-opacity-10" :
+                                       isRejected ? "text-danger-red bg-danger-red bg-opacity-10" :
+                                       isPendingApproval ? "text-warning-amber bg-warning-amber bg-opacity-10" :
+                                       isActive ? "text-info-blue bg-info-blue bg-opacity-10" : "text-slate-gray bg-slate-gray bg-opacity-10";
+                var statusIcon = isApproved ? "verified" :
+                                 isRejected ? "error" :
+                                 isPendingApproval ? "pending_actions" :
+                                 "description";
+
+                <div class="bg-white rounded-xl border border-outline-variant/50 p-4 shadow-sm flex flex-col gap-4">
+                    <div class="flex justify-between items-start gap-2">
+                        <p class="font-bold text-primary m-0 line-clamp-2">@contract.ApartmentAddress</p>
+                        <div class="inline-flex items-center gap-1 px-2 py-0.5 @statusColorClass rounded-full text-[10px] font-bold tracking-wider uppercase shrink-0">
+                            <span class="material-symbols-outlined text-[12px]">@statusIcon</span>
+                            @contract.Status
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0">Start Date</p>
+                            <p class="font-medium text-on-surface m-0">@contract.StartDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0">End Date</p>
+                            <p class="font-medium text-on-surface m-0">@contract.EndDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                        <div class="col-span-2">
+                            <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0">Submitted</p>
+                            <p class="font-medium text-on-surface m-0">@contract.SubmittedAt.ToLocalTime().ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2 border-t border-outline-variant/30">
+                        @if (contract.CanResubmit)
+                        {
+                            <a asp-action="EditContract" asp-route-id="@contract.ContractId" class="flex-1 text-center py-2 border border-danger-red text-danger-red rounded-lg text-sm font-bold hover:bg-red-50 transition-colors no-underline">
+                                Resubmit
+                            </a>
+                        }
+                        <a asp-action="ContractDetails" asp-route-id="@contract.ContractId" class="flex-1 text-center py-2 bg-deep-teal text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity no-underline shadow-sm btn-interact">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

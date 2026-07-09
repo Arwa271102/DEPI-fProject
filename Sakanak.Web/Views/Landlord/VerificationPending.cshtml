@@ -1,0 +1,91 @@
+@model Sakanak.BLL.DTOs.Landlord.LandlordVerificationDto
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Verification Status";
+}
+
+<div class="max-w-4xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+        <div>
+            <p class="text-on-surface-variant text-label-caps uppercase mb-1">Landlord Verification</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface m-0 mb-1">Your account is <span class="lowercase">@Model.Status</span></h2>
+            <p class="text-on-surface-variant m-0">Verified landlords can create and manage apartment listings.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-8 shadow-sm">
+        @if (Model.IsVerified)
+        {
+            <div class="bg-primary-container/20 border border-primary/30 p-6 rounded-xl flex items-start gap-4 mb-8">
+                <div class="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-2xl">verified</span>
+                </div>
+                <div>
+                    <h3 class="font-title-sm text-on-surface m-0 mb-1">Verification Successful</h3>
+                    <p class="text-body-sm text-on-surface-variant m-0">Your landlord account is verified. You can now create and manage apartment listings.</p>
+                </div>
+            </div>
+            
+            <a asp-action="CreateApartment" class="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg hover:bg-primary-container transition-all active:scale-95 no-underline font-title-sm shadow-sm">
+                <span class="material-symbols-outlined text-sm">add_home</span>
+                Create Apartment
+            </a>
+        }
+        else
+        {
+            <div class="bg-tertiary-fixed/20 border border-tertiary/30 p-6 rounded-xl flex items-start gap-4 mb-6">
+                <div class="w-12 h-12 rounded-full bg-tertiary/20 text-tertiary flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-2xl">hourglass_empty</span>
+                </div>
+                <div>
+                    <h3 class="font-title-sm text-on-surface m-0 mb-1">Verification Required</h3>
+                    <p class="text-body-sm text-on-surface-variant m-0">You cannot list apartments until an admin verifies your landlord account.</p>
+                </div>
+            </div>
+            
+            @if (!string.IsNullOrWhiteSpace(Model.RejectionReason))
+            {
+                <div class="bg-error-container/50 border border-error/30 p-6 rounded-xl flex items-start gap-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-error/20 text-error flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-2xl">error</span>
+                    </div>
+                    <div>
+                        <h3 class="font-title-sm text-error m-0 mb-1">Verification Rejected</h3>
+                        <p class="text-body-sm text-on-surface-variant m-0"><strong>Reason:</strong> @Model.RejectionReason</p>
+                    </div>
+                </div>
+            }
+            
+            <a asp-action="SubmitVerification" class="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg hover:bg-primary-container transition-all active:scale-95 no-underline font-title-sm shadow-sm">
+                <span class="material-symbols-outlined text-sm">upload_file</span>
+                Submit Verification Documents
+            </a>
+        }
+
+        @if (Model.Documents.Count > 0)
+        {
+            <div class="mt-8 pt-8 border-t border-outline-variant">
+                <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0">
+                    <span class="material-symbols-outlined">folder_open</span>
+                    Submitted Documents
+                </h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    @foreach (var document in Model.Documents)
+                    {
+                        <a href="@Url.Content(document.Url)" target="_blank" rel="noreferrer" class="flex items-center gap-3 p-4 bg-surface-container-low border border-outline-variant rounded-lg hover:bg-surface-container-high transition-colors no-underline group">
+                            <div class="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                <span class="material-symbols-outlined">description</span>
+                            </div>
+                            <span class="font-body-sm text-on-surface font-medium">Open Document</span>
+                            <span class="material-symbols-outlined text-on-surface-variant ml-auto text-sm">open_in_new</span>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

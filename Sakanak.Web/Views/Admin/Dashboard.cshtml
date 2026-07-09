@@ -1,0 +1,239 @@
+@model Sakanak.Web.Models.ViewModels.Admin.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Page Title -->
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">Control Center</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">Welcome back, here's what's happening today.</p>
+    </div>
+</div>
+
+<!-- KPI Cards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10 animate-slide-up" style="animation-delay: 0.1s">
+    <!-- Occupancy -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+        <div class="flex justify-between items-start mb-4">
+            <div class="p-3 bg-deep-teal/5 rounded-lg text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-all">
+                <span class="material-symbols-outlined">meeting_room</span>
+            </div>
+            <span class="text-xs font-bold text-success-green bg-success-green/10 px-2 py-1 rounded">@Model.PlatformOccupancyRate%</span>
+        </div>
+        <h3 class="text-slate-500 text-label-sm font-semibold mb-1">Platform Occupancy</h3>
+        <div class="flex items-baseline gap-2">
+            <p class="text-headline-h2 font-headline-h2 text-on-surface m-0">@Model.PlatformOccupiedSeats / @Model.PlatformTotalSeats</p>
+            <p class="text-slate-400 text-sm font-medium m-0">seats</p>
+        </div>
+        <p class="mt-3 mb-0 text-xs text-slate-400">Active contracts: <span class="font-bold text-deep-teal">@Model.ActiveContractsCount</span></p>
+        <div class="w-full bg-slate-100 h-1.5 rounded-full mt-4 overflow-hidden">
+            <div class="bg-deep-teal h-full rounded-full" style="width: @Model.PlatformOccupancyRate%"></div>
+        </div>
+    </div>
+    
+    <!-- Revenue -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+        <div class="flex justify-between items-start mb-4">
+            <div class="p-3 bg-warning-amber/5 rounded-lg text-warning-amber group-hover:bg-warning-amber group-hover:text-white transition-all">
+                <span class="material-symbols-outlined">payments</span>
+            </div>
+        </div>
+        <h3 class="text-slate-500 text-label-sm font-semibold mb-1">Revenue Statistics</h3>
+        <p class="text-headline-h2 font-headline-h2 text-on-surface m-0">@Model.TotalPaidPaymentsAmount.ToString("C0")</p>
+        <div class="mt-3 flex flex-col gap-1">
+            <p class="text-xs text-slate-400 m-0">Pending: <span class="font-bold">@Model.PendingPaymentsAmount.ToString("C0")</span></p>
+            <p class="text-xs text-slate-400 m-0">This Month: <span class="font-bold text-deep-teal">@Model.PaymentsThisMonthAmount.ToString("C0")</span></p>
+        </div>
+    </div>
+    
+    <!-- Pending Actions -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+        <div class="flex justify-between items-start mb-4">
+            <div class="p-3 bg-danger-red/5 rounded-lg text-danger-red group-hover:bg-danger-red group-hover:text-white transition-all">
+                <span class="material-symbols-outlined">notifications_active</span>
+            </div>
+            @if (Model.PendingRequestsCount > 0 || Model.PendingContractsCount > 0 || Model.PendingLandlordVerificationsCount > 0)
+            {
+                <span class="animate-pulse w-3 h-3 bg-danger-red rounded-full"></span>
+            }
+        </div>
+        <h3 class="text-slate-500 text-label-sm font-semibold mb-1">Pending Actions</h3>
+        <p class="text-headline-h2 font-headline-h2 text-on-surface m-0">@(Model.PendingRequestsCount + Model.PendingContractsCount + Model.PendingLandlordVerificationsCount) Total</p>
+        <div class="mt-3 flex flex-col gap-1">
+            <p class="text-xs text-slate-400 m-0">Apartment Requests: <span class="font-bold text-danger-red">@Model.PendingRequestsCount</span></p>
+            <p class="text-xs text-slate-400 m-0">Contract Approvals: <span class="font-bold text-danger-red">@Model.PendingContractsCount</span></p>
+            <p class="text-xs text-slate-400 m-0">Landlord Verifications: <span class="font-bold text-danger-red">@Model.PendingLandlordVerificationsCount</span></p>
+        </div>
+    </div>
+    
+    <!-- Processed Requests -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
+        <div class="flex justify-between items-start mb-4">
+            <div class="p-3 bg-info-blue/5 rounded-lg text-info-blue group-hover:bg-info-blue group-hover:text-white transition-all">
+                <span class="material-symbols-outlined">fact_check</span>
+            </div>
+        </div>
+        <h3 class="text-slate-500 text-label-sm font-semibold mb-1">Total Reviewed</h3>
+        <p class="text-headline-h2 font-headline-h2 text-on-surface m-0">@Model.TotalReviewedRequests</p>
+        <div class="mt-3 flex flex-col gap-1">
+            <p class="text-xs text-slate-400 m-0">Approved: <span class="font-bold text-success-green">@Model.ApprovedRequestsCount</span></p>
+            <p class="text-xs text-slate-400 m-0">Rejected: <span class="font-bold text-danger-red">@Model.RejectedRequestsCount</span></p>
+        </div>
+    </div>
+</section>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 animate-slide-up" style="animation-delay: 0.2s">
+    <!-- Pending Contracts Card -->
+    <section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <div>
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Pending Contract Reviews</h3>
+                <p class="text-sm text-slate-500 m-0">Awaiting your approval</p>
+            </div>
+            <a asp-action="ContractHistory" class="text-deep-teal text-sm font-bold hover:underline no-underline">See All</a>
+        </div>
+        <div class="flex-1 overflow-x-auto">
+            @if (Model.RecentPendingContracts.Count == 0)
+            {
+                <div class="p-6 text-center text-slate-500">No pending contracts found.</div>
+            }
+            else
+            {
+                <table class="w-full text-left text-sm">
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach (var contract in Model.RecentPendingContracts.Take(4))
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-on-surface leading-none mb-1">@contract.StudentName</p>
+                                    <p class="text-xs text-slate-500 m-0 line-clamp-1">@contract.ApartmentAddress</p>
+                                </td>
+                                <td class="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
+                                    @contract.StartDate.ToString("MMM dd") - @contract.EndDate.ToString("MMM dd")
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a asp-action="ReviewContract" asp-route-id="@contract.ContractId" class="text-deep-teal hover:underline font-semibold bg-deep-teal/10 px-3 py-1.5 rounded-lg no-underline">Review</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </section>
+
+    <!-- Recent Payments Card -->
+    <section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <div>
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Recent Payments</h3>
+                <p class="text-sm text-slate-500 m-0">Platform transactions</p>
+            </div>
+            <a asp-action="Payments" class="text-deep-teal text-sm font-bold hover:underline no-underline">See All</a>
+        </div>
+        <div class="flex-1 overflow-x-auto">
+            @if (Model.RecentPayments.Count == 0)
+            {
+                <div class="p-6 text-center text-slate-500">No recent payments.</div>
+            }
+            else
+            {
+                <table class="w-full text-left text-sm">
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach (var payment in Model.RecentPayments.Take(4))
+                        {
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-on-surface leading-none mb-1">@payment.Amount.ToString("C0")</p>
+                                    <p class="text-xs text-slate-500 m-0">@payment.StudentName</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @await Html.PartialAsync("_StatusBadgePartial", payment.Status)
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a asp-action="PaymentDetails" asp-route-id="@payment.PaymentId" class="text-deep-teal hover:underline font-semibold no-underline">View</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </section>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 animate-slide-up" style="animation-delay: 0.3s">
+    <!-- Pending Apartments -->
+    <section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <div>
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Pending Apartments</h3>
+                <p class="text-sm text-slate-500 m-0">Review new property listings</p>
+            </div>
+            <a asp-action="RequestHistory" class="text-deep-teal text-sm font-bold hover:underline no-underline">See All</a>
+        </div>
+        <div class="p-6 flex flex-col gap-4">
+            @if (Model.RecentPendingRequests.Count == 0)
+            {
+                <div class="text-center text-slate-500 py-4">No pending apartment requests.</div>
+            }
+            else
+            {
+                @foreach (var request in Model.RecentPendingRequests.Take(3))
+                {
+                    <div class="flex items-center gap-4 border border-slate-100 p-3 rounded-lg hover:border-deep-teal/30 transition-colors">
+                        @if (!string.IsNullOrWhiteSpace(request.ThumbnailUrl))
+                        {
+                            <img src="@Url.Content(request.ThumbnailUrl)" alt="Thumbnail" class="w-16 h-16 rounded-md object-cover flex-shrink-0" />
+                        }
+                        else
+                        {
+                            <div class="w-16 h-16 rounded-md bg-slate-100 flex items-center justify-center text-slate-400 flex-shrink-0">
+                                <span class="material-symbols-outlined">image</span>
+                            </div>
+                        }
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-on-surface text-sm m-0 line-clamp-1">@request.ApartmentAddress</h4>
+                            <p class="text-xs text-slate-500 m-0 line-clamp-1">By: @request.LandlordName</p>
+                        </div>
+                        <a asp-action="ReviewRequest" asp-route-id="@request.RequestId" class="text-deep-teal bg-deep-teal/10 px-3 py-1.5 rounded-lg text-sm font-bold no-underline hover:bg-deep-teal/20 transition-colors">Review</a>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <!-- Pending Landlords -->
+    <section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <div>
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Pending Landlords</h3>
+                <p class="text-sm text-slate-500 m-0">Verify new accounts</p>
+            </div>
+            <a asp-action="Landlords" class="text-deep-teal text-sm font-bold hover:underline no-underline">See All</a>
+        </div>
+        <div class="p-6 flex flex-col gap-4">
+            @if (Model.RecentPendingLandlords.Count == 0)
+            {
+                <div class="text-center text-slate-500 py-4">No pending landlord verifications.</div>
+            }
+            else
+            {
+                @foreach (var landlord in Model.RecentPendingLandlords.Take(3))
+                {
+                    <div class="flex items-center gap-4 border border-slate-100 p-3 rounded-lg hover:border-deep-teal/30 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 flex-shrink-0">
+                            <span class="material-symbols-outlined">person</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-on-surface text-sm m-0 line-clamp-1">@landlord.LandlordName</h4>
+                            <p class="text-xs text-slate-500 m-0 line-clamp-1">@landlord.Email</p>
+                        </div>
+                        <a asp-action="ReviewLandlord" asp-route-id="@landlord.LandlordId" class="text-deep-teal bg-deep-teal/10 px-3 py-1.5 rounded-lg text-sm font-bold no-underline hover:bg-deep-teal/20 transition-colors">Review</a>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+</div>

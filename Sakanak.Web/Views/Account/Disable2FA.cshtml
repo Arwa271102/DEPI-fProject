@@ -1,0 +1,58 @@
+@model Sakanak.Web.Models.ViewModels.Account.Disable2FAViewModel
+@{
+    ViewData["Title"] = "Disable Two-Factor Authentication";
+    Layout = "_TailwindAuthLayout";
+}
+
+<!-- Main Container -->
+<div class="min-h-screen flex items-center justify-center relative overflow-hidden bg-surface-student py-12 px-4 sm:px-6 lg:px-8">
+    
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-0 left-0 w-72 h-72 bg-error/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-container/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+    
+    <!-- Disable 2FA Card -->
+    <div class="w-full max-w-md bg-surface-student rounded-xl shadow-[0_10px_40px_-15px_rgba(13,92,99,0.1)] p-8 border border-error/20 relative z-10 animate-slide-up">
+        
+        <!-- Icon -->
+        <div class="w-20 h-20 bg-error/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-4xl text-error">gpp_bad</span>
+        </div>
+
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-headline-h2 text-deep-teal font-bold">Disable 2FA</h2>
+            <p class="text-on-surface-variant font-body-base mt-2 text-sm">
+                We've sent a 6-digit authentication code to your email. Please enter it below to confirm you want to disable Two-Factor Authentication.
+            </p>
+        </div>
+
+        <form asp-action="Disable2FA" asp-controller="Account" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-error text-sm mb-4"></div>
+
+            <div>
+                <label asp-for="Code" class="block text-sm font-medium text-on-surface mb-2"></label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline-variant">
+                        <span class="material-symbols-outlined text-lg">pin</span>
+                    </span>
+                    <input asp-for="Code" class="w-full pl-10 pr-4 py-3 rounded-lg border border-outline-variant bg-surface focus:ring-2 focus:ring-error/20 focus:border-error transition-all outline-none" placeholder="123456" autocomplete="off" />
+                </div>
+                <span asp-validation-for="Code" class="text-error text-xs mt-1 block"></span>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <button type="submit" class="w-full bg-error text-white py-3 px-4 rounded-lg hover:bg-error/90 transition-all font-medium focus:ring-4 focus:ring-error/20 outline-none shadow-md flex justify-center items-center">
+                    <span class="material-symbols-outlined mr-2">security_update_warning</span>
+                    Confirm & Disable 2FA
+                </button>
+                <a asp-action="Settings" asp-controller="Account" class="w-full bg-surface-student border border-outline-variant text-on-surface py-3 px-4 rounded-lg hover:bg-surface-variant transition-all font-medium flex justify-center items-center outline-none">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

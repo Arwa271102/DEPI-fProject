@@ -1,0 +1,178 @@
+@model Sakanak.BLL.DTOs.Common.PagedResult<Sakanak.BLL.DTOs.Notifications.NotificationDto>
+@{
+    ViewData["Title"] = "Notifications";
+
+    // Option B: set role-aware layout
+    if (User.IsInRole("Student"))       { Layout = "_TailwindStudentLayout"; }
+    else if (User.IsInRole("Landlord")) { Layout = "_TailwindLandlordLayout"; }
+    else                                { Layout = "_TailwindAdminLayout"; }
+
+    bool unreadOnly  = Context.Request.Query["unreadOnly"] == "true";
+    int  totalCount  = Model.TotalCount;
+    int  unreadCount = Model.Items.Count(n => !n.IsRead);
+}
+
+@* ── Icon colour helper by notification type ── *@
+@{
+    (string bg, string icon) NotifStyle(string type) => type?.ToLower() switch
+    {
+        "booking"    => ("bg-deep-teal/10 text-deep-teal",   "calendar_month"),
+        "contract"   => ("bg-warning-amber/10 text-warning-amber", "description"),
+        "payment"    => ("bg-success-green/10 text-success-green", "payments"),
+        "security"   => ("bg-info-blue/10 text-info-blue",   "shield"),
+        "match"      => ("bg-purple-100 text-purple-600",    "people"),
+        "system"     => ("bg-slate-100 text-slate-500",      "settings"),
+        _            => ("bg-deep-teal/10 text-deep-teal",   "notifications"),
+    };
+
+    string RelTime(DateTime utc)
+    {
+        var diff = DateTime.UtcNow - utc;
+        if (diff.TotalMinutes  < 1)  return "just now";
+        if (diff.TotalMinutes  < 60) return $"{(int)diff.TotalMinutes} minutes ago";
+        if (diff.TotalHours    < 24) return $"{(int)diff.TotalHours} hours ago";
+        if (diff.TotalDays     < 2)  return "Yesterday";
+        if (diff.TotalDays     < 7)  return $"{(int)diff.TotalDays} days ago";
+        return utc.ToLocalTime().ToString("MMM d, yyyy");
+    }
+}
+
+@* ─────────────────────── PAGE ─────────────────────── *@
+<div class="animate-slide-up">
+
+    @await Html.PartialAsync("_AlertMessagesPartial")
+
+    @* ── Page Header ── *@
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
+        <div>
+            <p class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Notification Center</p>
+            <h1 class="text-3xl font-black text-on-surface m-0">Notification History</h1>
+            <p class="text-slate-500 text-sm mt-1 m-0">Manage all your system alerts, booking updates, and contract requests.</p>
+        </div>
+        <div class="flex items-center gap-3 flex-shrink-0">
+            <form asp-action="MarkAllRead" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit"
+                        class="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm cursor-pointer">
+                    <span class="material-symbols-outlined text-[18px]">done_all</span>
+                    Mark All as Read
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @* ── Tabs ── *@
+    <div class="flex items-center gap-0 border-b border-slate-200 mb-6">
+        <a asp-action="Index"
+           class="flex items-center gap-2 px-5 py-3 text-sm font-bold no-underline transition-colors border-b-2 @(!unreadOnly ? "border-deep-teal text-deep-teal" : "border-transparent text-slate-500 hover:text-slate-700")">
+            All Notifications
+            <span class="@(!unreadOnly ? "bg-deep-teal text-white" : "bg-slate-200 text-slate-600") text-[11px] font-bold px-2 py-0.5 rounded-full">@totalCount</span>
+        </a>
+        <a asp-action="Index" asp-route-unreadOnly="true"
+           class="flex items-center gap-2 px-5 py-3 text-sm font-bold no-underline transition-colors border-b-2 @(unreadOnly ? "border-deep-teal text-deep-teal" : "border-transparent text-slate-500 hover:text-slate-700")">
+            Unread
+            <span class="@(unreadOnly ? "bg-deep-teal text-white" : "bg-slate-200 text-slate-600") text-[11px] font-bold px-2 py-0.5 rounded-full">@unreadCount</span>
+        </a>
+    </div>
+
+    @* ── Notification List ── *@
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+        @if (!Model.Items.Any())
+        {
+            <div class="py-16 text-center text-slate-400">
+                <span class="material-symbols-outlined text-5xl mb-3 block opacity-40">notifications_off</span>
+                <p class="font-semibold m-0">@(unreadOnly ? "No unread notifications." : "No notifications yet.")</p>
+            </div>
+        }
+        else
+        {
+            <div class="divide-y divide-slate-100">
+                @foreach (var notif in Model.Items)
+                {
+                    var (iconBg, iconName) = NotifStyle(notif.Type);
+                    <div class="flex items-start gap-4 px-6 py-5 @(!notif.IsRead ? "bg-deep-teal/[0.02]" : "") hover:bg-slate-50 transition-colors">
+
+                        @* Unread indicator *@
+                        <div class="flex-shrink-0 mt-1.5">
+                            @if (!notif.IsRead)
+                            {
+                                <span class="w-2 h-2 bg-deep-teal rounded-full block"></span>
+                            }
+                            else
+                            {
+                                <span class="w-2 h-2 rounded-full block"></span>
+                            }
+                        </div>
+
+                        @* Icon *@
+                        <div class="w-11 h-11 rounded-full @iconBg flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1;">@iconName</span>
+                        </div>
+
+                        @* Content *@
+                        <a asp-action="Open" asp-route-id="@notif.NotificationId"
+                           class="flex-1 min-w-0 no-underline group">
+                            <div class="flex items-start justify-between gap-4">
+                                <p class="text-sm @(!notif.IsRead ? "font-bold" : "font-semibold") text-on-surface m-0 group-hover:text-deep-teal transition-colors">@notif.Title</p>
+                                <span class="text-[11px] text-slate-400 flex-shrink-0 whitespace-nowrap">@RelTime(notif.CreatedAt)</span>
+                            </div>
+                            <p class="text-sm text-slate-500 m-0 mt-1 leading-relaxed">@notif.Message</p>
+                        </a>
+
+                        @* Actions *@
+                        <div class="flex-shrink-0 self-center">
+                            @if (notif.IsRead)
+                            {
+                                <form asp-action="MarkAsUnread" asp-route-id="@notif.NotificationId" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit"
+                                            class="text-xs text-slate-400 hover:text-deep-teal font-semibold border-0 bg-transparent cursor-pointer transition-colors whitespace-nowrap">
+                                        Mark unread
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-xs font-bold text-deep-teal bg-deep-teal/10 px-2 py-1 rounded-full">New</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* ── Pagination ── *@
+            @if (Model.TotalPages > 1)
+            {
+                <div class="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
+                    <p class="text-sm text-slate-500 m-0">
+                        Showing @((Model.PageNumber - 1) * Model.PageSize + 1)–@(Math.Min(Model.PageNumber * Model.PageSize, Model.TotalCount)) of @Model.TotalCount notifications
+                    </p>
+                    <div class="flex items-center gap-1">
+                        @if (Model.HasPrevious)
+                        {
+                            <a asp-action="Index" asp-route-page="@(Model.PageNumber - 1)" asp-route-unreadOnly="@unreadOnly"
+                               class="w-9 h-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors no-underline">
+                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            </a>
+                        }
+                        @for (int p = Math.Max(1, Model.PageNumber - 2); p <= Math.Min(Model.TotalPages, Model.PageNumber + 2); p++)
+                        {
+                            bool isCurrentPage = p == Model.PageNumber;
+                            <a asp-action="Index" asp-route-page="@p" asp-route-unreadOnly="@unreadOnly"
+                               class="w-9 h-9 rounded-lg border flex items-center justify-center text-sm font-bold transition-colors no-underline @(isCurrentPage ? "bg-deep-teal text-white border-deep-teal" : "border-slate-200 bg-white text-slate-600 hover:bg-slate-100")">
+                                @p
+                            </a>
+                        }
+                        @if (Model.HasNext)
+                        {
+                            <a asp-action="Index" asp-route-page="@(Model.PageNumber + 1)" asp-route-unreadOnly="@unreadOnly"
+                               class="w-9 h-9 rounded-lg border border-slate-200 bg-white flex items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors no-underline">
+                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

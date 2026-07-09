@@ -1,0 +1,133 @@
+@model Sakanak.Web.Models.ViewModels.Landlord.MyRequestsViewModel
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "My Requests";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Approval Queue</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface m-0">My Apartment Requests</h2>
+        <p class="text-on-surface-variant m-0">Track every apartment submission and review outcome from admins.</p>
+    </div>
+    <div class="flex items-center gap-stack-md">
+        <a asp-action="Dashboard" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-6 py-2.5 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+            <span class="font-title-sm">Back to Dashboard</span>
+        </a>
+    </div>
+</div>
+
+<form method="get" class="flex flex-wrap items-center gap-4 mb-stack-lg p-4 bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm">
+    <span class="text-on-surface-variant text-label-caps uppercase mr-2">Filters</span>
+    
+    <select name="status" class="bg-surface-container-low border-none rounded-lg text-body-sm py-2 px-4 focus:ring-primary cursor-pointer outline-none">
+        <option value="">All statuses</option>
+        <option value="Pending" selected="@(Model.StatusFilter == "Pending" ? "selected" : null)">Pending</option>
+        <option value="Approved" selected="@(Model.StatusFilter == "Approved" ? "selected" : null)">Approved</option>
+        <option value="Rejected" selected="@(Model.StatusFilter == "Rejected" ? "selected" : null)">Rejected</option>
+        <option value="Cancelled" selected="@(Model.StatusFilter == "Cancelled" ? "selected" : null)">Cancelled</option>
+    </select>
+
+    <input type="hidden" name="sortBy" value="@Model.SortBy" />
+    <input type="hidden" name="desc" value="@Model.Descending.ToString().ToLowerInvariant()" />
+    <input type="hidden" name="pageSize" value="@Model.Pagination.PageSize" />
+    
+    <button type="submit" class="bg-primary text-on-primary px-4 py-2 rounded-lg text-body-sm font-semibold hover:opacity-90 transition-colors">Apply Filter</button>
+    <a asp-action="MyRequests" class="text-on-surface-variant hover:text-on-surface text-body-sm no-underline ml-2">Clear</a>
+</form>
+
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col shadow-sm">
+    <div class="px-6 py-5 border-b border-outline-variant bg-surface-container-low/50">
+        <h3 class="font-headline-md text-headline-md text-on-surface m-0">Request History</h3>
+    </div>
+    
+    <div class="flex-1 overflow-x-auto">
+        @if (Model.Requests.Count == 0)
+        {
+            <div class="p-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-on-surface-variant text-3xl">request_page</span>
+                </div>
+                <p class="text-on-surface font-title-sm m-0">No requests found</p>
+                <p class="text-on-surface-variant text-body-sm mt-1">You have not submitted any apartment requests yet.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px]">
+                            <a class="flex items-center gap-1 text-on-surface-variant hover:text-primary no-underline" asp-action="MyRequests" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="apartment" asp-route-desc="@(Model.SortBy.Equals("apartment", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Apartment
+                                @if (Model.SortBy.Equals("apartment", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="material-symbols-outlined text-[14px]">@(Model.Descending ? "arrow_downward" : "arrow_upward")</span>
+                                }
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px]">
+                            <a class="flex items-center gap-1 text-on-surface-variant hover:text-primary no-underline" asp-action="MyRequests" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="createdat" asp-route-desc="@(Model.SortBy.Equals("createdat", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Submitted
+                                @if (Model.SortBy.Equals("createdat", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="material-symbols-outlined text-[14px]">@(Model.Descending ? "arrow_downward" : "arrow_upward")</span>
+                                }
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px]">
+                            <a class="flex items-center gap-1 text-on-surface-variant hover:text-primary no-underline" asp-action="MyRequests" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="status" asp-route-desc="@(Model.SortBy.Equals("status", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Status
+                                @if (Model.SortBy.Equals("status", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="material-symbols-outlined text-[14px]">@(Model.Descending ? "arrow_downward" : "arrow_upward")</span>
+                                }
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px]">
+                            <a class="flex items-center gap-1 text-on-surface-variant hover:text-primary no-underline" asp-action="MyRequests" asp-route-status="@Model.StatusFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="resolvedat" asp-route-desc="@(Model.SortBy.Equals("resolvedat", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Resolution
+                                @if (Model.SortBy.Equals("resolvedat", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <span class="material-symbols-outlined text-[14px]">@(Model.Descending ? "arrow_downward" : "arrow_upward")</span>
+                                }
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px]">Message</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant uppercase tracking-widest text-[11px] text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    @foreach (var request in Model.Requests)
+                    {
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            <td class="px-6 py-4">
+                                <a asp-action="ApartmentDetails" asp-route-id="@request.ApartmentId" class="font-body-md text-primary font-semibold hover:underline no-underline block mb-1">@request.ApartmentAddress</a>
+                                <div class="text-xs text-on-surface-variant">@request.City</div>
+                            </td>
+                            <td class="px-6 py-4 font-data-mono text-xs text-on-surface-variant">@request.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                            <td class="px-6 py-4">
+                                @await Html.PartialAsync("_StatusBadgePartial", request.Status)
+                            </td>
+                            <td class="px-6 py-4 font-data-mono text-xs text-on-surface-variant">@(request.ResolvedAt?.ToLocalTime().ToString("dd MMM yyyy") ?? "Waiting")</td>
+                            <td class="px-6 py-4 text-sm text-on-surface-variant italic">@(string.IsNullOrWhiteSpace(request.Message) ? "No note provided." : request.Message)</td>
+                            <td class="px-6 py-4 text-right">
+                                @if (request.Status.Equals("Pending", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <form asp-action="CancelRequest" asp-route-id="@request.RequestId" method="post" class="m-0">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="border border-error text-error bg-transparent px-3 py-1.5 rounded text-sm hover:bg-error/10 transition-colors cursor-pointer" onclick="return confirm('Are you sure you want to cancel this request?');">Cancel</button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            
+            <div class="p-4 border-t border-outline-variant">
+                <partial name="_PaginationPartial" model="Model.Pagination" />
+            </div>
+        }
+    </div>
+</section>

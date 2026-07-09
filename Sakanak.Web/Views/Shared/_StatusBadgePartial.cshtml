@@ -1,0 +1,24 @@
+@model string
+
+@{
+    var cssClass = Model?.ToLowerInvariant() switch
+    {
+        "approved" => "bg-[#10B981] text-white",
+        "accepted" => "bg-[#10B981] text-white",
+        "active" => "bg-[#10B981] text-white",
+        "paid" => "bg-[#10B981] text-white",
+        "pending" => "bg-[#F59E0B] text-white",
+        "pendingapproval" => "bg-[#F59E0B] text-white",
+        "rejected" => "bg-[#EF4444] text-white",
+        "failed" => "bg-[#EF4444] text-white",
+        "cancelled" => "bg-[#64748B] text-white",
+        "refunded" => "bg-[#64748B] text-white",
+        "completed" => "bg-[#0D5C63] text-white",
+        "expired" => "bg-[#64748B] text-white",
+        "suspended" => "bg-[#1E293B] text-white",
+        "inactive" => "bg-[#64748B] text-white",
+        _ => "bg-[#F1F5F9] text-[#475569]"
+    };
+}
+
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider @cssClass">@Model</span>

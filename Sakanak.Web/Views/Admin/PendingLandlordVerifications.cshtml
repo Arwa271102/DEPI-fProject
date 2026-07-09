@@ -1,0 +1,74 @@
+@model Sakanak.BLL.DTOs.Common.PagedResult<Sakanak.BLL.DTOs.Admin.LandlordVerificationRequestDto>
+@{
+    ViewData["Title"] = "Pending Landlord Verifications";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Verification Queue</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">Pending Landlord Verifications</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">Review uploaded documents before landlords can list apartments.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <a asp-action="LandlordVerificationHistory" class="bg-deep-teal text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-colors shadow-sm no-underline">
+            <span class="material-symbols-outlined text-[18px]">history</span> View All History
+        </a>
+        <a asp-action="Dashboard" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm animate-slide-up" style="animation-delay: 0.1s">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+        <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Verification Queue</h3>
+    </div>
+    <div class="overflow-x-auto">
+        @if (Model.Items.Count == 0)
+        {
+            <div class="p-8 text-center text-slate-500">
+                <span class="material-symbols-outlined text-4xl mb-2 opacity-50">done_all</span>
+                <p class="m-0">No landlord verification requests are pending.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50/50 text-slate-500 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold">Landlord</th>
+                        <th class="px-6 py-3 font-semibold">Contact</th>
+                        <th class="px-6 py-3 font-semibold">Submitted</th>
+                        <th class="px-6 py-3 font-semibold">Documents</th>
+                        <th class="px-6 py-3 font-semibold text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                @foreach (var request in Model.Items)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 flex-shrink-0">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <span class="font-bold text-on-surface">@request.LandlordName</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-500">@request.Email</td>
+                        <td class="px-6 py-4 text-slate-500">@(request.VerificationRequestedAt?.ToLocalTime().ToString("dd MMM yyyy") ?? "N/A")</td>
+                        <td class="px-6 py-4 text-slate-500">
+                            <span class="bg-slate-100 text-slate-600 px-2 py-1 rounded font-bold text-xs">@request.Documents.Count</span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a asp-action="ReviewLandlord" asp-route-id="@request.LandlordId" class="text-deep-teal bg-deep-teal/10 px-4 py-2 rounded-lg text-sm font-bold no-underline hover:bg-deep-teal/20 transition-colors inline-block">Review</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

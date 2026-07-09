@@ -1,0 +1,207 @@
+@model Sakanak.Web.Models.ViewModels.Admin.ReviewRequestViewModel
+@{
+    ViewData["Title"] = "Review Request";
+    // Build a list of URL strings for the modern gallery partial
+    var photoUrls = Model.Apartment.Photos.Select(p => p.Url).ToList().AsReadOnly();
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Request Review</p>
+        <div class="flex items-center gap-3">
+            <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">@Model.Apartment.Address</h2>
+            <span class="px-2 py-1 rounded-full text-xs font-bold bg-slate-200 text-slate-700">@Model.Type</span>
+        </div>
+        <p class="text-slate-500 font-body-base m-0 mt-2">Submitted by @Model.LandlordName on @Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</p>
+    </div>
+    <a asp-action="PendingRequests" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Queue
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="lg:col-span-2 space-y-8">
+        @* ── Photos ── *@
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Apartment Photos</h3>
+            </div>
+            <div class="p-6">
+                @await Html.PartialAsync("_ApartmentPhotoGallery", photoUrls)
+            </div>
+        </div>
+
+        @* ── Listing Details ── *@
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Listing Details</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">City</p>
+                        <p class="font-semibold text-on-surface m-0">@Model.Apartment.City</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">Price</p>
+                        <p class="font-semibold text-on-surface m-0">@Model.Apartment.PricePerMonth.ToString("C0") / month</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">Total Seats</p>
+                        <p class="font-semibold text-on-surface m-0">@Model.Apartment.TotalSeats</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">Current Visibility</p>
+                        <p class="font-semibold text-on-surface m-0">@(Model.Apartment.IsActive ? "Visible" : "Hidden")</p>
+                    </div>
+
+                    <div class="sm:col-span-2 mt-2">
+                        <p class="text-xs font-bold text-slate-500 mb-2">Amenities</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (var amenity in Model.Apartment.Amenities)
+                            {
+                                <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs font-bold border border-slate-200">@amenity</span>
+                            }
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Apartment.VirtualTourUrl))
+                    {
+                        <div class="sm:col-span-2 mt-2">
+                            <p class="text-xs font-bold text-slate-500 mb-1">Virtual Tour</p>
+                            <a href="@Model.Apartment.VirtualTourUrl" target="_blank" rel="noopener noreferrer" class="text-deep-teal font-semibold text-sm hover:underline flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">360</span>
+                                View Virtual Tour
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-1 space-y-8">
+        @* ── Landlord Info ── *@
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Landlord Information</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Name</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.LandlordName</p>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Email</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.LandlordEmail</p>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Phone</p>
+                    <p class="font-semibold text-on-surface m-0">@(string.IsNullOrWhiteSpace(Model.LandlordPhoneNumber) ? "Not provided" : Model.LandlordPhoneNumber)</p>
+                </div>
+            </div>
+        </div>
+
+        @* ── Decision Card ── *@
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm sticky top-24">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Decision</h3>
+            </div>
+            <div class="p-6">
+                @if (Model.Type.Equals("ApartmentEdit", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="bg-info-blue/10 border border-info-blue/20 text-info-blue p-3 rounded-lg text-xs font-semibold mb-4 flex gap-2">
+                        <span class="material-symbols-outlined text-[16px]">info</span>
+                        This is an edit request. The apartment is hidden from students until changes are approved.
+                    </div>
+                }
+
+                <div class="mb-6 flex justify-between items-center">
+                    <span class="text-sm font-bold text-slate-500">Current Status:</span>
+                    @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+                </div>
+
+                <form asp-action="ApproveRequest" asp-route-id="@Model.RequestId" method="post" class="mb-4">
+                    @Html.AntiForgeryToken()
+                    <button type="button" onclick="showApproveModal()"
+                            class="w-full bg-success-green hover:bg-success-green/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer border-0">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Approve Request
+                    </button>
+                </form>
+
+                <hr class="border-t border-slate-200 my-4" />
+
+                <button type="button" onclick="document.getElementById('rejectModal').classList.remove('hidden'); document.getElementById('rejectModal').classList.add('flex');"
+                        class="w-full bg-white border border-danger-red text-danger-red hover:bg-danger-red hover:text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined">cancel</span>
+                    Reject Request
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ── Approve Confirmation Modal ── *@
+<div id="approveModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden animate-slide-up">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-success-green/5">
+            <span class="material-symbols-outlined text-success-green text-[28px]" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <h2 class="font-headline-md text-lg font-bold text-on-surface m-0">Approve Request?</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-slate-600 text-sm m-0">This will approve the apartment listing for <strong>@Model.Apartment.Address</strong> and make it visible to students.</p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('approveModal').classList.add('hidden'); document.getElementById('approveModal').classList.remove('flex');"
+                    class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+            <form asp-action="ApproveRequest" asp-route-id="@Model.RequestId" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="px-4 py-2 bg-success-green text-white rounded-lg font-bold hover:bg-success-green/90 border-0 cursor-pointer">Yes, Approve</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* ── Reject Modal ── *@
+<div id="rejectModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 overflow-hidden animate-slide-up">
+        <form asp-action="RejectRequest" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="RejectRequest.RequestId" type="hidden" />
+
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h2 class="font-headline-md text-xl font-bold text-on-surface m-0">Reject Request</h2>
+                <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden'); document.getElementById('rejectModal').classList.remove('flex');"
+                        class="text-slate-400 hover:text-slate-600 border-0 bg-transparent cursor-pointer">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="p-6">
+                <label asp-for="RejectRequest.Reason" class="block text-sm font-bold text-on-surface mb-2">Rejection Reason</label>
+                <textarea asp-for="RejectRequest.Reason" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-danger-red focus:border-danger-red outline-none text-sm transition-all" rows="5" placeholder="Explain what needs to be fixed before approval..."></textarea>
+                <span asp-validation-for="RejectRequest.Reason" class="text-danger-red text-xs mt-1 block"></span>
+            </div>
+
+            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('rejectModal').classList.add('hidden'); document.getElementById('rejectModal').classList.remove('flex');"
+                        class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Reject Listing</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function showApproveModal() {
+            const modal = document.getElementById('approveModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+    </script>
+}

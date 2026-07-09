@@ -1,0 +1,71 @@
+@model Sakanak.BLL.DTOs.Apartment.ApartmentOccupancyDto
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Apartment Tenants";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Tenants</p>
+        <h2 class="font-headline-md text-headline-md text-on-surface m-0">@Model.Address</h2>
+        <p class="text-on-surface-variant m-0">@Model.OccupiedSeats / @Model.TotalSeats seats occupied</p>
+    </div>
+    <div class="flex items-center gap-stack-md">
+        <a asp-action="MyApartments" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-6 py-2.5 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+            <span class="font-title-sm">Back to My Apartments</span>
+        </a>
+    </div>
+</div>
+
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+    <div class="px-6 py-5 border-b border-outline-variant">
+        <h3 class="font-headline-md text-headline-md text-on-surface m-0">Current Tenants</h3>
+    </div>
+    <div class="flex-1 overflow-x-auto">
+        @if (Model.Tenants.Count == 0)
+        {
+            <div class="p-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-on-surface-variant text-3xl">person_off</span>
+                </div>
+                <p class="text-on-surface font-title-sm m-0">No active tenants</p>
+                <p class="text-on-surface-variant text-body-sm mt-1">There are no active tenants assigned to this apartment.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Student</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">University</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Email</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Phone</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    @foreach (var tenant in Model.Tenants)
+                    {
+                        var initials = string.Join("", tenant.Name.Split(' ').Select(s => s[0])).ToUpper();
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container font-bold text-xs mr-3">@initials</div>
+                                    <div>
+                                        <p class="font-body-md text-on-surface leading-none m-0">@tenant.Name</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface">
+                                <div class="font-medium">@tenant.University</div>
+                                <div class="text-xs text-on-surface-variant mt-1">@tenant.Faculty</div>
+                            </td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface-variant">@tenant.Email</td>
+                            <td class="px-6 py-4 text-body-sm font-data-mono">@(tenant.PhoneNumber ?? "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>

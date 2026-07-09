@@ -1,0 +1,182 @@
+@model Sakanak.Web.Models.ViewModels.Landlord.EditApartmentViewModel
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Edit Apartment";
+}
+
+<div class="mb-stack-lg flex justify-between items-end">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Edit Listing</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface mb-1">@Model.Address</h2>
+        <p class="text-on-surface-variant font-body-md max-w-2xl">Latest request status: <span class="font-bold">@Model.LatestRequestStatus</span></p>
+    </div>
+    <a asp-action="ApartmentDetails" asp-route-id="@Model.ApartmentId" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+        <span class="font-title-sm">Back to Details</span>
+    </a>
+</div>
+
+@if (string.Equals(Model.LatestRequestStatus, "Approved", StringComparison.OrdinalIgnoreCase))
+{
+    <div class="bg-primary-container/20 border-l-4 border-primary p-4 rounded-lg mb-stack-lg flex items-start gap-3">
+        <span class="material-symbols-outlined text-primary">warning</span>
+        <div>
+            <p class="text-on-surface font-title-sm m-0">Heads up!</p>
+            <p class="text-body-sm text-on-surface-variant m-0">Saving changes to an approved apartment will deactivate it and send it back to admin review before students can see it again.</p>
+        </div>
+    </div>
+}
+
+<form asp-action="EditApartment" asp-route-id="@Model.ApartmentId" method="post" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+    <input asp-for="ApartmentId" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-error mb-3 lg:col-span-12"></div>
+    
+    <!-- Left Column: Form Details -->
+    <div class="lg:col-span-8 space-y-gutter">
+        <!-- Basic Information Card -->
+        <section class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant">
+            <h3 class="font-title-sm text-primary mb-stack-md flex items-center gap-2">
+                <span class="material-symbols-outlined">info</span>
+                General Details
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+                <div class="md:col-span-2">
+                    <label asp-for="Address" class="block font-label-caps text-on-surface-variant mb-1 ml-1 uppercase"></label>
+                    <input asp-for="Address" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 focus:border-primary transition-colors text-body-md placeholder:text-outline" />
+                    <span asp-validation-for="Address" class="text-error text-xs mt-1 block"></span>
+                </div>
+                
+                <div>
+                    <label asp-for="City" class="block font-label-caps text-on-surface-variant mb-1 ml-1 uppercase"></label>
+                    <input asp-for="City" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 focus:border-primary transition-colors text-body-md placeholder:text-outline" />
+                    <span asp-validation-for="City" class="text-error text-xs mt-1 block"></span>
+                </div>
+                
+                <div>
+                    <label asp-for="PricePerMonth" class="block font-label-caps text-on-surface-variant mb-1 ml-1 uppercase"></label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-data-mono text-primary">$</span>
+                        <input asp-for="PricePerMonth" class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-8 pr-4 py-3 focus:border-primary transition-colors text-data-mono placeholder:text-outline" type="number" step="0.01" />
+                    </div>
+                    <span asp-validation-for="PricePerMonth" class="text-error text-xs mt-1 block"></span>
+                </div>
+                
+                <div>
+                    <label asp-for="TotalSeats" class="block font-label-caps text-on-surface-variant mb-1 ml-1 uppercase"></label>
+                    <input asp-for="TotalSeats" class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-3 focus:border-primary transition-colors text-body-md placeholder:text-outline" type="number" />
+                    <span asp-validation-for="TotalSeats" class="text-error text-xs mt-1 block"></span>
+                </div>
+                
+                <div>
+                    <label asp-for="VirtualTourUrl" class="block font-label-caps text-on-surface-variant mb-1 ml-1 uppercase"></label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline-variant text-[20px]">360</span>
+                        <input asp-for="VirtualTourUrl" class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-11 pr-4 py-3 focus:border-primary transition-colors text-body-md placeholder:text-outline" type="url" />
+                    </div>
+                    <span asp-validation-for="VirtualTourUrl" class="text-error text-xs mt-1 block"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Amenities Section -->
+        <section class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant">
+            <h3 class="font-title-sm text-primary mb-stack-md flex items-center gap-2">
+                <span class="material-symbols-outlined">checklist</span>
+                Amenities
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                @foreach (var amenity in Model.AvailableAmenities)
+                {
+                    <div class="flex items-center space-x-3 group cursor-pointer">
+                        <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20" type="checkbox" name="Amenities" value="@amenity" id="amenity-@amenity.Replace(" ", "-")" @(Model.Amenities.Contains(amenity) ? "checked" : null) />
+                        <label class="text-body-md text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer m-0" for="amenity-@amenity.Replace(" ", "-")">@amenity</label>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+
+    <!-- Right Column: Uploads & Actions -->
+    <div class="lg:col-span-4 space-y-gutter">
+        <!-- New Photos Upload -->
+        <section class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant">
+            <h3 class="font-title-sm text-primary mb-stack-md flex items-center gap-2 m-0">
+                <span class="material-symbols-outlined">add_a_photo</span>
+                Add More Photos
+            </h3>
+            
+            <div class="mb-4 mt-2">
+                <input asp-for="NewPhotos" id="newPhotoInput" class="w-full text-body-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors" type="file" multiple accept=".jpg,.jpeg,.png" />
+                <span asp-validation-for="NewPhotos" class="text-error text-xs mt-1 block"></span>
+                <p class="text-xs text-on-surface-variant mt-2">JPEG/PNG only, max 5MB each.</p>
+            </div>
+            
+            <div id="newPhotoPreview" class="grid grid-cols-3 gap-2 mt-stack-md"></div>
+        </section>
+
+        <!-- Existing Photos -->
+        <section class="bg-surface-container-lowest p-stack-lg rounded-xl border border-outline-variant">
+            <h3 class="font-title-sm text-primary mb-stack-md flex items-center gap-2 m-0">
+                <span class="material-symbols-outlined">photo_library</span>
+                Existing Photos
+            </h3>
+            
+            <div class="grid grid-cols-2 gap-4">
+                @foreach (var photo in Model.ExistingPhotos)
+                {
+                    <div class="relative group aspect-square rounded-lg overflow-hidden border border-outline-variant">
+                        <img src="@Url.Content(photo.Url)" alt="Apartment photo" class="w-full h-full object-cover" />
+                        <div class="absolute bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-sm p-2 flex items-center justify-center gap-2 border-t border-outline-variant opacity-90 group-hover:opacity-100 transition-opacity">
+                            <input class="w-4 h-4 rounded text-error border-outline-variant focus:ring-error" type="checkbox" name="RemovedPhotoIds" value="@photo.MediaId" id="remove-@photo.MediaId" />
+                            <label class="text-xs text-on-surface font-semibold m-0 cursor-pointer" for="remove-@photo.MediaId">Remove</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col space-y-3">
+            <button type="submit" class="w-full bg-primary text-on-primary py-4 px-6 rounded-xl font-title-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-2 border-0 cursor-pointer" onclick="return confirm('Save changes? Approved apartments will be deactivated until an admin approves the update.');">
+                <span class="material-symbols-outlined">save</span>
+                <span>Save Changes</span>
+            </button>
+            <button type="submit" class="w-full border border-error/30 text-error py-4 px-6 rounded-xl font-title-sm hover:bg-error/5 active:scale-95 transition-all text-center no-underline cursor-pointer bg-transparent" formaction="@Url.Action("DeleteApartment", "Landlord", new { id = Model.ApartmentId })" formmethod="post" onclick="return confirm('Delete this apartment permanently?');">
+                Delete Apartment
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const newPhotoInput = document.getElementById('newPhotoInput');
+        const newPhotoPreview = document.getElementById('newPhotoPreview');
+
+        newPhotoInput?.addEventListener('change', function (event) {
+            newPhotoPreview.innerHTML = '';
+            Array.from(event.target.files).forEach((file) => {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File too large: ${file.name}`);
+                    return;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'relative group aspect-square rounded-lg overflow-hidden border border-outline-variant';
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = file.name;
+                    img.className = 'w-full h-full object-cover';
+                    card.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+                newPhotoPreview.appendChild(card);
+            });
+        });
+    </script>
+}

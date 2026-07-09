@@ -1,0 +1,288 @@
+@model Sakanak.Web.Models.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+    ViewData["IsHomePage"] = true;
+}
+
+<!-- Hero Section -->
+<section class="position-relative d-flex align-items-center overflow-hidden bg-sand-light" style="min-height: 870px; padding: 6rem 0;">
+    <div class="container position-relative z-3 max-w-7xl">
+        <div class="row align-items-center gx-5">
+            <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                <span class="badge-stitch mb-4 d-inline-flex align-items-center shadow-sm">
+                    <span class="material-symbols-outlined fill fs-6 me-1">verified_user</span>
+                    TRUSTED BY 10,000+ STUDENTS
+                </span>
+                <h1 class="font-display-hero text-primary mb-4">Find the perfect space for your studies.</h1>
+                <p class="font-body-lg text-slate-gray mb-5">
+                    Modern, verified student housing designed for focus and community. From private studios to shared apartments, Sakanak simplifies your living journey.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Account" asp-action="RegisterStudent" class="btn-stitch-primary px-4 py-3 shadow-lg">
+                        <span class="material-symbols-outlined">search</span>
+                        Find Housing
+                    </a>
+                    <a asp-controller="Account" asp-action="RegisterLandlord" class="btn-stitch-outline px-4 py-3 shadow-sm">
+                        <span class="material-symbols-outlined">add_home</span>
+                        List Property
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block position-relative" data-aos="fade-left" data-aos-delay="200">
+                <div class="rounded-4 overflow-hidden shadow-lg position-relative" style="aspect-ratio: 1/1;">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2E5ivWEkM8sY0fzolxJKtui9SR5tR1Wxbn-Fjwd7xmiBcyuTBReJWFos2PveytxmMvkqaQ522JqPMJUhXlNOVhPDnNaGgnt_imnO3Shcmc2UhOMYpxgBcVuK7su_7GOsRjqNfwuvHzC9sOFuybdbk3xFlf7KN8xU7UHYCxijj7BT5NSpcwuPLg2ZvoAn4CRTZ93CtLYhPQebA_g8Urn-RlXkSGiBLaqNxksfZNbBhfFYotsX5Y8iz2VoEFgV3oTOyTnd88bUyPAmj" class="w-100 h-100 object-fit-cover" alt="Modern student apartment">
+                    <div class="position-absolute w-100 h-100 top-0 start-0" style="background: linear-gradient(to top, rgba(0,67,73,0.4), transparent);"></div>
+                </div>
+                
+                <div class="position-absolute glass-card p-4 rounded-4 shadow-lg border" style="bottom: -2rem; left: -2rem; max-width: 260px;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: var(--sk-success-green);">
+                            <span class="material-symbols-outlined fs-4">check_circle</span>
+                        </div>
+                        <div>
+                            <p class="font-manrope fw-bold mb-0 text-dark">Contract Ready</p>
+                            <p class="text-muted mb-0 small">Verified by Sakanak</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="position-absolute bg-white p-3 rounded-4 shadow-lg border" style="top: -1.5rem; right: -1.5rem;">
+                    <div class="d-flex mb-2">
+                        <div class="rounded-circle bg-secondary border border-2 border-white ms-n2 first-ms-0" style="width: 32px; height: 32px; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7I0DboB0L9d7XFUEYl8_8aSXsdh1tvYx9cVKCqTC7bNryBJhusHzzkuDmhzCHIzD1_nWqJBPTqVjt4lTtbPTjyNnhOzq_bfEF8t4q9exh_XI5OexIJ6IrIMKPte0rKVYfqvuBwzOHQnwgai_f0J2X9iZ_s3grj01XVUxMMwIoa7jAnlLttgF2NbHL5o1uA5AqjA_871nRK7NbT5M5rtY0Yh1BmS-2kuqa0uGDF5BpI_7LaCVECe83uYY2QCfWWspr0xMK6ETlHgSz'); background-size: cover; margin-left: -10px;"></div>
+                        <div class="rounded-circle bg-secondary border border-2 border-white ms-n2" style="width: 32px; height: 32px; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZpP1hEzhMQhGK4t4ypkgBioD9Oe0cdBkWSIInXKjZ-H0lPEGbrrXkF7kdJ6f_OS7MDUiWmeRQV5Hd5-V1_AoLsxBQC_USIvuXw0ImWUCrK-aU6qJL4ZqISMzYobZCeO80VHYjFHsm5Ir9QYBQuhVVXNXevic7oODcCWpel-5eKyvULziVFK74VW1B2G0SUu-XpehTkoY3anQcBPBha7TTKiAXmfBYqzqjF7TUSoS7g_bGABIUIEDi5OtIkcNCATkohS1Tzj0nH8xV'); background-size: cover; margin-left: -10px;"></div>
+                        <div class="rounded-circle bg-secondary border border-2 border-white ms-n2" style="width: 32px; height: 32px; background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBs5XtD9Q_jYDd3TcTcbO_uZyMA_Q3vLYubzlTLYSDir5ReMsK-5z4iNkif68lB1GtfrKOyW1EmD4XsnGBk5PL_na0_VA9WC-h1nMbP2RJr0Dr09409eW9D5Wz7Ozh_qqbgb3n8bXVzJIupF2sruhFIFA-8hnTY06_RJA6dQyIqI1IlYbBs2iknp7bm9ownSOxcAm0I-1xbanEig8fsKivGpkpJcExpY8vCjt5vaxv-w8QcumFUMNKvQpDMaL5o9kls90iCdpRaeUVc'); background-size: cover; margin-left: -10px;"></div>
+                    </div>
+                    <p class="font-manrope fw-bold text-slate-gray mb-0" style="font-size: 0.75rem;">+450 students looking now</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Decorative skewed background -->
+    <div class="position-absolute top-0 end-0 h-100 bg-primary-container" style="width: 33.333%; opacity: 0.05; transform: skewX(-12deg) translateX(50%); z-index: 1;"></div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-white">
+    <div class="container py-5 max-w-7xl">
+        <div class="text-center mb-5 mx-auto" style="max-width: 600px;" data-aos="fade-up">
+            <h2 class="font-headline-h1 text-primary mb-3">How it Works</h2>
+            <p class="font-body-lg text-slate-gray">A streamlined journey from searching for your new home to signing the contract and moving in.</p>
+        </div>
+        <div class="row g-4">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card p-4 h-100 border-0 shadow-sm text-center text-md-start">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center mb-4 text-deep-teal bg-primary-container-subtle icon-box mx-auto mx-md-0" style="width: 64px; height: 64px;">
+                        <span class="material-symbols-outlined fs-1">search_insights</span>
+                    </div>
+                    <h3 class="font-manrope fw-bold fs-5 mb-3">1. Smart Search</h3>
+                    <p class="text-slate-gray small">Filter by university proximity, budget, and lifestyle preferences with our AI search.</p>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card p-4 h-100 border-0 shadow-sm text-center text-md-start">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center mb-4 text-deep-teal bg-primary-container-subtle icon-box mx-auto mx-md-0" style="width: 64px; height: 64px;">
+                        <span class="material-symbols-outlined fs-1">event_available</span>
+                    </div>
+                    <h3 class="font-manrope fw-bold fs-5 mb-3">2. Instant Booking</h3>
+                    <p class="text-slate-gray small">Request a viewing or book instantly through our secure platform with verified landlords.</p>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card p-4 h-100 border-0 shadow-sm text-center text-md-start">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center mb-4 text-deep-teal bg-primary-container-subtle icon-box mx-auto mx-md-0" style="width: 64px; height: 64px;">
+                        <span class="material-symbols-outlined fs-1">edit_document</span>
+                    </div>
+                    <h3 class="font-manrope fw-bold fs-5 mb-3">3. Digital Contracts</h3>
+                    <p class="text-slate-gray small">Review and sign legally-binding student lease agreements digitally in minutes.</p>
+                </div>
+            </div>
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card p-4 h-100 border-0 shadow-sm text-center text-md-start">
+                    <div class="rounded-4 d-flex align-items-center justify-content-center mb-4 text-deep-teal bg-primary-container-subtle icon-box mx-auto mx-md-0" style="width: 64px; height: 64px;">
+                        <span class="material-symbols-outlined fs-1">vpn_key</span>
+                    </div>
+                    <h3 class="font-manrope fw-bold fs-5 mb-3">4. Secure Move-in</h3>
+                    <p class="text-slate-gray small">Your deposit is protected. Get your keys and start your new chapter with peace of mind.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Apartments Section -->
+<section class="py-5 bg-surface">
+    <div class="container py-5 max-w-7xl">
+        <div class="d-flex justify-content-between align-items-end mb-5" data-aos="fade-up">
+            <div class="max-w-xl">
+                <h2 class="font-headline-h1 text-primary mb-3">Featured Apartments</h2>
+                <p class="font-body-lg text-slate-gray mb-0">Handpicked, high-quality residences near major university campuses.</p>
+            </div>
+            <a asp-controller="Account" asp-action="RegisterStudent" class="d-none d-md-flex align-items-center gap-2 text-deep-teal font-manrope fw-bold text-decoration-none action-link">
+                View all properties
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            @if (Model.FeaturedApartments != null && Model.FeaturedApartments.Any())
+            {
+                var delay = 100;
+                foreach (var apt in Model.FeaturedApartments)
+                {
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="@delay">
+                        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden apartment-card" style="transition: all 0.3s;">
+                            <div class="position-relative" style="height: 240px;">
+                                <img src="@(!string.IsNullOrEmpty(apt.PrimaryPhotoUrl) ? Url.Content(apt.PrimaryPhotoUrl) : "https://lh3.googleusercontent.com/aida-public/AB6AXuANYLc_ejs6ce1MdxEL6Hp7a0ZMgA69-qPsXnpk7wwohU7UXBENK2eDWyXUMbNKQ5t67rxgiLUkG-OnAOVb4V6qK3FTVkeh_sSXiWQQE1B2B309NgW0qKjVcMIRl2zm6HM57VMUDrUrM-2kabvj87xiVOyvatKpFdUBSvdLg-DU7zmoE1y5Vu6baHosljr7X022efs7UuRmQ46AocGTXz8_x6u2TOb_AGmmSotlCwEqSjqz1IVD03c1aCxnfVAAGvnDjAAQsShI8jZi")" class="w-100 h-100 object-fit-cover apt-image" style="transition: transform 0.5s;" alt="Apartment">
+                                <div class="position-absolute top-0 start-0 m-3 glass-card px-3 py-1 rounded-pill d-flex align-items-center gap-1 shadow-sm">
+                                    <span class="material-symbols-outlined text-deep-teal fs-6 fill">star</span>
+                                    <span class="fw-bold text-deep-teal small">New</span>
+                                </div>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h4 class="font-manrope fw-bold fs-5 text-truncate" title="@apt.Address">@apt.Address</h4>
+                                    <span class="text-deep-teal fw-bold">@apt.PricePerMonth.ToString("C0")/mo</span>
+                                </div>
+                                <p class="text-muted small mb-4 d-flex align-items-center gap-1">
+                                    <span class="material-symbols-outlined fs-6">location_on</span>
+                                    @(apt.City)@(apt.DistanceFromUniversityKm.HasValue ? $", {apt.DistanceFromUniversityKm.Value:F1} km from Uni" : "")
+                                </p>
+                                <div class="d-flex gap-4 border-top pt-3">
+                                    <div class="d-flex align-items-center gap-1 text-muted small">
+                                        <span class="material-symbols-outlined fs-6">bed</span> @apt.TotalSeats Beds
+                                    </div>
+                                    @if (apt.Amenities.Any())
+                                    {
+                                        <div class="d-flex align-items-center gap-1 text-muted small">
+                                            <span class="material-symbols-outlined fs-6">stars</span> @apt.Amenities.Count Amenities
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    delay += 100;
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted mb-0">No active apartments found right now.</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Lifestyle Matching Section -->
+<section class="py-5 bg-primary text-white position-relative overflow-hidden" style="padding-top: 6rem !important; padding-bottom: 6rem !important;">
+    <div class="container position-relative z-3 max-w-7xl">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="font-headline-h1 text-white mb-4">Lifestyle Matching</h2>
+                <p class="font-body-lg text-on-primary-container mb-5" style="color: #90d2da;">
+                    We don't just find you a room; we find you a home. Our matching algorithm connects you with roommates and spaces that align with your study habits and social vibe.
+                </p>
+                <div class="d-flex flex-column gap-4 mb-5">
+                    <div class="d-flex gap-3">
+                        <div class="rounded-circle bg-deep-teal d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm" style="width: 48px; height: 48px;">
+                            <span class="material-symbols-outlined">psychology</span>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold fs-5 mb-1">Study Preference AI</h4>
+                            <p class="small text-on-primary-container mb-0" style="color: #90d2da;">Quiet hours or collaborative study? Choose what works for your degree.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div class="rounded-circle bg-deep-teal d-flex align-items-center justify-content-center flex-shrink-0 shadow-sm" style="width: 48px; height: 48px;">
+                            <span class="material-symbols-outlined">groups</span>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold fs-5 mb-1">Vibe Check Rooms</h4>
+                            <p class="small text-on-primary-container mb-0" style="color: #90d2da;">Join households of students from your faculty or similar interests.</p>
+                        </div>
+                    </div>
+                </div>
+                <a asp-controller="Account" asp-action="RegisterStudent" class="btn-stitch-white px-4 py-3 rounded-custom font-manrope fw-bold shadow-lg d-inline-block">Take the Match Quiz</a>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                <div class="row g-3">
+                    <div class="col-6 d-flex flex-column gap-3">
+                        <div class="glass-card bg-white p-4 rounded-custom shadow-sm border border-light" style="--bs-bg-opacity: .1;">
+                            <span class="material-symbols-outlined fs-1 mb-3" style="color: #90d2da;">menu_book</span>
+                            <h4 class="fw-bold fs-6 mb-2">The Quiet Zone</h4>
+                            <p class="small mb-0" style="color: #90d2da;">For serious scholars. 24/7 silence policy in study areas.</p>
+                        </div>
+                        <div class="rounded-custom overflow-hidden position-relative h-100 lifestyle-card" style="min-height: 180px;">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKLgbaCMkhbyMd1UIVQpKY3VYQ2plwPGeKOogZRT-OabyZcW4ExeHm-W-jLl7eULBWqFQPgM93xxS44tio-pEiBYwETvq43Oph9cIZwewqLTRE-sXLIvavopHQqntcir1opT02nqSvb8vs9cck1sAO4gNnndQDZKPUu7GPxuqoy1aVu7fsr5-Z4BSUi2LBsTO20tauQUxXN62m9xYcVLxdGNz4aOThwhTU-Y6vl2C21_ElNc-tR7NOPva-zHMMU5w3TsGrskIpoke0" class="w-100 h-100 object-fit-cover opacity-75 ls-img" alt="Study">
+                            <div class="position-absolute bottom-0 start-0 p-3 z-3">
+                                <h4 class="fw-bold fs-6 text-white mb-0 shadow-sm">Collab Hub</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex flex-column gap-3 pt-4">
+                        <div class="rounded-custom overflow-hidden position-relative h-100 lifestyle-card" style="min-height: 180px;">
+                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa8SUoZZXzj10pRv0LC0P4OhK2klngVFFVnwZ40V3vKAixx3RBjuoTg6usENmUxRYwAOilmbRdDxaUwmDj1_4IbEFlEgW8OJcGN2InQ4EubXXdMbIzTcAFEBQAuD9yLMAaLujxHM7RT86RG3CgSM7P7Kciq2MzItw-xSj0mNNU7ce5eGEnTnaa-uFgoRWP3QMDCQNTQ3tM4bjf_ajo4RObwN6qu5_v4008SswAC9IJjOxBSU3Eb1NP4Pd8PuAe__Y4BslZdYyWjoWk" class="w-100 h-100 object-fit-cover opacity-75 ls-img" alt="Shared">
+                            <div class="position-absolute bottom-0 start-0 p-3 z-3">
+                                <h4 class="fw-bold fs-6 text-white mb-0 shadow-sm">Shared Living</h4>
+                            </div>
+                        </div>
+                        <div class="glass-card bg-white p-4 rounded-custom shadow-sm border border-light" style="--bs-bg-opacity: .1;">
+                            <span class="material-symbols-outlined fs-1 mb-3" style="color: #90d2da;">self_improvement</span>
+                            <h4 class="fw-bold fs-6 mb-2">Wellness Pad</h4>
+                            <p class="small mb-0" style="color: #90d2da;">Yoga spaces and natural light for mental health.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Decorative Circle -->
+    <div class="position-absolute bg-deep-teal rounded-circle" style="width: 400px; height: 400px; filter: blur(100px); opacity: 0.4; bottom: -100px; left: -100px; z-index: 1;"></div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-white border-top text-center" data-aos="fade-up" data-aos-duration="1000" style="padding-top: 6rem !important; padding-bottom: 6rem !important;">
+    <div class="container py-4 max-w-4xl mx-auto">
+        <h2 class="font-headline-h1 text-primary mb-4">Ready to find your base?</h2>
+        <p class="font-body-lg text-slate-gray mb-5 mx-auto" style="max-width: 600px;">
+            Join thousands of students who have found their perfect home through Sakanak. Safe, simple, and student-focused.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a asp-controller="Account" asp-action="RegisterStudent" class="btn-stitch-primary px-5 py-3 shadow-sm">Sign up as Student</a>
+            <a asp-controller="Account" asp-action="RegisterLandlord" class="btn-stitch-outline px-5 py-3 shadow-sm">Sign up as Landlord</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .apartment-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .apartment-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15) !important;
+    }
+    .apartment-card:hover .apt-image {
+        transform: scale(1.05);
+    }
+    .lifestyle-card {
+        cursor: pointer;
+    }
+    .lifestyle-card .ls-img {
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .lifestyle-card:hover .ls-img {
+        transform: scale(1.1);
+    }
+    .action-link:hover span {
+        transform: translateX(4px);
+    }
+    .action-link span {
+        transition: transform 0.2s;
+    }
+</style>

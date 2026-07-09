@@ -1,0 +1,193 @@
+@using Sakanak.BLL.DTOs.Matching
+@using Sakanak.BLL.DTOs.Questionnaire
+@model RoommateDiscoveryDto
+@{
+    ViewData["Title"] = "Roommate Profile";
+    Layout = "_TailwindStudentLayout";
+    var questionnaire = ViewBag.Questionnaire as LifestyleQuestionnaireDto;
+    
+    var isHighlyCompatible = Model.CompatibilityScore >= 80;
+    var isModeratelyCompatible = Model.CompatibilityScore >= 60 && Model.CompatibilityScore < 80;
+    
+    var scoreColorClass = isHighlyCompatible ? "text-success-green bg-success-green/10" : 
+                          isModeratelyCompatible ? "text-warning-amber bg-warning-amber/10" : 
+                          "text-slate-500 bg-slate-100";
+}
+
+<div class="animate-slide-up max-w-6xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <a asp-action="FindRoommates" class="flex items-center gap-1 text-on-surface-variant hover:text-deep-teal mb-2 transition-colors no-underline">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                <span class="text-label-sm font-label-sm">Back to Matches</span>
+            </a>
+            <h2 class="text-headline-h1 font-headline-h1 text-on-surface m-0 mb-1">Roommate Profile</h2>
+            <p class="text-body-base font-body-base text-on-surface-variant m-0">Review compatibility and lifestyle details for @Model.Name.</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        
+        <!-- Left Column: Profile Overview -->
+        <div class="lg:col-span-4">
+            <div class="bg-surface-student rounded-2xl shadow-sm border border-outline-variant/50 overflow-hidden sticky top-24">
+                <div class="p-8 text-center border-b border-outline-variant/30 relative">
+                    <div class="absolute top-4 right-4 px-3 py-1 rounded-full @scoreColorClass text-xs font-bold shadow-sm">
+                        @Model.CompatibilityScore% Match
+                    </div>
+                    
+                    <div class="w-32 h-32 rounded-full border-4 border-white shadow-sm mx-auto mb-4 overflow-hidden bg-surface-container-high flex items-center justify-center text-slate-400">
+                        @if (!string.IsNullOrEmpty(Model.ProfilePhotoUrl))
+                        {
+                            <img src="@Url.Content(Model.ProfilePhotoUrl)" alt="@Model.Name" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <span class="material-symbols-outlined text-[64px]">person</span>
+                        }
+                    </div>
+                    
+                    <h3 class="font-headline-h2 text-2xl text-primary m-0 mb-1">@Model.Name</h3>
+                    <p class="text-sm font-bold text-on-surface-variant m-0">@Model.University</p>
+                    <p class="text-sm text-slate-500 m-0">@Model.Faculty</p>
+                </div>
+                
+                <div class="p-6 bg-surface-container-lowest">
+                    <h4 class="text-[11px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-4">Housing Status</h4>
+                    
+                    @if (Model.HousingStatus == StudentHousingStatus.HasApartment && Model.ApartmentId.HasValue)
+                    {
+                        <div class="bg-teal-50 border border-teal-100 rounded-xl p-4">
+                            <p class="text-xs font-bold text-deep-teal m-0 mb-1 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[14px]">apartment</span>
+                                Has an Apartment
+                            </p>
+                            <p class="text-sm text-slate-700 font-medium m-0 mb-3">@Model.ApartmentAddress</p>
+                            
+                            <div class="flex justify-between items-center text-xs font-medium text-slate-500 mb-4">
+                                <span>@Model.AvailableSeats seat(s) available</span>
+                                <span>@Model.ApartmentPrice?.ToString("C0")/mo</span>
+                            </div>
+                            
+                            <a asp-action="ApartmentDetails" asp-route-id="@Model.ApartmentId" class="block w-full text-center py-2.5 bg-deep-teal text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity shadow-sm no-underline btn-interact">
+                                View Apartment
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center gap-3 text-slate-500">
+                            <span class="material-symbols-outlined text-xl">search</span>
+                            <div>
+                                <p class="text-sm font-bold m-0">Searching</p>
+                                <p class="text-xs m-0">Currently looking for an apartment</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Details -->
+        <div class="lg:col-span-8 space-y-gutter">
+            
+            <!-- Compatibility Breakdown -->
+            <div class="bg-surface-student rounded-2xl shadow-sm border border-outline-variant/50 p-card-padding">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-outline-variant/30">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-deep-teal">favorite</span>
+                        <h3 class="font-headline-h2 text-xl text-on-surface m-0">Compatibility with You</h3>
+                    </div>
+                    <div class="px-4 py-2 rounded-xl @scoreColorClass font-bold flex items-center gap-2 shadow-sm">
+                        <span class="text-lg">@Model.CompatibilityScore% Match</span>
+                    </div>
+                </div>
+                
+                <h4 class="text-[11px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-4">Why you match</h4>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @foreach (var reason in Model.CompatibilityReasons)
+                    {
+                        <div class="bg-surface-container-lowest border border-outline-variant/50 p-4 rounded-xl flex items-start gap-3">
+                            <span class="material-symbols-outlined text-success-green mt-0.5">check_circle</span>
+                            <span class="text-sm text-on-surface font-medium leading-relaxed">@reason</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Lifestyle Details -->
+            @if (questionnaire != null)
+            {
+                <div class="bg-surface-student rounded-2xl shadow-sm border border-outline-variant/50 p-card-padding">
+                    <div class="flex items-center gap-2 mb-6 pb-4 border-b border-outline-variant/30">
+                        <span class="material-symbols-outlined text-deep-teal">psychology</span>
+                        <h3 class="font-headline-h2 text-xl text-on-surface m-0">Lifestyle Details</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                <span class="material-symbols-outlined">bedtime</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-0.5">Sleep Schedule</p>
+                                <p class="text-sm font-bold text-on-surface m-0">@questionnaire.SleepSchedule</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                <span class="material-symbols-outlined">smoking_rooms</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-0.5">Smoker</p>
+                                <p class="text-sm font-bold text-on-surface m-0">@(questionnaire.IsSmoker ? "Yes" : "No")</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                <span class="material-symbols-outlined">menu_book</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-0.5">Study Habits</p>
+                                <p class="text-sm font-bold text-on-surface m-0">@questionnaire.StudyHabits</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                <span class="material-symbols-outlined">groups</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-0.5">Social Preference</p>
+                                <p class="text-sm font-bold text-on-surface m-0">@questionnaire.SocialPreference</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 flex items-center gap-4 md:col-span-2">
+                            <div class="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                <span class="material-symbols-outlined">cleaning_services</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between items-end mb-1">
+                                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0">Hygiene Level</p>
+                                    <p class="text-sm font-bold text-on-surface m-0">@questionnaire.HygieneLevel / 5</p>
+                                </div>
+                                <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
+                                    <div class="h-full bg-deep-teal rounded-full" style="width: @(questionnaire.HygieneLevel * 20)%"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                                    <span>Relaxed</span>
+                                    <span>Very Tidy</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

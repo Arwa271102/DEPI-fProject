@@ -1,0 +1,84 @@
+@model Sakanak.BLL.DTOs.Admin.LandlordVerificationRequestDto
+@{
+    ViewData["Title"] = "Review Landlord";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Landlord Verification</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">@Model.LandlordName</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">@Model.Email</p>
+    </div>
+    <a asp-action="PendingLandlordVerifications" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Queue
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Submitted Documents</h3>
+            </div>
+            <div class="p-6">
+                @if (Model.Documents.Count == 0)
+                {
+                    <div class="text-center text-slate-500 py-8">
+                        <span class="material-symbols-outlined text-4xl mb-2 opacity-50">description</span>
+                        <p class="m-0">No documents were uploaded by this landlord.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        @foreach (var document in Model.Documents)
+                        {
+                            <a href="@Url.Content(document.Url)" target="_blank" rel="noreferrer" class="flex items-center gap-3 p-4 border border-slate-200 rounded-lg hover:border-deep-teal/50 hover:bg-deep-teal/5 transition-colors no-underline group">
+                                <div class="w-12 h-12 bg-deep-teal/10 rounded-lg flex items-center justify-center text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors">
+                                    <span class="material-symbols-outlined">plagiarism</span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-on-surface text-sm m-0">@document.Type</p>
+                                    <p class="text-xs text-deep-teal font-semibold m-0 mt-1">Click to view</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-1">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm sticky top-24">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Decision</h3>
+            </div>
+            <div class="p-6">
+                <form asp-action="ApproveLandlord" asp-route-id="@Model.LandlordId" method="post" class="mb-4">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="w-full bg-success-green hover:bg-success-green/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer border-0">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Approve Landlord
+                    </button>
+                </form>
+                
+                <hr class="border-t border-slate-200 my-4" />
+                
+                <form asp-action="RejectLandlord" asp-route-id="@Model.LandlordId" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="reason" class="block text-sm font-bold text-on-surface mb-2">Rejection Reason</label>
+                        <textarea id="reason" name="reason" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-danger-red focus:border-danger-red outline-none text-sm transition-all" rows="4" placeholder="Explain why the verification is rejected..." required></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-white border border-danger-red text-danger-red hover:bg-danger-red hover:text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined">cancel</span>
+                        Reject Verification
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

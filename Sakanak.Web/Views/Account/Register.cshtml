@@ -1,0 +1,398 @@
+@model Sakanak.Web.Models.ViewModels.Account.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_TailwindAuthLayout";
+}
+
+@if (ViewBag.Role == "Landlord")
+{
+<!-- Landlord Registration UI -->
+<main class="flex-grow flex items-center justify-center px-4 py-12 relative overflow-hidden bg-surface-landlord">
+    <!-- Subtle Ambient Background Decorations -->
+    <div class="absolute top-0 left-0 w-64 h-64 bg-deep-teal/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-container/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+    
+    <!-- Registration Card -->
+    <div class="w-full max-w-4xl bg-surface-student rounded-xl shadow-[0_10px_40px_-15px_rgba(13,92,99,0.1)] overflow-hidden flex flex-col md:flex-row border border-outline-variant/30 relative z-10">
+        <!-- Left Side: Informational/Brand -->
+        <div class="md:w-5/12 bg-deep-teal p-stack-lg text-white flex flex-col justify-between">
+            <div>
+                <h1 class="font-headline-h2 text-headline-h2 mb-4">Partner with Sakanak</h1>
+                <p class="font-body-base text-white/80 mb-8">Join the premier network for high-quality student housing and manage your properties with ease.</p>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-on-primary-container">verified_user</span>
+                        <span class="font-label-sm text-label-sm">Verified Student Tenants</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-on-primary-container">description</span>
+                        <span class="font-label-sm text-label-sm">Automated Contracts</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-on-primary-container">payments</span>
+                        <span class="font-label-sm text-label-sm">Secure Payment Gateways</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="mt-12 hidden md:block">
+                <div class="p-4 bg-white/10 rounded-lg backdrop-blur-sm border border-white/10">
+                    <p class="font-label-sm text-label-sm italic text-white/90">"The operational clarity provided by the Sakanak dashboard has reduced my administrative workload by 40%."</p>
+                    <div class="mt-3 flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-white">
+                            <span class="material-symbols-outlined text-deep-teal text-xl mt-1 ml-1">person</span>
+                        </div>
+                        <span class="text-[12px] font-semibold">Youssef, Landlord</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side: Registration Form -->
+        <div class="md:w-7/12 p-8 md:p-10 bg-white">
+            <div class="mb-8">
+                <h2 class="font-headline-h2 text-headline-h2 text-deep-teal mb-1">Create Account</h2>
+                <p class="font-label-sm text-label-sm text-slate-gray">Fill in your details to start listing your properties.</p>
+            </div>
+            
+            @if (ViewBag.UserExistsNotConfirmed == true)
+            {
+                <div class="bg-warning-amber/10 border border-warning-amber/20 text-warning-amber px-4 py-3 rounded-lg mb-4 text-sm">
+                    Account exists but is not confirmed. 
+                    <form asp-controller="Account" asp-action="ResendConfirmation" method="post" class="inline">
+                        <input type="hidden" name="email" value="@ViewBag.UnconfirmedEmail" />
+                        <button type="submit" class="font-bold underline decoration-warning-amber/30">Resend Email</button>
+                    </form>
+                </div>
+            }
+
+            <form method="post" class="space-y-5">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <div asp-validation-summary="ModelOnly" class="text-danger-red text-sm font-medium"></div>
+
+                <!-- Name & Username Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label asp-for="Name" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">person</span>
+                            <input asp-for="Name" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="Youssef Ayman" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label asp-for="Username" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">badge</span>
+                            <input asp-for="Username" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="youssef88" />
+                        </div>
+                        <span asp-validation-for="Username" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-1.5">
+                    <label asp-for="Email" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                    <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                        <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">mail</span>
+                        <input asp-for="Email" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="youssef@example.com" />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger-red text-xs mt-1 block"></span>
+                </div>
+
+                <!-- Age & Phone Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label asp-for="Age" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">cake</span>
+                            <input asp-for="Age" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" type="number" placeholder="25" />
+                        </div>
+                        <span asp-validation-for="Age" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label asp-for="PhoneNumber" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">call</span>
+                            <input asp-for="PhoneNumber" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="+1 (555) 000-0000" />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Password Fields -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label asp-for="Password" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">lock</span>
+                            <input asp-for="Password" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label asp-for="ConfirmPassword" class="font-label-sm text-[12px] text-slate-gray uppercase tracking-wider"></label>
+                        <div class="relative flex items-center group transition-all duration-200 border border-outline-variant rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-deep-teal/20 focus-within:border-deep-teal">
+                            <span class="material-symbols-outlined text-slate-gray group-focus-within:text-deep-teal text-[20px] mr-2">lock_reset</span>
+                            <input asp-for="ConfirmPassword" class="w-full bg-transparent border-none focus:ring-0 p-0 text-body-base placeholder:text-slate-400 font-body-base outline-none" placeholder="••••••••" />
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger-red text-xs mt-1 block"></span>
+                    </div>
+                </div>
+
+                <!-- Primary CTA -->
+                <button type="submit" class="w-full py-3.5 px-6 bg-deep-teal text-white font-headline-h2 text-body-base rounded-lg shadow-lg shadow-deep-teal/20 hover:bg-[#0A4D53] active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 mt-4">
+                    Register as Landlord
+                </button>
+            </form>
+            
+            <!-- Divider -->
+            <div class="relative flex items-center py-4">
+                <div class="flex-grow border-t border-outline-variant/30"></div>
+                <span class="flex-shrink mx-4 text-[12px] font-semibold text-slate-gray uppercase tracking-widest">or</span>
+                <div class="flex-grow border-t border-outline-variant/30"></div>
+            </div>
+
+            <!-- Social Login -->
+            <form asp-action="ExternalLogin" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <input type="hidden" name="role" value="@ViewBag.Role" />
+                <button type="submit" name="provider" value="Google" class="w-full py-3 px-6 border border-outline-variant rounded-lg text-body-base font-semibold text-slate-gray hover:bg-slate-50 transition-all duration-150 flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" viewbox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"></path>
+                    </svg>
+                    Sign up with Google
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="font-label-sm text-body-base text-slate-gray">
+                    Already have an account? 
+                    <a asp-action="Login" class="text-deep-teal font-bold hover:underline ml-1">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+}
+else
+{
+<!-- Student Registration UI -->
+<main class="flex-grow flex items-center justify-center py-12 px-4 md:px-8 relative overflow-hidden">
+    <!-- Background Atmosphere -->
+    <div class="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-primary-fixed/20 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-[-5%] left-[-5%] w-[300px] h-[300px] bg-secondary-fixed/30 rounded-full blur-3xl animate-float" style="animation-delay: -3s"></div>
+    
+    <div class="w-full max-w-5xl grid md:grid-cols-12 gap-8 relative z-10">
+        <!-- Left Side: Marketing/Value Prop -->
+        <div class="md:col-span-5 flex flex-col justify-start pt-12 space-y-6">
+            <div>
+                <h1 class="font-headline-h1 text-headline-h1 text-deep-teal mb-4">Start your student journey with us.</h1>
+                <p class="font-body-lg text-body-lg text-slate-gray">Join thousands of students finding safe, affordable, and verified housing near campus.</p>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">verified_user</span>
+                    </div>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-deep-teal">Verified Listings</p>
+                        <p class="text-xs text-slate-gray">Directly vetted properties</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+                    <div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <div>
+                        <p class="font-label-sm text-label-sm text-deep-teal">Smart Contracts</p>
+                        <p class="text-xs text-slate-gray">Legally secure agreements</p>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-6 border-t border-slate-200">
+                <div class="flex items-center gap-3">
+                    <div class="flex -space-x-2">
+                        <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300"></div>
+                        <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-400"></div>
+                        <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-500"></div>
+                    </div>
+                    <p class="text-xs text-slate-gray"><span class="font-bold text-deep-teal">4.8/5</span> from 2,000+ happy students</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side: The Registration Card -->
+        <div class="md:col-span-7">
+            <div class="bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                <div class="p-8">
+                    <div class="mb-8 flex justify-between items-start">
+                        <div>
+                            <h2 class="font-headline-h2 text-headline-h2 text-deep-teal">Create Account</h2>
+                            <p class="font-label-sm text-label-sm text-slate-gray">Tell us about yourself to get started.</p>
+                        </div>
+                        <span class="px-2 py-1 bg-primary-fixed text-primary text-[10px] font-bold rounded uppercase tracking-wider">Student</span>
+                    </div>
+
+                    @if (ViewBag.UserExistsNotConfirmed == true)
+                    {
+                        <div class="bg-warning-amber/10 border border-warning-amber/20 text-warning-amber px-4 py-3 rounded-lg mb-4 text-sm">
+                            Account exists but is not confirmed. 
+                            <form asp-controller="Account" asp-action="ResendConfirmation" method="post" class="inline">
+                                <input type="hidden" name="email" value="@ViewBag.UnconfirmedEmail" />
+                                <button type="submit" class="font-bold underline decoration-warning-amber/30">Resend Email</button>
+                            </form>
+                        </div>
+                    }
+                    
+                    <form method="post" class="space-y-6">
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger-red text-sm font-medium"></div>
+
+                        <!-- Basic Info Section -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label asp-for="Name" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">person</span>
+                                    <input asp-for="Name" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="Youssef Ayman" />
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                            <div class="space-y-2">
+                                <label asp-for="Username" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">badge</span>
+                                    <input asp-for="Username" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="youssef24" />
+                                </div>
+                                <span asp-validation-for="Username" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label asp-for="Email" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                            <div class="relative group">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">mail</span>
+                                <input asp-for="Email" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="youssef@university.edu" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger-red text-xs mt-1 block"></span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label asp-for="Age" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">cake</span>
+                                    <input asp-for="Age" type="number" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="18" />
+                                </div>
+                                <span asp-validation-for="Age" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                            <div class="space-y-2">
+                                <label asp-for="PhoneNumber" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">call</span>
+                                    <input asp-for="PhoneNumber" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="+1 (555) 000-0000" />
+                                </div>
+                                <span asp-validation-for="PhoneNumber" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                        </div>
+
+                        <!-- Academic Info Section -->
+                        <div class="pt-6 border-t border-slate-100">
+                            <h3 class="font-label-sm text-label-sm text-deep-teal uppercase tracking-widest mb-4">Student Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <label asp-for="University" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                    <input asp-for="University" class="w-full px-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="Global University" />
+                                    <span asp-validation-for="University" class="text-danger-red text-xs mt-1 block"></span>
+                                </div>
+                                <div class="space-y-2">
+                                    <label asp-for="Faculty" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                    <input asp-for="Faculty" class="w-full px-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="Engineering, Arts, etc." />
+                                    <span asp-validation-for="Faculty" class="text-danger-red text-xs mt-1 block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Section -->
+                        <div class="pt-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label asp-for="Password" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">lock</span>
+                                    <input asp-for="Password" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="••••••••" />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                            <div class="space-y-2">
+                                <label asp-for="ConfirmPassword" class="font-label-sm text-label-sm text-on-surface-variant block"></label>
+                                <div class="relative group">
+                                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-deep-teal transition-colors">lock_reset</span>
+                                    <input asp-for="ConfirmPassword" class="w-full pl-10 pr-4 py-3 bg-slate-50 border-slate-200 rounded-lg font-body-base text-body-base focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all" placeholder="••••••••" />
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger-red text-xs mt-1 block"></span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 bg-deep-teal text-white rounded-xl font-headline-h2 text-body-lg hover:bg-[#0a4d53] active:scale-[0.98] transition-all shadow-lg shadow-deep-teal/20">
+                            Register as Student
+                        </button>
+                    </form>
+
+                    <div class="relative py-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-slate-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-xs uppercase">
+                            <span class="bg-white px-2 text-slate-400 font-label-sm">Or sign up with</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="ExternalLogin" method="post">
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                        <input type="hidden" name="role" value="@ViewBag.Role" />
+                        <button type="submit" name="provider" value="Google" class="w-full py-3 px-4 border border-slate-200 rounded-xl font-label-sm text-deep-teal hover:bg-slate-50 flex items-center justify-center gap-3 transition-colors">
+                            <svg class="w-5 h-5" viewbox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"></path>
+                            </svg>
+                            Sign up with Google
+                        </button>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <p class="font-label-sm text-label-sm text-slate-gray">
+                            Already have an account? 
+                            <a asp-action="Login" class="text-deep-teal font-bold hover:underline underline-offset-4">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+}
+
+<!-- Shared Footer -->
+<footer class="w-full bg-white dark:bg-slate-900 py-12 border-t border-slate-200 dark:border-slate-800">
+    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-stack-md">
+        <div class="flex items-center gap-2">
+            <span class="font-bold text-[#0D5C63] dark:text-teal-400">Sakanak</span>
+            <span class="font-manrope text-xs text-slate-500">© 2024 Sakanak Student Housing. All rights reserved.</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6">
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Privacy Policy</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Terms of Service</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Cookie Policy</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Contact Support</a>
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

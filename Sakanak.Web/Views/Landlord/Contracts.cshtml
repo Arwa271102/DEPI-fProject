@@ -1,0 +1,74 @@
+@model IReadOnlyList<Sakanak.BLL.DTOs.Contract.ContractDto>
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Contracts";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Contracts</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface m-0">Apartment Contracts</h2>
+        <p class="text-on-surface-variant m-0">Manage lease agreements and contract statuses.</p>
+    </div>
+    <div class="flex items-center gap-stack-md">
+        <a asp-action="Dashboard" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-6 py-2.5 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+            <span class="font-title-sm">Back to Dashboard</span>
+        </a>
+    </div>
+</div>
+
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col shadow-sm">
+    <div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
+        <h3 class="font-headline-md text-headline-md text-on-surface m-0">All Contracts</h3>
+    </div>
+    <div class="flex-1 overflow-x-auto">
+        @if (Model.Count == 0)
+        {
+            <div class="p-12 text-center">
+                <div class="w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-on-surface-variant text-3xl">description</span>
+                </div>
+                <p class="text-on-surface font-title-sm m-0">No contracts yet</p>
+                <p class="text-on-surface-variant text-body-sm mt-1">There are no contracts associated with your properties.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-surface-container-low border-b border-outline-variant">
+                    <tr>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Student</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Apartment</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Dates</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant">Status</th>
+                        <th class="px-6 py-3 font-label-caps text-on-surface-variant text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant">
+                    @foreach (var contract in Model)
+                    {
+                        var initials = string.Join("", contract.StudentName.Split(' ').Select(s => s[0])).ToUpper();
+                        <tr class="hover:bg-surface-container-low transition-colors group">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-secondary-container rounded-full flex items-center justify-center text-on-secondary-container font-bold text-xs mr-3 shrink-0">@initials</div>
+                                    <div>
+                                        <p class="font-body-md text-on-surface leading-none m-0">@contract.StudentName</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-body-sm text-on-surface font-medium">@contract.ApartmentAddress</td>
+                            <td class="px-6 py-4 font-data-mono text-xs text-on-surface-variant">@contract.StartDate.ToString("dd MMM yyyy") - @contract.EndDate.ToString("dd MMM yyyy")</td>
+                            <td class="px-6 py-4">
+                                @await Html.PartialAsync("_StatusBadgePartial", contract.Status)
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <a asp-action="ContractDetails" asp-route-id="@contract.ContractId" class="inline-block px-4 py-1.5 bg-primary text-on-primary rounded-lg font-title-sm text-sm hover:opacity-90 active:scale-95 transition-all shadow-sm no-underline">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>

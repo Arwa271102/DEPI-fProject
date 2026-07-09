@@ -1,0 +1,407 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Sakanak.Web
+build_property.RootNamespace = Sakanak.Web
+build_property.ProjectDir = E:\#1 University\DEPI\Depi Final Project\Sakanak\Sakanak.Web\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\#1 University\DEPI\Depi Final Project\Sakanak\Sakanak.Web
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/CheckYourEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGVja1lvdXJFbWFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/CompleteProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDb21wbGV0ZVByb2ZpbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/Disable2FA.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEaXNhYmxlMkZBLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/EmailConfirmed.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFbWFpbENvbmZpcm1lZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFcnJvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/ExternalRegistration.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFeHRlcm5hbFJlZ2lzdHJhdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/SelectRole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxTZWxlY3RSb2xlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Account/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxTZXR0aW5ncy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ApartmentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXBhcnRtZW50RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ApartmentOccupancyDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXBhcnRtZW50T2NjdXBhbmN5RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/Apartments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXBhcnRtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ApartmentsOccupancy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQXBhcnRtZW50c09jY3VwYW5jeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ContractHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ29udHJhY3RIaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/LandlordDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTGFuZGxvcmREZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/Landlords.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTGFuZGxvcmRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/LandlordVerificationHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTGFuZGxvcmRWZXJpZmljYXRpb25IaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/PaymentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGF5bWVudERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/Payments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGF5bWVudHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/PendingContracts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGVuZGluZ0NvbnRyYWN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/PendingLandlordVerifications.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGVuZGluZ0xhbmRsb3JkVmVyaWZpY2F0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/PendingRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGVuZGluZ1JlcXVlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/RequestHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmVxdWVzdEhpc3RvcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ReviewContract.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmV2aWV3Q29udHJhY3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ReviewLandlord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmV2aWV3TGFuZGxvcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/ReviewRequest.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmV2aWV3UmVxdWVzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Admin/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Dashboard/Admin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEFkbWluLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Dashboard/Landlord.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXExhbmRsb3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Dashboard/Student.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFN0dWRlbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/ApartmentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQXBhcnRtZW50RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/ApartmentTenants.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQXBhcnRtZW50VGVuYW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/BookingRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQm9va2luZ1JlcXVlc3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/ContractDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQ29udHJhY3REZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/Contracts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQ29udHJhY3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/CreateApartment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcQ3JlYXRlQXBhcnRtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/EditApartment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcRWRpdEFwYXJ0bWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/MyApartments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcTXlBcGFydG1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/MyRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcTXlSZXF1ZXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/OccupiedApartments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcT2NjdXBpZWRBcGFydG1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/PaymentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcUGF5bWVudERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/Payments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcUGF5bWVudHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/ReviewBooking.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcUmV2aWV3Qm9va2luZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/SubmitVerification.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcU3VibWl0VmVyaWZpY2F0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Landlord/VerificationPending.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGxvcmRcVmVyaWZpY2F0aW9uUGVuZGluZy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Messages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzc2FnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Notifications/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_AlertMessagesPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BbGVydE1lc3NhZ2VzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_ApartmentCardPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BcGFydG1lbnRDYXJkUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_ApartmentPhotoGallery.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BcGFydG1lbnRQaG90b0dhbGxlcnkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_ApartmentSearchResultCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BcGFydG1lbnRTZWFyY2hSZXN1bHRDYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_AuthLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BdXRoTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_FilterSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9GaWx0ZXJTaWRlYmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_PaginationPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdpbmF0aW9uUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_PhotoCarouselPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QaG90b0Nhcm91c2VsUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_PhotoGalleryPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QaG90b0dhbGxlcnlQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_StatusBadgePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TdGF0dXNCYWRnZVBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_TailwindAdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9UYWlsd2luZEFkbWluTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_TailwindAuthLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9UYWlsd2luZEF1dGhMYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_TailwindLandlordLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9UYWlsd2luZExhbmRsb3JkTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_TailwindStudentLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9UYWlsd2luZFN0dWRlbnRMYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/ApartmentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxBcGFydG1lbnREZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/BookApartment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxCb29rQXBhcnRtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/BookingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxCb29raW5nRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/ContractDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDb250cmFjdERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/CreateContract.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDcmVhdGVDb250cmFjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/FindRoommates.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxGaW5kUm9vbW1hdGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/FutureRoommates.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxGdXR1cmVSb29tbWF0ZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/MyApartment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeUFwYXJ0bWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/MyBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeUJvb2tpbmdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/MyContracts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeUNvbnRyYWN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/MyPayments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeVBheW1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/MyRoommates.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeVJvb21tYXRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/PayContract.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQYXlDb250cmFjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/PaymentCancelled.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQYXltZW50Q2FuY2VsbGVkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/PaymentDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQYXltZW50RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/PaymentSuccess.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQYXltZW50U3VjY2Vzcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/Questionnaire.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxRdWVzdGlvbm5haXJlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/SearchApartments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxTZWFyY2hBcGFydG1lbnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Student/ViewRoommateProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxWaWV3Um9vbW1hdGVQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/TwoFactor/VerifyCode.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHdvRmFjdG9yXFZlcmlmeUNvZGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/\#1 University/DEPI/Depi Final Project/Sakanak/Sakanak.Web/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-g6p43cjh55

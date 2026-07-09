@@ -1,0 +1,187 @@
+@model Sakanak.Web.Models.ViewModels.Account.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_TailwindAuthLayout";
+}
+
+<main class="flex-grow flex items-center justify-center p-gutter relative overflow-hidden">
+    <!-- Atmospheric Background Element -->
+    <div class="absolute inset-0 z-0 opacity-20 pointer-events-none"></div>
+    
+    <div class="relative z-10 w-full max-w-[480px]">
+        <!-- Brand Identity -->
+        <div class="text-center mb-stack-lg">
+            <div class="inline-flex items-center gap-2 mb-stack-md">
+                <span class="material-symbols-outlined text-deep-teal text-4xl" data-icon="house">house</span>
+                <span class="font-headline-h1 text-headline-h1 text-deep-teal tracking-tight">Sakanak</span>
+            </div>
+            <h1 class="font-headline-h1 text-headline-h1 text-on-surface mb-2">Welcome Back</h1>
+            <p class="font-body-lg text-body-lg text-slate-gray">Sign in to your account to continue</p>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="bg-success-green/10 border border-success-green/20 text-success-green px-4 py-3 rounded-lg mb-4 flex items-center gap-3">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span class="text-sm font-medium">@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ResendMessage"] != null)
+        {
+            <div class="bg-info-blue/10 border border-info-blue/20 text-info-blue px-4 py-3 rounded-lg mb-4 flex items-center gap-3">
+                <span class="material-symbols-outlined">info</span>
+                <span class="text-sm font-medium">@TempData["ResendMessage"]</span>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="bg-danger-red/10 border border-danger-red/20 text-danger-red px-4 py-3 rounded-lg mb-4 flex items-center gap-3">
+                <span class="material-symbols-outlined">error</span>
+                <span class="text-sm font-medium">@TempData["ErrorMessage"]</span>
+            </div>
+        }
+
+        @if (ViewBag.EmailNotConfirmed == true)
+        {
+            <div class="bg-warning-amber/10 border border-warning-amber/20 text-warning-amber px-4 py-3 rounded-lg mb-4">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined">warning</span>
+                    <span class="text-sm font-bold">Email not confirmed</span>
+                </div>
+                <form asp-controller="Account" asp-action="ResendConfirmation" method="post">
+                    <input type="hidden" name="email" value="@ViewBag.UnconfirmedEmail" />
+                    <button type="submit" class="text-sm font-semibold underline decoration-warning-amber/30 hover:text-warning-amber/80 transition-colors">Resend Confirmation Email</button>
+                </form>
+            </div>
+        }
+
+        <!-- Login Card -->
+        <div class="glass-card border border-white/40 shadow-xl rounded-xl p-stack-lg transition-all duration-300 hover:shadow-2xl">
+            <form asp-action="Login" method="post" class="space-y-stack-md">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <div asp-validation-summary="ModelOnly" class="text-danger-red text-sm font-medium"></div>
+
+                <!-- Email Field -->
+                <div>
+                    <label asp-for="Email" class="block font-label-sm text-label-sm text-on-surface-variant mb-1.5 ml-1"></label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline group-focus-within:text-deep-teal transition-colors">
+                            <span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+                        </div>
+                        <input asp-for="Email" class="block w-full pl-11 pr-4 py-3 bg-white/50 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-deep-teal transition-all outline-none text-on-surface placeholder:text-outline/50" placeholder="your@email.com" />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger-red text-xs mt-1 ml-1 block"></span>
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <div class="flex justify-between items-center mb-1.5 ml-1">
+                        <label asp-for="Password" class="block font-label-sm text-label-sm text-on-surface-variant"></label>
+                        <a asp-action="ForgotPassword" class="font-label-sm text-label-sm text-deep-teal hover:underline decoration-deep-teal/30">Forgot?</a>
+                    </div>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline group-focus-within:text-deep-teal transition-colors">
+                            <span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+                        </div>
+                        <input asp-for="Password" class="block w-full pl-11 pr-10 py-3 bg-white/50 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-fixed-dim focus:border-deep-teal transition-all outline-none text-on-surface placeholder:text-outline/50" placeholder="••••••••" />
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-outline hover:text-on-surface transition-colors" onclick="togglePasswordVisibility()">
+                            <span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger-red text-xs mt-1 ml-1 block"></span>
+                </div>
+                
+                <div class="flex items-center gap-2 mt-2 ml-1">
+                    <input asp-for="RememberMe" class="rounded border-outline-variant text-deep-teal focus:ring-deep-teal cursor-pointer" />
+                    <label asp-for="RememberMe" class="font-label-sm text-sm text-slate-gray cursor-pointer"></label>
+                </div>
+
+                <!-- Primary Action -->
+                <button type="submit" class="w-full bg-deep-teal text-white font-headline-h2 text-body-base py-3.5 rounded-lg shadow-md hover:bg-primary transition-all active:scale-[0.98] focus:ring-4 focus:ring-primary/20 flex items-center justify-center gap-2 mt-stack-md">
+                    Sign In
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="relative my-stack-lg">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-outline-variant/50"></div>
+                </div>
+                <div class="relative flex justify-center text-xs uppercase tracking-widest font-semibold text-outline-variant bg-transparent">
+                    <span class="px-3 bg-white/80 backdrop-blur-md">Or</span>
+                </div>
+            </div>
+
+            <!-- Social Login -->
+            <form asp-action="ExternalLogin" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+                <button type="submit" name="provider" value="Google" class="w-full flex items-center justify-center gap-3 bg-white border border-outline-variant rounded-lg py-3 px-4 text-on-surface font-label-sm text-label-sm hover:bg-slate-50 transition-colors active:scale-[0.99] shadow-sm">
+                    <svg class="w-5 h-5" viewbox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"></path>
+                    </svg>
+                    Sign in with Google
+                </button>
+            </form>
+
+            <!-- Support Links -->
+            <div class="mt-8 pt-6 border-t border-outline-variant/30 text-center">
+                <p class="font-body-base text-label-sm text-slate-gray">
+                    Don't have an account? 
+                    <span class="block mt-2">
+                        <a asp-action="RegisterStudent" class="text-deep-teal font-semibold hover:underline">Register as Student</a>
+                        <span class="mx-2 text-outline-variant">•</span>
+                        <a asp-action="RegisterLandlord" class="text-deep-teal font-semibold hover:underline">Landlord</a>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Shared Footer -->
+<footer class="w-full bg-white dark:bg-slate-900 py-12 border-t border-slate-200 dark:border-slate-800">
+    <div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-stack-md">
+        <div class="flex items-center gap-2">
+            <span class="font-bold text-[#0D5C63] dark:text-teal-400">Sakanak</span>
+            <span class="font-manrope text-xs text-slate-500">© 2024 Sakanak Student Housing. All rights reserved.</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-6">
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Privacy Policy</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Terms of Service</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Cookie Policy</a>
+            <a class="font-manrope text-xs text-slate-400 hover:text-[#0D5C63] transition-opacity opacity-80 hover:opacity-100 underline decoration-teal-500/30 underline-offset-4" href="#">Contact Support</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Decorative Illustration elements (Right & Left floating icons) -->
+<div class="fixed bottom-12 right-12 hidden lg:block opacity-40 float-animation pointer-events-none">
+    <div class="p-6 bg-white rounded-2xl shadow-lg border border-outline-variant/20">
+        <span class="material-symbols-outlined text-deep-teal text-5xl" data-icon="key">key</span>
+    </div>
+</div>
+<div class="fixed top-24 left-12 hidden lg:block opacity-40 float-animation pointer-events-none" style="animation-delay: -3s">
+    <div class="p-6 bg-white rounded-2xl shadow-lg border border-outline-variant/20">
+        <span class="material-symbols-outlined text-deep-teal text-5xl" data-icon="apartment">apartment</span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('@Html.IdFor(m => m.Password)');
+            if (!passwordInput) return;
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            const icon = event.currentTarget.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+            }
+        }
+    </script>
+}

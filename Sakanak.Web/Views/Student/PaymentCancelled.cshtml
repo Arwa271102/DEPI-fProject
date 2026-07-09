@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Payment Cancelled";
+    Layout = "_TailwindStudentLayout";
+}
+
+<div class="animate-slide-up flex flex-col items-center justify-center min-h-[60vh]">
+    <div class="w-full max-w-md bg-surface-student rounded-3xl shadow-sm border border-outline-variant/50 p-8 text-center flex flex-col items-center relative overflow-hidden">
+        
+        <!-- Warning Icon Background Blur -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-warning-amber/10 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-warning-amber/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <div class="w-20 h-20 bg-warning-amber/10 text-warning-amber rounded-full flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-[40px]">cancel</span>
+            </div>
+            
+            <h1 class="font-headline-h1 text-2xl text-primary m-0 mb-3">Payment Cancelled</h1>
+            <p class="text-body-base text-on-surface-variant m-0 mb-8 leading-relaxed max-w-sm">
+                Your payment process was cancelled and no charges were made. You can try again whenever you are ready.
+            </p>
+            
+            <a asp-action="MyPayments" class="w-full py-3 bg-surface-container-high text-on-surface rounded-xl font-bold shadow-sm hover:bg-surface-variant transition-colors flex items-center justify-center gap-2 no-underline btn-interact">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                Back to My Payments
+            </a>
+        </div>
+    </div>
+</div>

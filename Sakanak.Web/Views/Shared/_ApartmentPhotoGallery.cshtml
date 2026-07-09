@@ -1,0 +1,144 @@
+@model IReadOnlyList<string>
+
+@if (Model.Count == 0)
+{
+    <div class="w-full h-64 bg-slate-100 rounded-3xl flex flex-col items-center justify-center text-slate-400 border border-dashed border-slate-300">
+        <span class="material-symbols-outlined text-[48px] mb-2">no_photography</span>
+        <span class="font-medium">No photos available</span>
+    </div>
+}
+else if (Model.Count == 1)
+{
+    <div class="w-full h-[300px] md:h-[450px] rounded-3xl overflow-hidden shadow-sm relative group cursor-pointer">
+        <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[0])" alt="Apartment photo" loading="lazy" />
+    </div>
+}
+else if (Model.Count == 2)
+{
+    <section class="grid grid-cols-2 gap-3 h-[300px] md:h-[450px] rounded-3xl overflow-hidden shadow-sm">
+        <div class="relative group cursor-pointer overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[0])" alt="Apartment photo" loading="lazy" />
+        </div>
+        <div class="relative group cursor-pointer overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[1])" alt="Apartment photo" loading="lazy" />
+        </div>
+    </section>
+}
+else
+{
+    <section class="grid grid-cols-4 grid-rows-2 gap-3 h-[300px] md:h-[450px] rounded-3xl overflow-hidden shadow-sm">
+        <div class="col-span-3 row-span-2 relative group cursor-pointer overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[0])" alt="Primary photo" loading="lazy" />
+            <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-lg">
+                <span class="material-symbols-outlined text-deep-teal" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+                <span class="font-label-sm text-label-sm text-deep-teal">1/@Model.Count Photos</span>
+            </div>
+        </div>
+        <div class="col-span-1 row-span-1 group cursor-pointer overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[1])" alt="Photo 2" loading="lazy" />
+        </div>
+        <div class="col-span-1 row-span-1 relative group cursor-pointer overflow-hidden">
+            <img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="@Url.Content(Model[2])" alt="Photo 3" loading="lazy" />
+            @if (Model.Count > 3)
+            {
+                <div class="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity hover:bg-black/50">
+                    <span class="text-white font-bold">+@(Model.Count - 3) More</span>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+<!-- Lightbox Modal -->
+<div id="photoLightbox" class="fixed inset-0 z-50 bg-black/95 hidden flex flex-col backdrop-blur-sm transition-opacity duration-300 opacity-0" aria-modal="true" role="dialog">
+    <div class="flex justify-between items-center p-4 text-white">
+        <div class="font-label-sm text-sm" id="lightboxCounter">1 / @Model.Count</div>
+        <button onclick="closeLightbox()" class="hover:bg-white/10 p-2 rounded-full transition-colors">
+            <span class="material-symbols-outlined text-[32px]">close</span>
+        </button>
+    </div>
+    <div class="flex-1 flex items-center justify-between px-4 relative">
+        <button onclick="prevPhoto()" class="text-white hover:bg-white/10 p-3 rounded-full transition-colors" id="prevBtn">
+            <span class="material-symbols-outlined text-[48px]">chevron_left</span>
+        </button>
+        <div class="w-full max-w-5xl max-h-full p-4 flex items-center justify-center">
+            <img id="lightboxImage" src="" alt="Apartment Full Photo" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl transition-transform duration-300 scale-95" />
+        </div>
+        <button onclick="nextPhoto()" class="text-white hover:bg-white/10 p-3 rounded-full transition-colors" id="nextBtn">
+            <span class="material-symbols-outlined text-[48px]">chevron_right</span>
+        </button>
+    </div>
+</div>
+
+<script>
+    const photos = @Html.Raw(Json.Serialize(Model.Select(m => Url.Content(m)).ToList()));
+    let currentIndex = 0;
+    const lightbox = document.getElementById('photoLightbox');
+    const lightboxImg = document.getElementById('lightboxImage');
+    const counter = document.getElementById('lightboxCounter');
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.remove('hidden');
+        // Small delay to allow display:block to apply before animating opacity
+        setTimeout(() => {
+            lightbox.classList.remove('opacity-0');
+            lightboxImg.classList.remove('scale-95');
+        }, 10);
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('opacity-0');
+        lightboxImg.classList.add('scale-95');
+        setTimeout(() => {
+            lightbox.classList.add('hidden');
+            document.body.style.overflow = '';
+        }, 300);
+    }
+
+    function updateLightbox() {
+        lightboxImg.src = photos[currentIndex];
+        counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+        
+        // Hide/show arrows based on position
+        document.getElementById('prevBtn').style.visibility = currentIndex === 0 ? 'hidden' : 'visible';
+        document.getElementById('nextBtn').style.visibility = currentIndex === photos.length - 1 ? 'hidden' : 'visible';
+    }
+
+    function nextPhoto() {
+        if (currentIndex < photos.length - 1) {
+            currentIndex++;
+            updateLightbox();
+        }
+    }
+
+    function prevPhoto() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateLightbox();
+        }
+    }
+
+    // Attach click events to all images in the gallery
+    document.addEventListener('DOMContentLoaded', () => {
+        const galleryImages = document.querySelectorAll('img[alt^="Apartment photo"], img[alt="Primary photo"], img[alt^="Photo"]');
+        galleryImages.forEach((img, idx) => {
+            img.style.cursor = 'pointer';
+            img.parentElement.addEventListener('click', () => {
+                // If the gallery structure has exactly the same number of img tags as photos array
+                openLightbox(idx);
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden')) {
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowRight') nextPhoto();
+                if (e.key === 'ArrowLeft') prevPhoto();
+            }
+        });
+    });
+</script>

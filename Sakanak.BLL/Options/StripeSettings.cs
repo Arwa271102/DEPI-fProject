@@ -1,0 +1,11 @@
+namespace Sakanak.BLL.Options;
+
+public class StripeSettings
+{
+    public const string SectionName = "Stripe";
+    public string PublishableKey { get; set; } = string.Empty;
+    public string SecretKey { get; set; } = string.Empty;
+    public string Currency { get; set; } = "usd";
+    public string SuccessUrl { get; set; } = string.Empty;
+    public string CancelUrl { get; set; } = string.Empty;
+}

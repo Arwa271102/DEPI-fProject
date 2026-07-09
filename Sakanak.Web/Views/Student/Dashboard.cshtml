@@ -1,0 +1,382 @@
+@model Sakanak.Web.Models.ViewModels.Student.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "Student Dashboard";
+    Layout = "_TailwindStudentLayout";
+}
+
+<!-- Welcome Header -->
+<div class="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-4 animate-slide-up">
+    <div>
+        <h2 class="text-headline-h1 font-headline-h1 text-primary mb-1">Welcome back, @(User.Identity?.Name ?? "Student")!</h2>
+        <p class="text-body-base text-outline m-0">Here's what's happening with your housing search and bookings.</p>
+    </div>
+    <div class="flex gap-stack-sm">
+        <a asp-action="FindRoommates" class="bg-deep-teal text-white px-gutter py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center gap-stack-sm shadow-sm btn-interact no-underline">
+            <span class="material-symbols-outlined text-[20px]" data-icon="group_add">group_add</span>
+            Find Roommates
+        </a>
+    </div>
+</div>
+
+<!-- Dashboard Bento Grid -->
+<div class="dashboard-grid animate-slide-up" style="animation-delay: 0.1s;">
+    
+    <!-- Profile Completion Widget -->
+    <div class="col-span-12 md:col-span-4 bento-card flex flex-col justify-between overflow-hidden relative">
+        <div class="relative z-10">
+            <h3 class="font-headline-h2 text-headline-h2 mb-stack-sm">Profile Status</h3>
+            <div class="flex items-end gap-stack-sm mb-4">
+                <span class="text-display-hero font-display-hero text-deep-teal">@Model.Profile.Completion.CompletionPercentage%</span>
+                @if (Model.Profile.Completion.CompletionPercentage == 100)
+                {
+                    <span class="text-label-sm text-outline mb-3">All set!</span>
+                }
+                else
+                {
+                    <span class="text-label-sm text-outline mb-3">Almost there!</span>
+                }
+            </div>
+            <div class="w-full bg-surface-container rounded-full h-2 mb-4">
+                <div class="bg-deep-teal h-2 rounded-full" style="width: @Model.Profile.Completion.CompletionPercentage%"></div>
+            </div>
+            
+            @if (Model.Profile.Completion.MissingFields.Count > 0)
+            {
+                <p class="text-[12px] text-outline mb-4">Missing: @string.Join(", ", Model.Profile.Completion.MissingFields)</p>
+                <a asp-action="Profile" class="text-deep-teal font-bold text-label-sm flex items-center gap-1 hover:underline w-fit no-underline">
+                    Complete your profile
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+                </a>
+            }
+            else
+            {
+                <p class="text-[12px] text-outline mb-4">Your profile is ready for apartment discovery and matching.</p>
+                <a asp-action="Questionnaire" class="text-deep-teal font-bold text-label-sm flex items-center gap-1 hover:underline w-fit no-underline">
+                    Update Lifestyle Questionnaire
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+                </a>
+            }
+        </div>
+        <div class="absolute top-4 right-4 opacity-20 pointer-events-none">
+            <span class="material-symbols-outlined text-[64px]" data-icon="verified_user">verified_user</span>
+        </div>
+    </div>
+
+    <!-- KPI: Active Bookings -->
+    <div class="col-span-12 md:col-span-4 bento-card flex flex-col justify-between">
+        <div>
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-secondary-container text-deep-teal rounded-xl">
+                    <span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+                </div>
+            </div>
+            <h3 class="text-outline text-label-sm uppercase tracking-wider font-bold mb-1">Active Bookings</h3>
+            <p class="text-headline-h1 font-display-hero m-0">@Model.ActiveBookingsCount.ToString("D2")</p>
+        </div>
+        <div class="pt-4 border-t border-outline-variant flex justify-between items-center mt-4">
+            <span class="text-label-sm text-outline">Track your requests</span>
+            <a asp-action="MyBookings" class="text-deep-teal font-bold text-label-sm hover:underline no-underline">View All</a>
+        </div>
+    </div>
+
+    <!-- Unread Messages Count -->
+    <div class="col-span-12 md:col-span-4 bento-card bg-primary-container text-white flex flex-col justify-center items-center text-center p-gutter">
+        <div class="mb-4 relative">
+            <span class="material-symbols-outlined text-[48px]" data-icon="mail">mail</span>
+            @if (Model.RecentMessages.Sum(m => m.UnreadCount) > 0)
+            {
+                <div class="absolute -top-1 -right-1 w-6 h-6 bg-danger-red rounded-full flex items-center justify-center text-[12px] font-bold">
+                    @Model.RecentMessages.Sum(m => m.UnreadCount)
+                </div>
+            }
+        </div>
+        <h3 class="font-headline-h2 text-headline-h2 mb-1">
+            @if (Model.RecentMessages.Sum(m => m.UnreadCount) > 0)
+            {
+                <text>@Model.RecentMessages.Sum(m => m.UnreadCount) Unread Messages</text>
+            }
+            else
+            {
+                <text>Message Center</text>
+            }
+        </h3>
+        <p class="text-label-sm opacity-80 mb-6">Updates from landlords and admins</p>
+        <a asp-controller="Messages" asp-action="Index" class="w-full bg-white text-deep-teal py-2 rounded-lg font-bold text-label-sm hover:bg-surface-container-low transition-colors no-underline block btn-interact">Open Inbox</a>
+    </div>
+
+    <!-- Current Apartment Widget -->
+    <div class="col-span-12 lg:col-span-8 bento-card">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-h2 text-headline-h2 m-0">Current Rental</h3>
+            @if (Model.CurrentApartment?.HasAssignment == true)
+            {
+                <span class="px-3 py-1 bg-success-green/10 text-success-green text-status-chip font-status-chip rounded-full flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Active Contract
+                </span>
+            }
+            else
+            {
+                <span class="px-3 py-1 bg-surface-variant text-on-surface-variant text-status-chip font-status-chip rounded-full flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+                    Searching
+                </span>
+            }
+        </div>
+
+        @if (Model.CurrentApartment?.HasAssignment == true)
+        {
+            <div class="flex flex-col md:flex-row gap-gutter">
+                <div class="w-full md:w-1/3 h-48 rounded-xl overflow-hidden shadow-inner bg-surface-container-low flex items-center justify-center relative">
+                    @if (Model.CurrentApartment.PhotoUrls.Any())
+                    {
+                        <img src="@Url.Content(Model.CurrentApartment.PhotoUrls.First())" alt="Apartment Photo" class="w-full h-full object-cover" />
+                    }
+                    else
+                    {
+                        <span class="material-symbols-outlined text-[64px] text-outline-variant">apartment</span>
+                    }
+                </div>
+                <div class="flex-grow flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-headline-h2 font-bold mb-1">@Model.CurrentApartment.Address</h4>
+                        <p class="text-outline text-label-sm flex items-center gap-1 mb-4">
+                            <span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+                            Active until @Model.CurrentApartment.ContractEndDate.ToString("dd MMM yyyy")
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-deep-teal" data-icon="timer">timer</span>
+                                <div>
+                                    <p class="text-[10px] text-outline uppercase font-bold m-0">Remaining</p>
+                                    <p class="text-label-sm font-bold m-0">@Model.CurrentApartment.DaysRemaining days</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-stack-sm mt-6">
+                        <a asp-action="MyApartment" class="flex-grow bg-deep-teal text-white py-2 rounded-lg font-bold text-label-sm hover:opacity-90 transition-opacity text-center no-underline btn-interact">View Apartment</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="flex flex-col items-center justify-center py-8 text-center bg-surface-student border border-dashed border-outline-variant rounded-xl h-[200px]">
+                <span class="material-symbols-outlined text-[48px] text-outline-variant mb-3">house_siding</span>
+                <p class="text-label-sm font-medium text-on-surface mb-1">No active rental yet.</p>
+                <p class="text-[12px] text-outline mb-4">Search for an apartment to start your booking process.</p>
+                <a asp-action="SearchApartments" class="bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-bold text-label-sm hover:bg-surface-variant transition-colors no-underline btn-interact">Search Apartments</a>
+            </div>
+        }
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="col-span-12 lg:col-span-4 bento-card">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-h2 text-headline-h2 m-0">Recent Updates</h3>
+            <a asp-controller="Notifications" asp-action="Index" class="text-deep-teal font-bold text-label-sm hover:underline no-underline">View All</a>
+        </div>
+        <div class="flex flex-col gap-4">
+            @if (Model.RecentNotifications.Count == 0)
+            {
+                <div class="text-center py-8">
+                    <p class="text-[12px] text-outline mb-0">No recent notifications.</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var notification in Model.RecentNotifications.Take(4))
+                {
+                    <a asp-controller="Notifications" asp-action="Open" asp-route-id="@notification.NotificationId" class="flex gap-stack-md items-start p-3 hover:bg-surface-container-low rounded-xl transition-colors group no-underline text-on-surface @(notification.IsRead ? "opacity-70" : "")">
+                        <div class="w-10 h-10 rounded-full bg-surface-container-high text-deep-teal flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <p class="text-label-sm font-bold group-hover:text-deep-teal transition-colors m-0 line-clamp-1 @(notification.IsRead ? "font-medium" : "font-bold")">@notification.Title</p>
+                            <p class="text-[12px] text-outline m-0 line-clamp-1">@notification.Message</p>
+                            <span class="text-[10px] text-outline mt-1 font-medium">@notification.CreatedAt.ToLocalTime().ToString("MMM dd")</span>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Contracts & Payments Widgets -->
+    <div class="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Contracts Widget -->
+        <div class="bento-card flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-teal-50 text-deep-teal rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">description</span>
+                    </div>
+                    <h3 class="font-headline-h2 text-headline-h2 m-0">My Contracts</h3>
+                </div>
+                <a asp-action="MyContracts" class="text-deep-teal font-bold text-label-sm hover:underline no-underline">View All</a>
+            </div>
+            @if (Model.RecentContracts.Any())
+            {
+                <div class="space-y-3">
+                    @foreach (var contract in Model.RecentContracts.Take(2))
+                    {
+                        <div class="p-3 border border-outline-variant/30 rounded-xl flex justify-between items-center hover:bg-surface-container-low transition-colors">
+                            <div>
+                                <p class="text-sm font-bold text-on-surface m-0">@contract.ApartmentAddress</p>
+                                <p class="text-xs text-on-surface-variant m-0">Status: <span class="font-medium">@contract.Status</span></p>
+                            </div>
+                            <a asp-action="ContractDetails" asp-route-id="@contract.ContractId" class="text-deep-teal hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-6 bg-surface-student rounded-xl border border-dashed border-outline-variant/50">
+                    <p class="text-xs text-on-surface-variant m-0">No active contracts found.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Payments Widget -->
+        <div class="bento-card flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-success-green/10 text-success-green rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined">payments</span>
+                    </div>
+                    <h3 class="font-headline-h2 text-headline-h2 m-0">My Payments</h3>
+                </div>
+                <a asp-action="MyPayments" class="text-deep-teal font-bold text-label-sm hover:underline no-underline">View All</a>
+            </div>
+            @if (Model.RecentPayments.Any())
+            {
+                <div class="space-y-3">
+                    @foreach (var payment in Model.RecentPayments.Take(2))
+                    {
+                        <div class="p-3 border border-outline-variant/30 rounded-xl flex justify-between items-center hover:bg-surface-container-low transition-colors">
+                            <div>
+                                <p class="text-sm font-bold text-on-surface m-0">@string.Format("{0:C0}", payment.Amount)</p>
+                                <p class="text-xs text-on-surface-variant m-0">@payment.PaymentDate?.ToString("MMM dd, yyyy")</p>
+                            </div>
+                            <div>
+                                @if (payment.Status == "Paid")
+                                {
+                                    <span class="px-2 py-1 bg-success-green/10 text-success-green rounded-md text-[10px] font-bold">@payment.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="px-2 py-1 bg-warning-amber/10 text-warning-amber rounded-md text-[10px] font-bold">@payment.Status</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-6 bg-surface-student rounded-xl border border-dashed border-outline-variant/50">
+                    <p class="text-xs text-on-surface-variant m-0">No recent payments found.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Quick Access Sidebar / Section -->
+    <div class="col-span-12 bento-card">
+        <h3 class="font-headline-h2 text-headline-h2 mb-stack-lg">Quick Links</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+            <a asp-action="Profile" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="person">person</span>
+                </div>
+                <span class="text-label-sm font-bold">Profile</span>
+            </a>
+            <a asp-action="SearchApartments" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="search">search</span>
+                </div>
+                <span class="text-label-sm font-bold">Search</span>
+            </a>
+            <a asp-action="MyBookings" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                </div>
+                <span class="text-label-sm font-bold">Bookings</span>
+            </a>
+            <a asp-action="MyContracts" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="description">description</span>
+                </div>
+                <span class="text-label-sm font-bold">Contracts</span>
+            </a>
+            <a asp-action="MyPayments" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="payments">payments</span>
+                </div>
+                <span class="text-label-sm font-bold">Payments</span>
+            </a>
+            <a asp-action="MyApartment" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="home_work">home_work</span>
+                </div>
+                <span class="text-label-sm font-bold">My Apartment</span>
+            </a>
+            <a asp-action="FindRoommates" class="flex flex-col items-center gap-stack-sm p-4 rounded-xl hover:bg-surface-container-high transition-all text-center group no-underline text-on-surface">
+                <div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-full text-deep-teal group-hover:bg-deep-teal group-hover:text-white transition-colors shadow-sm">
+                    <span class="material-symbols-outlined" data-icon="diversity_3">diversity_3</span>
+                </div>
+                <span class="text-label-sm font-bold">Matching</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Featured Roommate Matching (Prominent CTA) -->
+    <div class="col-span-12 bento-card bg-sand-light relative overflow-hidden flex flex-col md:flex-row items-stretch p-0">
+        <div class="w-full md:w-1/2 min-h-[200px] overflow-hidden bg-primary-fixed-dim/30 flex items-center justify-center">
+            <!-- Simulated image space -->
+            <span class="material-symbols-outlined text-[120px] md:text-[180px] text-deep-teal/30">diversity_1</span>
+        </div>
+        <div class="w-full md:w-1/2 p-10 relative z-10">
+            <h3 class="text-display-hero font-display-hero text-deep-teal mb-stack-sm leading-tight m-0">Find Your Perfect Roommate Match</h3>
+            <p class="text-body-lg text-slate-gray mb-8">Our intelligent algorithm pairs you with students who share your lifestyle, habits, and interests. Take the stress out of shared living.</p>
+            <div class="flex flex-wrap gap-4">
+                <a asp-action="FindRoommates" class="bg-deep-teal text-white px-gutter py-4 rounded-xl font-bold text-body-base hover:shadow-lg transition-all active:scale-95 no-underline inline-block">Get Started Now</a>
+                <a asp-action="Questionnaire" class="bg-white border-2 border-deep-teal text-deep-teal px-gutter py-4 rounded-xl font-bold text-body-base hover:bg-deep-teal/5 transition-all no-underline inline-block">Update Preferences</a>
+            </div>
+        </div>
+        <!-- Abstract Decorative Element -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed opacity-20 rounded-bl-full"></div>
+    </div>
+
+    <!-- Newest Apartments -->
+    <div class="col-span-12 bento-card">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h3 class="font-headline-h2 text-headline-h2 m-0">Newest Apartments</h3>
+                <p class="text-[12px] text-outline m-0">Approved apartments currently visible to students.</p>
+            </div>
+            <a asp-action="SearchApartments" class="bg-surface-container-high text-on-surface px-4 py-2 rounded-lg font-bold text-[12px] hover:bg-surface-variant transition-colors no-underline">View All</a>
+        </div>
+        
+        @if (Model.FeaturedApartments.Count == 0)
+        {
+            <div class="flex flex-col items-center justify-center py-8 text-center bg-surface-student border border-dashed border-outline-variant rounded-xl h-[150px]">
+                <p class="text-label-sm font-medium text-on-surface m-0">No approved apartments are available yet.</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                @foreach (var apartment in Model.FeaturedApartments)
+                {
+                    <partial name="_ApartmentSearchResultCard" model="apartment" />
+                }
+            </div>
+        }
+    </div>
+
+</div>

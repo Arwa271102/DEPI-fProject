@@ -1,0 +1,244 @@
+@model Sakanak.Web.Models.ViewModels.Account.SettingsViewModel
+@{
+    ViewData["Title"] = "Account Settings";
+    Layout = "_TailwindAuthLayout";
+}
+
+<!-- Main Container -->
+<div class="min-h-screen bg-surface-student py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    
+    <!-- Abstract Background Elements -->
+    <div class="absolute top-0 left-0 w-72 h-72 bg-deep-teal/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-primary-container/5 rounded-full translate-x-1/3 translate-y-1/3 blur-3xl"></div>
+    
+    <div class="max-w-4xl mx-auto relative z-10">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-deep-teal text-white rounded-full flex items-center justify-center shadow-lg">
+                    <span class="material-symbols-outlined text-2xl">settings</span>
+                </div>
+                <h2 class="text-3xl font-headline-h2 text-deep-teal font-bold">Account Settings</h2>
+            </div>
+            @if (User.IsInRole("Student"))
+            {
+                <a asp-controller="Student" asp-action="Dashboard" class="flex items-center gap-2 bg-white border border-outline-variant/50 text-deep-teal px-4 py-2 rounded-lg font-semibold text-sm hover:bg-surface-container-low transition-colors shadow-sm no-underline">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+                </a>
+            }
+            else if (User.IsInRole("Landlord"))
+            {
+                <a asp-controller="Landlord" asp-action="Dashboard" class="flex items-center gap-2 bg-white border border-outline-variant/50 text-deep-teal px-4 py-2 rounded-lg font-semibold text-sm hover:bg-surface-container-low transition-colors shadow-sm no-underline">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+                </a>
+            }
+            else if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Admin" asp-action="Dashboard" class="flex items-center gap-2 bg-white border border-outline-variant/50 text-deep-teal px-4 py-2 rounded-lg font-semibold text-sm hover:bg-surface-container-low transition-colors shadow-sm no-underline">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+                </a>
+            }
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="bg-success-green/10 border border-success-green/20 text-success-green px-4 py-3 rounded-lg relative mb-6 flex items-center gap-3 animate-slide-up" role="alert">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span class="block sm:inline font-medium">@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        <div asp-validation-summary="ModelOnly" class="text-error mb-6 text-sm"></div>
+
+        <div class="space-y-6">
+            <!-- SECTION 1: PROFILE INFORMATION -->
+            <div class="bg-surface rounded-xl shadow-[0_4px_20px_-10px_rgba(13,92,99,0.1)] border border-outline-variant/30 overflow-hidden animate-slide-up" style="animation-delay: 0.1s;">
+                <div class="bg-surface-variant/50 px-6 py-4 border-b border-outline-variant/30 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">badge</span>
+                    <h5 class="text-lg font-bold text-deep-teal m-0">Profile Information</h5>
+                </div>
+                <div class="p-6">
+                    <form asp-action="UpdateProfile" method="post" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label asp-for="Profile.Name" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Profile.Name" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Enter your full name" />
+                                <span asp-validation-for="Profile.Name" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Profile.Username" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Profile.Username" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Choose a username" />
+                                <span asp-validation-for="Profile.Username" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Profile.PhoneNumber" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Profile.PhoneNumber" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Your phone number" />
+                                <span asp-validation-for="Profile.PhoneNumber" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Profile.Age" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Profile.Age" type="number" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" />
+                                <span asp-validation-for="Profile.Age" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="bg-deep-teal text-white py-2.5 px-6 rounded-lg hover:bg-deep-teal/90 transition-all font-medium focus:ring-4 focus:ring-deep-teal/20 outline-none shadow-sm">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CHANGE EMAIL -->
+            <div class="bg-surface rounded-xl shadow-[0_4px_20px_-10px_rgba(13,92,99,0.1)] border border-outline-variant/30 overflow-hidden animate-slide-up" style="animation-delay: 0.2s;">
+                <div class="bg-surface-variant/50 px-6 py-4 border-b border-outline-variant/30 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">mark_email_unread</span>
+                    <h5 class="text-lg font-bold text-deep-teal m-0">Change Email</h5>
+                </div>
+                <div class="p-6">
+                    <div class="bg-surface-variant/50 rounded-lg p-4 mb-4 border border-outline-variant/30">
+                        <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-1">Current Email</p>
+                        <p class="font-bold text-on-surface">@Model.Profile.Email</p>
+                    </div>
+                    <form asp-action="RequestEmailChange" method="post" class="space-y-4">
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <div class="flex-grow w-full">
+                                <label asp-for="Email.NewEmail" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Email.NewEmail" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Enter new email address" />
+                                <span asp-validation-for="Email.NewEmail" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div class="w-full md:w-auto">
+                                <button type="submit" class="w-full md:w-auto border-2 border-deep-teal text-deep-teal py-2.5 px-6 rounded-lg hover:bg-deep-teal/5 transition-all font-medium focus:ring-4 focus:ring-deep-teal/20 outline-none">Update Email</button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-2">
+                            <span class="material-symbols-outlined text-[16px]">info</span>
+                            A confirmation link will be sent to your new email address.
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SECTION 3: CHANGE PASSWORD -->
+            <div class="bg-surface rounded-xl shadow-[0_4px_20px_-10px_rgba(13,92,99,0.1)] border border-outline-variant/30 overflow-hidden animate-slide-up" style="animation-delay: 0.3s;">
+                <div class="bg-surface-variant/50 px-6 py-4 border-b border-outline-variant/30 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">lock_reset</span>
+                    <h5 class="text-lg font-bold text-deep-teal m-0">Change Password</h5>
+                </div>
+                <div class="p-6">
+                    <form asp-action="ChangePassword" method="post" class="space-y-4">
+                        <div>
+                            <label asp-for="Password.OldPassword" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                            <input asp-for="Password.OldPassword" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Enter current password" />
+                            <span asp-validation-for="Password.OldPassword" class="text-error text-xs mt-1 block"></span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label asp-for="Password.NewPassword" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Password.NewPassword" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="New password" />
+                                <span asp-validation-for="Password.NewPassword" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div>
+                                <label asp-for="Password.ConfirmPassword" class="block text-sm font-medium text-on-surface-variant mb-1"></label>
+                                <input asp-for="Password.ConfirmPassword" class="w-full p-3 rounded-lg border border-outline-variant bg-surface-variant focus:ring-2 focus:ring-deep-teal/20 focus:border-deep-teal transition-all outline-none" placeholder="Confirm new password" />
+                                <span asp-validation-for="Password.ConfirmPassword" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" class="bg-on-surface text-surface py-2.5 px-6 rounded-lg hover:bg-on-surface/90 transition-all font-medium focus:ring-4 focus:ring-on-surface/20 outline-none shadow-sm">Change Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SECTION 4: SECURITY / 2FA -->
+            <div class="bg-surface rounded-xl shadow-[0_4px_20px_-10px_rgba(13,92,99,0.1)] border border-outline-variant/30 overflow-hidden animate-slide-up" style="animation-delay: 0.4s;">
+                <div class="bg-surface-variant/50 px-6 py-4 border-b border-outline-variant/30 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">verified_user</span>
+                    <h5 class="text-lg font-bold text-deep-teal m-0">Two-Factor Authentication</h5>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <p class="text-on-surface-variant text-sm mb-3">
+                                Add an extra layer of security to your account by requiring an OTP sent to your email.
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Status:</span>
+                                @if (Model.IsTwoFactorEnabled)
+                                {
+                                    <span class="inline-flex items-center gap-1 bg-success-green/10 text-success-green border border-success-green/20 px-3 py-1 rounded-full text-sm font-medium">
+                                        <span class="material-symbols-outlined text-[16px]">check_circle</span> Enabled
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1 bg-outline-variant/20 text-on-surface-variant border border-outline-variant/30 px-3 py-1 rounded-full text-sm font-medium">
+                                        <span class="material-symbols-outlined text-[16px]">cancel</span> Disabled
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            @if (Model.IsTwoFactorEnabled)
+                            {
+                                <a asp-action="Disable2FA" asp-controller="Account" class="inline-block border-2 border-error text-error py-2.5 px-6 rounded-lg hover:bg-error/5 transition-all font-medium focus:ring-4 focus:ring-error/20 outline-none" onclick="return confirm('Are you sure you want to disable 2FA?');">
+                                    Disable 2FA
+                                </a>
+                            }
+                            else
+                            {
+                                <form asp-action="Enable2FA" asp-controller="Account" method="post">
+                                    <button type="submit" class="bg-deep-teal text-white py-2.5 px-6 rounded-lg hover:bg-deep-teal/90 transition-all font-medium focus:ring-4 focus:ring-deep-teal/20 outline-none shadow-sm">
+                                        Enable 2FA
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: ACCOUNT DEACTIVATION (SOFT DELETE) -->
+            <div class="bg-surface rounded-xl shadow-[0_4px_20px_-10px_rgba(13,92,99,0.1)] border border-error/30 overflow-hidden animate-slide-up relative" style="animation-delay: 0.5s;">
+                <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-error"></div>
+                <div class="bg-error/5 px-6 py-4 border-b border-error/20 flex items-center gap-2 pl-8">
+                    <span class="material-symbols-outlined text-error">person_off</span>
+                    <h5 class="text-lg font-bold text-error m-0">Deactivate Account</h5>
+                </div>
+                <div class="p-6 pl-8">
+                    <div class="bg-error/10 border border-error/20 rounded-lg p-4 mb-6 flex items-start gap-3">
+                        <span class="material-symbols-outlined text-error mt-0.5">warning</span>
+                        <div>
+                            <h6 class="font-bold text-error mb-1">Warning: Account Deactivation</h6>
+                            <p class="text-sm text-error/80 m-0">
+                                Deactivating your account will hide your profile and properties from other users. 
+                                You will be logged out immediately and will not be able to log back in unless you contact support.
+                            </p>
+                        </div>
+                    </div>
+
+                    <form asp-action="DeactivateAccount" method="post" onsubmit="return confirm('Are you absolutely sure? This will deactivate your account.');">
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <div class="flex-grow w-full">
+                                <label asp-for="Deactivation.Password" class="block text-sm font-medium text-on-surface-variant mb-1">Confirm with your password</label>
+                                <input asp-for="Deactivation.Password" class="w-full p-3 rounded-lg border border-error/30 bg-surface focus:ring-2 focus:ring-error/20 focus:border-error transition-all outline-none" placeholder="Enter password to confirm" />
+                                <span asp-validation-for="Deactivation.Password" class="text-error text-xs mt-1 block"></span>
+                            </div>
+                            <div class="w-full md:w-auto">
+                                <button type="submit" class="w-full md:w-auto bg-error text-white py-2.5 px-6 rounded-lg hover:bg-error/90 transition-all font-medium focus:ring-4 focus:ring-error/20 outline-none shadow-sm flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-[18px]">delete_forever</span> Deactivate Now
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

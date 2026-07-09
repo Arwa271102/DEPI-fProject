@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "xzBzn6Zmpuo=",
+  "success": true,
+  "projectFilePath": "E:\\#1 University\\DEPI\\Depi Final Project\\Sakanak\\Sakanak.Domain\\Sakanak.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\legion\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.28\\microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
+    "C:\\Users\\legion\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.28\\microsoft.windowsdesktop.app.ref.8.0.28.nupkg.sha512",
+    "C:\\Users\\legion\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.28\\microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,184 @@
+@model Sakanak.Web.Models.ViewModels.Student.StudentProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "_TailwindStudentLayout";
+}
+
+<div class="animate-slide-up max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-stack-lg">
+        <a asp-action="Dashboard" class="flex items-center gap-1 text-on-surface-variant hover:text-deep-teal mb-2 transition-colors no-underline">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            <span class="text-label-sm font-label-sm">Back to Dashboard</span>
+        </a>
+        <h2 class="text-headline-h1 font-headline-h1 text-on-surface m-0 mb-1">Academic Profile</h2>
+        <p class="text-body-lg font-body-lg text-on-surface-variant m-0">Keep your university and contact details current for discovery and roommate matching.</p>
+    </div>
+
+    <form asp-action="Profile" method="post" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        @Html.AntiForgeryToken()
+        
+        <!-- Left Column: Profile Card -->
+        <div class="lg:col-span-4 space-y-gutter">
+            
+            <div class="bg-surface-student rounded-xl p-card-padding border border-outline-variant shadow-sm text-center">
+                <div class="relative w-32 h-32 mx-auto mb-stack-md">
+                    <div class="w-full h-full rounded-full border-4 border-primary-container p-1">
+                        <div class="w-full h-full rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center text-slate-400">
+                            @if (!string.IsNullOrWhiteSpace(Model.ProfilePhotoUrl))
+                            {
+                                <img src="@Url.Content(Model.ProfilePhotoUrl)" alt="Profile photo" class="w-full h-full object-cover" />
+                            }
+                            else
+                            {
+                                <span class="material-symbols-outlined text-[64px]">person</span>
+                            }
+                        </div>
+                    </div>
+                    
+                    <label for="ProfilePhoto" class="absolute bottom-0 right-0 w-10 h-10 bg-deep-teal text-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer" title="Upload Photo">
+                        <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+                    </label>
+                    <input asp-for="ProfilePhoto" type="file" accept=".jpg,.jpeg,.png" class="hidden" id="ProfilePhoto" onchange="previewImage(this)" />
+                </div>
+                
+                <h3 class="text-headline-h2 font-headline-h2 text-on-surface m-0">@Model.Name</h3>
+                <p class="text-label-sm text-on-surface-variant m-0 mb-stack-md">Student</p>
+                
+                <div class="bg-surface-container-low rounded-lg p-3 mb-stack-md">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-status-chip font-status-chip text-deep-teal uppercase tracking-widest text-[10px]">Profile Completion</span>
+                        <span class="text-status-chip font-bold text-deep-teal">@Model.CompletionPercentage%</span>
+                    </div>
+                    <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                        <div class="bg-deep-teal h-full rounded-full transition-all duration-1000" style="width: @Model.CompletionPercentage%"></div>
+                    </div>
+                    @if (Model.MissingFields.Count > 0)
+                    {
+                        <p class="text-[10px] text-slate-500 text-left mt-2 m-0 leading-tight">Missing: @string.Join(", ", Model.MissingFields)</p>
+                    }
+                </div>
+                
+                @if (Model.CompletionStatus == "Complete")
+                {
+                    <div class="flex items-center justify-center gap-2 text-success-green bg-success-green/10 py-2 rounded-lg">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        <span class="text-status-chip font-bold">Profile Complete</span>
+                    </div>
+                }
+                
+                @if (!string.IsNullOrWhiteSpace(Model.ProfilePhotoUrl))
+                {
+                    <button type="submit" formaction="@Url.Action("DeleteProfilePhoto")" formmethod="post" class="mt-4 w-full py-2 border border-danger-red text-danger-red rounded-lg text-sm font-bold hover:bg-red-50 transition-colors btn-interact">
+                        Remove Photo
+                    </button>
+                }
+            </div>
+            
+            <!-- Roommate Matching Status -->
+            <div class="bg-primary-container text-on-primary-container rounded-xl p-card-padding shadow-sm relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+                        <span class="text-label-sm font-bold uppercase tracking-wider text-[11px]">Matching Questionnaire</span>
+                    </div>
+                    <p class="text-label-sm leading-relaxed mb-4 m-0">Complete your lifestyle preferences to find highly compatible roommates.</p>
+                    <a asp-action="Questionnaire" class="block text-center w-full py-2 bg-on-primary-container text-primary-container rounded-lg font-bold text-status-chip hover:bg-white transition-colors no-underline btn-interact">
+                        UPDATE LIFESTYLE
+                    </a>
+                </div>
+                <div class="absolute -right-4 -bottom-4 opacity-10">
+                    <span class="material-symbols-outlined text-[120px]">diversity_3</span>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Right Column: Details Forms -->
+        <div class="lg:col-span-8 space-y-gutter">
+            
+            <div asp-validation-summary="ModelOnly" class="bg-danger-red/10 border border-danger-red/20 text-danger-red p-4 rounded-xl text-sm font-medium"></div>
+            
+            <!-- Personal Details Card -->
+            <div class="bg-surface-student rounded-xl p-card-padding border border-outline-variant shadow-sm">
+                <div class="flex items-center gap-3 mb-stack-lg border-b border-outline-variant pb-4">
+                    <span class="material-symbols-outlined text-deep-teal">person</span>
+                    <h3 class="text-headline-h2 font-headline-h2 text-on-surface m-0">Personal Details</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+                    <div class="space-y-2">
+                        <label asp-for="Name" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="Name" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:outline-none focus:border-deep-teal focus:ring-2 focus:ring-deep-teal/20 transition-all" />
+                        <span asp-validation-for="Name" class="text-danger-red text-xs font-medium"></span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label asp-for="Email" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="Email" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:outline-none focus:border-deep-teal focus:ring-2 focus:ring-deep-teal/20 transition-all" />
+                        <span asp-validation-for="Email" class="text-danger-red text-xs font-medium"></span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label asp-for="PhoneNumber" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="PhoneNumber" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:outline-none focus:border-deep-teal focus:ring-2 focus:ring-deep-teal/20 transition-all" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger-red text-xs font-medium"></span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label asp-for="Age" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="Age" class="w-full bg-slate-100 border border-outline-variant rounded-lg px-4 py-3 text-body-base text-slate-500 cursor-not-allowed" disabled />
+                        <p class="text-[10px] text-slate-400 m-0">Age is derived from your birthdate.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Academic Information Card -->
+            <div class="bg-surface-student rounded-xl p-card-padding border border-outline-variant shadow-sm">
+                <div class="flex items-center gap-3 mb-stack-lg border-b border-outline-variant pb-4">
+                    <span class="material-symbols-outlined text-deep-teal">school</span>
+                    <h3 class="text-headline-h2 font-headline-h2 text-on-surface m-0">Academic Information</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
+                    <div class="space-y-2">
+                        <label asp-for="University" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="University" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:outline-none focus:border-deep-teal focus:ring-2 focus:ring-deep-teal/20 transition-all" />
+                        <span asp-validation-for="University" class="text-danger-red text-xs font-medium"></span>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label asp-for="Faculty" class="text-label-sm font-semibold text-on-surface-variant block m-0"></label>
+                        <input asp-for="Faculty" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-3 text-body-base focus:outline-none focus:border-deep-teal focus:ring-2 focus:ring-deep-teal/20 transition-all" />
+                        <span asp-validation-for="Faculty" class="text-danger-red text-xs font-medium"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Footer -->
+            <div class="flex justify-end pt-4">
+                <button type="submit" class="w-full sm:w-auto px-10 py-3 bg-deep-teal text-white rounded-lg font-bold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 btn-interact">
+                    <span class="material-symbols-outlined">save</span>
+                    <span>Save Profile Changes</span>
+                </button>
+            </div>
+            
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var container = input.previousElementSibling.previousElementSibling.querySelector('.overflow-hidden');
+                    container.innerHTML = '<img src="' + e.target.result + '" alt="Profile photo" class="w-full h-full object-cover" />';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

@@ -1,0 +1,87 @@
+@model Sakanak.Web.Models.ViewModels.Account.VerifyCodeViewModel
+@{
+    ViewData["Title"] = "Verify Two-Factor Authentication";
+    Layout = "_TailwindAuthLayout";
+}
+
+<main class="flex-grow flex items-center justify-center relative overflow-hidden pt-12 px-4">
+    <!-- Atmospheric Background Elements -->
+    <div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-deep-teal/5 rounded-full blur-[100px] pointer-events-none"></div>
+    
+    <div class="w-full max-w-lg z-10">
+        <!-- Central Card (Student Focused Style) -->
+        <div class="bg-surface-student rounded-xl shadow-[0_10px_40px_rgba(13,92,99,0.08)] p-stack-lg md:p-12 text-center relative overflow-hidden border border-slate-100">
+            
+            <!-- Large Teal Mail/Check Icon -->
+            <div class="mb-stack-lg relative inline-block">
+                <div class="w-24 h-24 bg-primary-container/10 rounded-full flex items-center justify-center text-deep-teal animate-float">
+                    <span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1;">lock_clock</span>
+                </div>
+                <!-- Small decorative pulse effect -->
+                <span class="absolute top-0 right-0 block h-6 w-6 rounded-full bg-success-green ring-4 ring-white animate-pulse"></span>
+            </div>
+            
+            <!-- Messaging -->
+            <h1 class="font-headline-h1 text-headline-h1 text-deep-teal mb-stack-sm">Two-Step Verification</h1>
+            <p class="font-body-base text-body-base text-slate-gray mb-stack-md max-w-md mx-auto leading-relaxed">
+                Enter the 6-digit code sent to your email to verify your identity.
+            </p>
+
+            <form asp-action="VerifyCode" method="post" class="mt-6 space-y-4">
+                <input type="hidden" asp-for="UserId" />
+                <input type="hidden" asp-for="ReturnUrl" />
+                
+                <div asp-validation-summary="ModelOnly" class="text-danger-red text-sm font-medium"></div>
+                
+                <div class="mb-4">
+                    <label asp-for="Code" class="block font-label-sm text-label-sm text-slate-gray font-bold mb-2 uppercase tracking-wider">Authentication Code</label>
+                    <input asp-for="Code" class="w-full text-center tracking-[0.5em] text-3xl font-bold py-3 bg-white border-2 border-outline-variant/50 rounded-lg focus:ring-4 focus:ring-deep-teal/20 focus:border-deep-teal outline-none transition-all text-deep-teal placeholder:text-slate-300 placeholder:tracking-normal placeholder:font-normal" placeholder="------" maxlength="6" autocomplete="off" />
+                    <span asp-validation-for="Code" class="text-danger-red text-xs mt-2 block font-medium"></span>
+                </div>
+                
+                <button type="submit" class="w-full bg-deep-teal text-white font-manrope font-bold py-4 px-8 rounded-lg shadow-lg shadow-deep-teal/20 hover:bg-[#0a4d53] hover:scale-[1.02] active:scale-95 transition-all duration-150 flex items-center justify-center gap-2 mt-6">
+                    <span class="material-symbols-outlined">verified</span>
+                    Verify Identity
+                </button>
+            </form>
+
+            <!-- Support / Back Link -->
+            <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-4">
+                <a href="javascript:history.back()" class="font-label-sm text-label-sm text-slate-500 hover:text-deep-teal transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                    Didn't receive the code? Go back and try again
+                </a>
+            </div>
+            
+            <!-- Visual Detail: Steps Indicator (Contextual to Sakanak Flow) -->
+            <div class="mt-12 flex justify-center items-center gap-4">
+                <div class="flex flex-col items-center gap-2 opacity-100">
+                    <div class="w-8 h-8 rounded-full bg-success-green flex items-center justify-center text-white text-[10px]">
+                        <span class="material-symbols-outlined text-sm">check</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-gray uppercase tracking-wider">Login</span>
+                </div>
+                <div class="w-12 h-[2px] bg-success-green rounded-full"></div>
+                <div class="flex flex-col items-center gap-2 opacity-100">
+                    <div class="w-8 h-8 rounded-full bg-deep-teal flex items-center justify-center text-white text-[10px] ring-4 ring-deep-teal/10">
+                        2
+                    </div>
+                    <span class="text-[10px] font-bold text-deep-teal uppercase tracking-wider">Verify</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Supporting Illustration (Abstract) -->
+        <div class="mt-12 text-center">
+            <p class="font-label-sm text-label-sm text-slate-500 flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[16px]">security</span>
+                Securing your student housing journey
+            </p>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

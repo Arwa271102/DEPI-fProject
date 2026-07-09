@@ -1,0 +1,79 @@
+@model Sakanak.BLL.DTOs.Payment.PaymentDetailsDto
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="max-w-3xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+        <div>
+            <p class="text-on-surface-variant text-label-caps uppercase mb-1">Payment</p>
+            <h2 class="font-display-lg text-display-lg text-on-surface m-0">Payment #@Model.PaymentId</h2>
+        </div>
+        <div class="flex items-center gap-4">
+            @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+            <a asp-action="Payments" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+                <span class="font-title-sm text-sm">Back</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-8 shadow-sm">
+        <h3 class="font-title-sm text-primary mb-6 flex items-center gap-2 m-0 border-b border-outline-variant pb-2">
+            <span class="material-symbols-outlined">receipt_long</span>
+            Payment Receipt
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Student</p>
+                <p class="font-body-md text-on-surface font-medium m-0">@Model.StudentName</p>
+                <p class="text-xs text-on-surface-variant m-0">@Model.StudentEmail</p>
+            </div>
+            
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Apartment</p>
+                <p class="font-body-md text-on-surface font-medium m-0">@Model.ApartmentAddress</p>
+                <p class="text-xs text-on-surface-variant m-0">@Model.ApartmentCity</p>
+            </div>
+            
+            <div class="md:col-span-2 border-t border-outline-variant pt-4 mt-2"></div>
+            
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Contract Period</p>
+                <p class="font-data-mono text-sm text-on-surface m-0">@Model.ContractStartDate.ToString("dd MMM yyyy") <span class="mx-1 text-outline-variant">-</span> @Model.ContractEndDate.ToString("dd MMM yyyy")</p>
+            </div>
+            
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Due Date</p>
+                <p class="font-data-mono text-sm text-on-surface m-0">@Model.DueDate.ToString("dd MMM yyyy")</p>
+            </div>
+            
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Monthly Rate</p>
+                <p class="font-data-mono text-sm text-on-surface m-0">@Model.MonthlyRate.ToString("C")</p>
+            </div>
+            
+            <div>
+                <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Billing Months</p>
+                <p class="font-body-md text-on-surface m-0">@Model.BillingMonths</p>
+            </div>
+            
+            <div class="md:col-span-2 bg-surface-container-low p-4 rounded-lg flex justify-between items-center mt-2 border border-outline-variant border-opacity-50">
+                <p class="text-label-caps text-on-surface-variant uppercase m-0">Total Amount</p>
+                <p class="font-data-mono text-2xl font-bold text-primary m-0">@Model.Amount.ToString("C")</p>
+            </div>
+            
+            <div class="md:col-span-2 border-t border-outline-variant pt-4 mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Paid At</p>
+                    <p class="font-data-mono text-sm text-on-surface m-0">@(Model.PaidAt?.ToString("dd MMM yyyy HH:mm") ?? "-")</p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Stripe Payment Intent</p>
+                    <p class="font-data-mono text-xs text-on-surface-variant m-0 break-all">@(Model.StripePaymentIntentId ?? "-")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

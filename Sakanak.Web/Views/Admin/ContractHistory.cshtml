@@ -1,0 +1,65 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.BLL.DTOs.Common.PagedResult<Sakanak.BLL.DTOs.Contract.ContractDto>
+@{
+    ViewData["Title"] = "Contract History";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Audit Trail</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">Contract History</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">Full history of all contracts — @Model.TotalCount total.</p>
+    </div>
+    <a asp-action="Dashboard" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+    </a>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm animate-slide-up" style="animation-delay: 0.1s">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+        <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">History List</h3>
+    </div>
+    <div class="overflow-x-auto">
+        @if (Model.Items.Count == 0)
+        {
+            <div class="p-8 text-center text-slate-500">
+                <span class="material-symbols-outlined text-4xl mb-2 opacity-50">history</span>
+                <p class="m-0">No reviewed contracts yet.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold">Student</th>
+                        <th class="px-6 py-3 font-semibold">Apartment</th>
+                        <th class="px-6 py-3 font-semibold">Decision</th>
+                        <th class="px-6 py-3 font-semibold">Reviewed</th>
+                        <th class="px-6 py-3 font-semibold">Reason</th>
+                        <th class="px-6 py-3 font-semibold text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                @foreach (var contract in Model.Items)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-on-surface">@contract.StudentName</td>
+                        <td class="px-6 py-4 text-slate-600 line-clamp-1">@contract.ApartmentAddress</td>
+                        <td class="px-6 py-4">@await Html.PartialAsync("_StatusBadgePartial", contract.Status)</td>
+                        <td class="px-6 py-4 text-slate-600 text-xs">@(contract.ReviewedAt?.ToLocalTime().ToString("dd MMM yyyy") ?? "—")</td>
+                        <td class="px-6 py-4 text-slate-500 text-xs italic">
+                            @(contract.Status == ContractStatus.Cancelled.ToString() ? (string.IsNullOrWhiteSpace(contract.CancellationReason) ? "—" : contract.CancellationReason) : (string.IsNullOrWhiteSpace(contract.RejectionReason) ? "—" : contract.RejectionReason))
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <a asp-action="ReviewContract" asp-route-id="@contract.ContractId" class="text-deep-teal bg-deep-teal/10 px-4 py-2 rounded-lg text-sm font-bold no-underline hover:bg-deep-teal/20 transition-colors inline-block">Open</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

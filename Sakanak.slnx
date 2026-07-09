@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Sakanak.BLL/Sakanak.BLL.csproj" Id="d837f428-a49f-49ad-8c85-c812812bc7e8" />
+  <Project Path="Sakanak.DAL/Sakanak.DAL.csproj" />
+  <Project Path="Sakanak.Domain/Sakanak.Domain.csproj" />
+  <Project Path="Sakanak.Web/Sakanak.Web.csproj" Id="9fe27fc3-8f45-4dfb-96a5-c19728904ffd" />
+</Solution>

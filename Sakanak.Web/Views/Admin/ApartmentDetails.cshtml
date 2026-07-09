@@ -1,0 +1,173 @@
+@model Sakanak.Web.Models.ViewModels.Admin.AdminApartmentDetailsViewModel
+@{
+    ViewData["Title"] = "Apartment Details";
+    var isActive = Model.IsActive;
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Apartment Moderation</p>
+        <div class="flex items-center gap-3">
+            <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">@Model.Address</h2>
+            @await Html.PartialAsync("_StatusBadgePartial", Model.IsActive ? "Active" : "Inactive")
+        </div>
+        <p class="text-slate-500 font-body-base m-0 mt-2">@Model.City</p>
+    </div>
+    <div class="flex gap-2">
+        <a asp-action="Apartments" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back
+        </a>
+        @if (isActive)
+        {
+            <button type="button" onclick="document.getElementById('suspendModal').classList.remove('hidden'); document.getElementById('suspendModal').classList.add('flex');" class="bg-danger-red text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity shadow-sm border-0 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">gpp_bad</span> Suspend
+            </button>
+        }
+        else
+        {
+            <form asp-action="ReactivateApartment" asp-route-id="@Model.ApartmentId" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="bg-success-green text-white px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity shadow-sm border-0 cursor-pointer">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span> Reactivate
+                </button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="lg:col-span-2 space-y-8">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Apartment Details</h3>
+                @await Html.PartialAsync("_StatusBadgePartial", Model.LatestRequestStatus)
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">Price Per Month</p>
+                        <p class="font-black text-xl text-deep-teal m-0">@Model.PricePerMonth.ToString("C0")</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-1">Total Seats</p>
+                        <p class="font-semibold text-lg text-on-surface m-0">@Model.TotalSeats</p>
+                    </div>
+                    
+                    <div class="sm:col-span-2 mt-2">
+                        <p class="text-xs font-bold text-slate-500 mb-2">Amenities</p>
+                        <div class="flex flex-wrap gap-2">
+                            @if (Model.Amenities.Count == 0)
+                            {
+                                <span class="text-sm text-slate-500">No amenities listed</span>
+                            }
+                            else
+                            {
+                                @foreach (var amenity in Model.Amenities)
+                                {
+                                    <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs font-bold border border-slate-200">@amenity</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                    
+                    @if (!string.IsNullOrWhiteSpace(Model.VirtualTourUrl))
+                    {
+                        <div class="sm:col-span-2 mt-2">
+                            <p class="text-xs font-bold text-slate-500 mb-1">Virtual Tour</p>
+                            <a href="@Model.VirtualTourUrl" target="_blank" rel="noopener noreferrer" class="text-deep-teal font-semibold text-sm hover:underline flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px]">360</span>
+                                View Virtual Tour
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Photos</h3>
+            </div>
+            <div class="p-6">
+                @await Html.PartialAsync("_ApartmentPhotoGallery", Model.Photos.Select(p => p.Url).ToList())
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-1">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm sticky top-24">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Landlord Information</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-12 h-12 bg-deep-teal/10 rounded-full flex items-center justify-center text-deep-teal font-bold text-xl">
+                        @Model.LandlordName.Substring(0, 1)
+                    </div>
+                    <div>
+                        <p class="font-bold text-on-surface m-0">@Model.LandlordName</p>
+                        <p class="text-xs text-slate-500 m-0">Property Owner</p>
+                    </div>
+                </div>
+                
+                <hr class="border-t border-slate-100" />
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Email</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.LandlordEmail</p>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Phone</p>
+                    <p class="font-semibold text-on-surface m-0">@(string.IsNullOrWhiteSpace(Model.LandlordPhoneNumber) ? "Not provided" : Model.LandlordPhoneNumber)</p>
+                </div>
+                
+                <a asp-action="LandlordDetails" asp-route-id="@Model.LandlordId" class="mt-4 w-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer no-underline">
+                    <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+                    Open Landlord Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isActive)
+{
+    <!-- Tailwind Modal for Suspend -->
+    <div id="suspendModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 overflow-hidden animate-slide-up">
+            <form asp-action="SuspendApartment" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="SuspendApartment.ApartmentId" type="hidden" />
+                
+                <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                    <h2 class="font-headline-md text-xl font-bold text-on-surface m-0">Suspend Apartment</h2>
+                    <button type="button" onclick="document.getElementById('suspendModal').classList.add('hidden'); document.getElementById('suspendModal').classList.remove('flex');" class="text-slate-400 hover:text-slate-600 border-0 bg-transparent cursor-pointer">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <div class="p-6">
+                    <div class="bg-danger-red/10 border border-danger-red/20 text-danger-red p-4 rounded-xl text-sm font-semibold flex gap-3 mb-6">
+                        <span class="material-symbols-outlined shrink-0 text-danger-red">warning</span>
+                        <p class="m-0">Suspending this apartment will hide it from all students and pause any ongoing requests.</p>
+                    </div>
+                
+                    <label asp-for="SuspendApartment.Reason" class="block text-sm font-bold text-on-surface mb-2">Suspension Reason</label>
+                    <textarea asp-for="SuspendApartment.Reason" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-danger-red focus:border-danger-red outline-none text-sm transition-all" rows="4" placeholder="Explain why this apartment is being suspended..."></textarea>
+                    <span asp-validation-for="SuspendApartment.Reason" class="text-danger-red text-xs mt-1 block"></span>
+                </div>
+                
+                <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('suspendModal').classList.add('hidden'); document.getElementById('suspendModal').classList.remove('flex');" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Suspend Apartment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

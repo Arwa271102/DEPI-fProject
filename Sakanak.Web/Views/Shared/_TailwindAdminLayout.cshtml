@@ -1,0 +1,277 @@
+@inject Sakanak.BLL.Interfaces.INotificationService NotificationService
+@inject Microsoft.AspNetCore.Identity.UserManager<Sakanak.Domain.Entities.ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Sakanak Admin</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#5c310d",
+                        "surface-admin": "#F1F5F9",
+                        "on-error-container": "#93000a",
+                        "warning-amber": "#F59E0B",
+                        "surface-dim": "#d8dada",
+                        "sand-light": "#F4F1EA",
+                        "outline": "#6f797a",
+                        "on-primary": "#ffffff",
+                        "deep-teal": "#0D5C63",
+                        "inverse-on-surface": "#eff1f1",
+                        "on-primary-fixed": "#002023",
+                        "on-secondary-fixed": "#1c1c18",
+                        "on-primary-fixed-variant": "#004f55",
+                        "surface-bright": "#f8fafa",
+                        "on-secondary-fixed-variant": "#474742",
+                        "secondary-container": "#e5e2db",
+                        "danger-red": "#EF4444",
+                        "surface-landlord": "#F8FAFC",
+                        "on-tertiary-container": "#fcb88a",
+                        "surface-container-high": "#e6e8e8",
+                        "on-tertiary-fixed-variant": "#693b17",
+                        "secondary-fixed-dim": "#c9c6c0",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#8fd1d9",
+                        "primary": "#004349",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "success-green": "#10B981",
+                        "surface": "#f8fafa",
+                        "on-secondary-container": "#65645f",
+                        "surface-container-highest": "#e1e3e3",
+                        "inverse-surface": "#2e3131",
+                        "on-tertiary-fixed": "#301400",
+                        "info-blue": "#3B82F6",
+                        "tertiary-fixed-dim": "#fcb889",
+                        "surface-variant": "#e1e3e3",
+                        "on-primary-container": "#90d2da",
+                        "on-background": "#191c1d",
+                        "surface-container": "#eceeee",
+                        "surface-student": "#FFFFFF",
+                        "surface-container-low": "#f2f4f4",
+                        "outline-variant": "#bfc8c9",
+                        "background": "#f8fafa",
+                        "surface-tint": "#20686f",
+                        "inverse-primary": "#8fd1d9",
+                        "secondary": "#5f5e59",
+                        "slate-gray": "#475569",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#3f484a",
+                        "secondary-fixed": "#e5e2db",
+                        "error": "#ba1a1a",
+                        "primary-fixed": "#abeef6",
+                        "on-surface": "#191c1d",
+                        "tertiary-container": "#784722",
+                        "primary-container": "#0d5c63",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline-h2": ["Manrope"],
+                        "display-hero": ["Manrope"],
+                        "body-base": ["Work Sans"],
+                        "headline-h1": ["Manrope"],
+                        "status-chip": ["Work Sans"],
+                        "label-sm": ["Work Sans"],
+                        "body-lg": ["Work Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-surface-admin font-body-base text-on-surface">
+    @{
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+        int adminUnreadCount = 0;
+        IReadOnlyList<Sakanak.BLL.DTOs.Notifications.NotificationDto> adminRecentNotifications = Array.Empty<Sakanak.BLL.DTOs.Notifications.NotificationDto>();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var adminUserId = UserManager.GetUserId(User);
+            if (Guid.TryParse(adminUserId, out var adminUserGuid))
+            {
+                adminUnreadCount = await NotificationService.GetUnreadCountAsync(adminUserGuid);
+                var notifsResult = await NotificationService.GetRecentNotificationsAsync(adminUserGuid, 5);
+                if (notifsResult.Succeeded) adminRecentNotifications = notifsResult.Data!;
+            }
+        }
+        
+        var dashClass = currentAction == "Dashboard" ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var requestsClass = currentAction.Contains("Request") ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var contractsClass = currentAction.Contains("Contract") ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var verificationsClass = currentAction.Contains("Landlord") && !currentAction.Contains("LandlordDetails") ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var landlordsClass = currentAction == "Landlords" || currentAction == "LandlordDetails" ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var apartmentsClass = currentAction.Contains("Apartment") ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+        var paymentsClass = currentAction.Contains("Payment") ? "bg-deep-teal/10 text-deep-teal font-bold" : "text-slate-600 hover:bg-slate-200";
+    }
+
+    <!-- SideNavBar -->
+    <aside class="fixed left-0 top-0 h-full w-[280px] border-r border-slate-200 bg-slate-50 p-4 flex flex-col gap-2 z-50">
+        <div class="px-2 py-6 mb-4">
+            <h1 class="text-2xl font-black text-deep-teal font-headline-h1 tracking-tight">Sakanak</h1>
+            <p class="text-[12px] font-semibold text-slate-500 uppercase tracking-widest">Admin Control Center</p>
+        </div>
+        
+        <nav class="flex-1 sidebar-scroll overflow-y-auto flex flex-col gap-1">
+            <a asp-controller="Admin" asp-action="Dashboard" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @dashClass">
+                <span class="material-symbols-outlined" @(dashClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>dashboard</span>
+                <span>Overview</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="RequestHistory" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @requestsClass">
+                <span class="material-symbols-outlined" @(requestsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>history</span>
+                <span>Requests</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="ContractHistory" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @contractsClass">
+                <span class="material-symbols-outlined" @(contractsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>history_edu</span>
+                <span>Contracts</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="Landlords" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @landlordsClass">
+                <span class="material-symbols-outlined" @(landlordsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>real_estate_agent</span>
+                <span>Landlords</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="PendingLandlordVerifications" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @verificationsClass">
+                <span class="material-symbols-outlined" @(verificationsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>how_to_reg</span>
+                <span>Verifications</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="Apartments" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @apartmentsClass">
+                <span class="material-symbols-outlined" @(apartmentsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>apartment</span>
+                <span>Apartments</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="ApartmentsOccupancy" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline text-slate-600 hover:bg-slate-200">
+                <span class="material-symbols-outlined">analytics</span>
+                <span>Occupancy</span>
+            </a>
+            
+            <a asp-controller="Admin" asp-action="Payments" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-headline-h2 text-label-sm no-underline @paymentsClass">
+                <span class="material-symbols-outlined" @(paymentsClass.Contains("text-deep-teal") ? "style=font-variation-settings:'FILL'1;" : "")>payments</span>
+                <span>Payments</span>
+            </a>
+        </nav>
+        
+        <div class="mt-auto border-t border-slate-200 pt-4 flex flex-col gap-1">
+            <a asp-controller="Account" asp-action="Settings" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-200 transition-all duration-200 font-headline-h2 text-label-sm no-underline">
+                <span class="material-symbols-outlined">settings</span>
+                <span>Settings</span>
+            </a>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-danger-red hover:bg-red-50 transition-all duration-200 font-headline-h2 text-label-sm border-0 bg-transparent text-left cursor-pointer">
+                    <span class="material-symbols-outlined">logout</span>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- TopNavBar -->
+    <header class="fixed top-0 right-0 left-[280px] h-16 bg-white border-b border-slate-200 flex justify-between items-center px-8 z-40 shadow-sm">
+        <div class="flex items-center gap-4 flex-1">
+            <div class="relative w-full max-w-md">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input type="text" class="w-full bg-slate-50 border-none rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-deep-teal transition-all outline-none" placeholder="Search requests, students, or landlords..." />
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <!-- Notifications Dropdown -->
+            <div class="relative group">
+                <button class="relative p-2 text-slate-500 hover:text-deep-teal hover:bg-slate-100 rounded-full transition-colors outline-none">
+                    <span class="material-symbols-outlined">notifications</span>
+                    @if (adminUnreadCount > 0)
+                    {
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-danger-red rounded-full"></span>
+                    }
+                </button>
+                <!-- Dropdown Panel -->
+                <div class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div class="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                        <h4 class="font-bold text-sm text-on-surface m-0">Notifications</h4>
+                        <a asp-controller="Notifications" asp-action="Index" class="text-xs text-deep-teal font-bold hover:underline no-underline">View All</a>
+                    </div>
+                    <div class="max-h-[300px] overflow-y-auto">
+                        @if (adminRecentNotifications.Count == 0)
+                        {
+                            <div class="px-4 py-6 text-center text-slate-500 text-sm">No new notifications.</div>
+                        }
+                        else
+                        {
+                            @foreach (var notif in adminRecentNotifications)
+                            {
+                                <a asp-controller="Notifications" asp-action="Open" asp-route-id="@notif.NotificationId" class="block px-4 py-3 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0 no-underline @(notif.IsRead ? "opacity-60" : "")">
+                                    <div class="flex gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-deep-teal/10 text-deep-teal flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-[16px]">notifications</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm @(notif.IsRead ? "font-medium" : "font-bold") text-on-surface mb-0.5 leading-tight">@notif.Title</p>
+                                            <p class="text-xs text-slate-500 line-clamp-2 leading-tight m-0">@notif.Message</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <a asp-controller="Messages" asp-action="Index" class="relative text-slate-500 hover:text-deep-teal transition-colors no-underline">
+                <span class="material-symbols-outlined">chat_bubble</span>
+            </a>
+            
+            <div class="h-8 w-[1px] bg-slate-200"></div>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-right hidden sm:block">
+                    <p class="text-xs font-bold text-on-surface mb-0">Admin User</p>
+                    <p class="text-[10px] text-slate-500 mb-0">Super Admin</p>
+                </div>
+                <div class="h-10 w-10 rounded-full border-2 border-deep-teal/20 bg-deep-teal text-white flex items-center justify-center shadow-sm font-bold">
+                    A
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main class="ml-[280px] pt-24 px-8 pb-12 min-h-screen">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

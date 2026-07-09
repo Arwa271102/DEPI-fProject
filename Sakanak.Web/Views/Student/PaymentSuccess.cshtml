@@ -1,0 +1,78 @@
+@model Sakanak.BLL.DTOs.Payment.PaymentDetailsDto
+@{
+    ViewData["Title"] = "Payment Successful";
+    Layout = "_TailwindStudentLayout";
+    var assignment = ViewBag.Assignment as Sakanak.BLL.DTOs.Apartment.StudentApartmentAssignmentDto;
+}
+
+<div class="animate-slide-up flex flex-col items-center justify-center min-h-[80vh]">
+    <div class="w-full max-w-2xl bg-surface-student rounded-3xl shadow-lg border border-outline-variant/50 p-8 text-center relative overflow-hidden">
+        
+        <!-- Success Celebration Background Elements -->
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-success-green/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-deep-teal/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            
+            <div class="w-24 h-24 bg-success-green text-white rounded-full flex items-center justify-center mb-6 shadow-md">
+                <span class="material-symbols-outlined text-[48px]">check_circle</span>
+            </div>
+            
+            <h1 class="font-headline-h1 text-3xl font-extrabold text-success-green m-0 mb-3">Payment Successful!</h1>
+            <p class="text-body-base text-on-surface-variant m-0 mb-8 max-w-md mx-auto leading-relaxed">
+                Your payment of <strong class="text-on-surface">@Model.Amount.ToString("C0")</strong> has been confirmed securely and your contract is now officially active.
+            </p>
+            
+            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-6 w-full text-left shadow-sm mb-8">
+                <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-4 border-b border-outline-variant/30 pb-2">Transaction Summary</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0 mb-1">Apartment</p>
+                        <p class="font-bold text-primary m-0">@Model.ApartmentAddress</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0 mb-1">Contract Period</p>
+                        <p class="font-medium text-on-surface m-0">@Model.ContractStartDate.ToString("MMM dd, yyyy") — @Model.ContractEndDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                </div>
+
+                @if (assignment?.HasAssignment == true)
+                {
+                    <div class="mt-4 pt-4 border-t border-outline-variant/30 bg-teal-50/50 -mx-6 -mb-6 px-6 py-4 rounded-b-2xl border-t border-teal-100">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-deep-teal m-0 mb-2 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">vpn_key</span>
+                            Your Apartment Assignment
+                        </p>
+                        <div class="flex justify-between items-center text-sm">
+                            <p class="m-0 font-medium text-teal-900">@assignment.Address, @assignment.City</p>
+                            <p class="m-0 text-teal-700 font-bold whitespace-nowrap">Move-in: @assignment.ContractStartDate.ToString("MMM dd")</p>
+                        </div>
+                    </div>
+                }
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                @if (assignment?.HasAssignment == true)
+                {
+                    <a asp-action="MyApartment" class="w-full py-3.5 bg-deep-teal text-white rounded-xl font-bold shadow-md hover:bg-primary transition-colors flex items-center justify-center gap-2 no-underline btn-interact">
+                        <span class="material-symbols-outlined text-[20px]">meeting_room</span>
+                        View My Apartment
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="MyContracts" class="w-full py-3.5 bg-deep-teal text-white rounded-xl font-bold shadow-md hover:bg-primary transition-colors flex items-center justify-center gap-2 no-underline btn-interact">
+                        <span class="material-symbols-outlined text-[20px]">description</span>
+                        My Contracts
+                    </a>
+                }
+                <a asp-action="PaymentDetails" asp-route-id="@Model.PaymentId" class="w-full py-3.5 border-2 border-outline-variant text-on-surface-variant rounded-xl font-bold hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2 no-underline btn-interact">
+                    <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                    View Receipt
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

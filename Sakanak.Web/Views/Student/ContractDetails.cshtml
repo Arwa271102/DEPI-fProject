@@ -1,0 +1,244 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.BLL.DTOs.Contract.ContractDetailsDto
+@{
+    ViewData["Title"] = "Contract Details";
+    Layout = "_TailwindStudentLayout";
+
+    var isApproved = Model.Status == ContractStatus.Approved.ToString();
+    var isPendingApproval = Model.Status == ContractStatus.PendingApproval.ToString();
+    var isRejected = Model.Status == ContractStatus.Rejected.ToString();
+    var isActive = Model.Status == ContractStatus.Active.ToString();
+    var isCancelled = Model.Status == ContractStatus.Cancelled.ToString();
+
+    var statusColorClass = isApproved ? "text-success-green bg-success-green bg-opacity-10 border-success-green/20" :
+                           isRejected ? "text-danger-red bg-danger-red bg-opacity-10 border-danger-red/20" :
+                           isPendingApproval ? "text-warning-amber bg-warning-amber bg-opacity-10 border-warning-amber/20" :
+                           isActive ? "text-info-blue bg-info-blue bg-opacity-10 border-info-blue/20" :
+                           "text-slate-gray bg-slate-gray bg-opacity-10 border-slate-gray/20";
+                           
+    var statusIcon = isApproved || isActive ? "verified" :
+                     isRejected ? "error" :
+                     isPendingApproval ? "pending_actions" :
+                     "block";
+}
+
+<div class="animate-slide-up">
+    <!-- Header Section -->
+    <div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <a asp-action="MyContracts" class="flex items-center gap-1 text-on-surface-variant hover:text-deep-teal mb-2 transition-colors no-underline">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                <span class="text-label-sm font-label-sm">Back to My Contracts</span>
+            </a>
+            <h2 class="text-headline-h1 font-headline-h1 text-on-surface m-0 mb-1">Contract Details</h2>
+            <p class="text-body-base font-body-base text-on-surface-variant m-0 line-clamp-1" title="@Model.ApartmentAddress">@Model.ApartmentAddress</p>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="@statusColorClass border px-6 py-4 rounded-xl flex items-center gap-4 animate-in fade-in slide-in-from-top duration-500 shadow-sm shrink-0">
+            <div class="w-12 h-12 rounded-full @(isPendingApproval ? "bg-warning-amber" : (isApproved || isActive) ? "bg-success-green" : isRejected ? "bg-danger-red" : "bg-slate-gray") flex items-center justify-center text-white shrink-0">
+                <span class="material-symbols-outlined">@statusIcon</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg leading-tight m-0 mb-1">
+                    @if (isActive) { <text>Contract Active</text> }
+                    else if (isApproved) { <text>Contract Approved</text> }
+                    else if (isPendingApproval) { <text>Under Review</text> }
+                    else if (isRejected) { <text>Contract Rejected</text> }
+                    else { <text>Contract Cancelled</text> }
+                </h4>
+                <p class="text-sm opacity-90 m-0">
+                    @if (isActive) { <text>Your lease is active. Access your apartment details anytime.</text> }
+                    else if (isApproved) { <text>Proceed to payment to activate your contract.</text> }
+                    else if (isPendingApproval) { <text>Admin is currently reviewing your signed contract.</text> }
+                    else if (isRejected) { <text>Your contract submission was declined.</text> }
+                    else { <text>This contract request was cancelled.</text> }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <!-- Left Column: Contract Info -->
+        <div class="lg:col-span-1 space-y-gutter">
+            
+            <!-- Actions Panel -->
+            <div class="bg-surface-student rounded-xl shadow-sm border border-outline-variant/50 p-6">
+                <h3 class="font-headline-h2 text-lg text-primary m-0 mb-4">Required Actions</h3>
+                
+                <div class="space-y-3">
+                    @if (isRejected)
+                    {
+                        <div class="mb-4 bg-red-50 p-4 rounded-xl border border-red-100">
+                            <p class="text-sm font-bold text-danger-red m-0 mb-1">Rejection Reason:</p>
+                            <p class="text-sm text-danger-red m-0 italic">"@Model.RejectionReason"</p>
+                        </div>
+                        <a asp-action="EditContract" asp-route-id="@Model.ContractId" class="w-full flex items-center justify-center gap-2 bg-danger-red text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all active:scale-[0.98] no-underline shadow-sm btn-interact">
+                            <span class="material-symbols-outlined">edit_document</span>
+                            Resubmit Contract
+                        </a>
+                    }
+                    else if (isApproved)
+                    {
+                        <a asp-action="PayContract" asp-route-contractId="@Model.ContractId" class="w-full flex items-center justify-center gap-2 bg-deep-teal text-white py-3 rounded-xl font-bold hover:bg-primary transition-all active:scale-[0.98] no-underline shadow-sm btn-interact">
+                            <span class="material-symbols-outlined">payments</span>
+                            Pay Now to Activate
+                        </a>
+                        <form asp-action="CancelContract" asp-route-id="@Model.ContractId" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="w-full border border-danger-red text-danger-red py-3 rounded-xl font-bold hover:bg-red-50 transition-colors btn-interact" onclick="return confirm('Are you sure you want to cancel this contract? This action cannot be undone.');">
+                                Cancel Contract
+                            </button>
+                        </form>
+                    }
+                    else if (isActive)
+                    {
+                        <a asp-action="MyApartment" class="w-full flex items-center justify-center gap-2 bg-deep-teal text-white py-3 rounded-xl font-bold hover:bg-primary transition-all active:scale-[0.98] no-underline shadow-sm btn-interact">
+                            <span class="material-symbols-outlined">home_work</span>
+                            View My Apartment
+                        </a>
+                        <p class="text-xs text-on-surface-variant text-center m-0 mt-4 px-2">For contract cancellations or refunds, please contact Sakanak Admin support.</p>
+                    }
+                    else if (isPendingApproval)
+                    {
+                        <button disabled class="w-full border border-outline-variant text-on-surface-variant py-3 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">hourglass_empty</span>
+                            Awaiting Admin Review
+                        </button>
+                        <form asp-action="CancelContract" asp-route-id="@Model.ContractId" method="post" class="mt-3">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="w-full border border-danger-red text-danger-red py-3 rounded-xl font-bold hover:bg-red-50 transition-colors btn-interact" onclick="return confirm('Are you sure you want to cancel this contract? This action cannot be undone.');">
+                                Cancel Contract
+                            </button>
+                        </form>
+                    }
+                    else if (isCancelled)
+                    {
+                        <button disabled class="w-full border border-outline-variant text-on-surface-variant py-3 rounded-xl font-bold cursor-not-allowed">
+                            Contract Cancelled
+                        </button>
+                        @if (!string.IsNullOrWhiteSpace(Model.CancellationReason))
+                        {
+                            <div class="mt-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <p class="text-sm font-bold text-slate-700 m-0 mb-1">Cancellation Reason:</p>
+                                <p class="text-sm text-slate-600 m-0 italic">"@Model.CancellationReason"</p>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Timeline Panel -->
+            <div class="bg-surface-student rounded-xl shadow-sm border border-outline-variant/50 p-6 sticky top-24">
+                <h3 class="font-headline-h2 text-lg text-primary m-0 mb-6">Contract Timeline</h3>
+                
+                <div class="space-y-6 relative before:absolute before:left-5 before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant/30">
+                    <div class="relative pl-12">
+                        <div class="absolute left-3.5 top-0 w-3 h-3 rounded-full bg-deep-teal ring-4 ring-deep-teal/20"></div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Lease Start</p>
+                        <p class="text-sm font-bold text-on-surface m-0">@Model.StartDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                    
+                    <div class="relative pl-12">
+                        <div class="absolute left-3.5 top-0 w-3 h-3 rounded-full bg-outline-variant ring-4 ring-transparent"></div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Lease End</p>
+                        <p class="text-sm font-bold text-on-surface m-0">@Model.EndDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                    
+                    <div class="relative pl-12 pt-4 border-t border-outline-variant/30 mt-6 before:hidden">
+                        <div class="absolute left-3.5 top-4 w-3 h-3 rounded-full bg-outline-variant ring-4 ring-transparent"></div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Submitted On</p>
+                        <p class="text-sm font-bold text-on-surface m-0">@Model.SubmittedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</p>
+                    </div>
+                    
+                    @if (Model.ReviewedAt.HasValue)
+                    {
+                        <div class="relative pl-12 before:hidden">
+                            <div class="absolute left-3.5 top-0 w-3 h-3 rounded-full @(isRejected ? "bg-danger-red" : "bg-success-green") ring-4 ring-transparent"></div>
+                            <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Reviewed On</p>
+                            <p class="text-sm font-bold text-on-surface m-0">@Model.ReviewedAt.Value.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</p>
+                        </div>
+                    }
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-outline-variant/30">
+                    <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Landlord</p>
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-deep-teal">real_estate_agent</span>
+                        <p class="text-sm font-bold text-on-surface m-0">@Model.LandlordName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Documents -->
+        <div class="lg:col-span-2 space-y-gutter">
+            <div class="bg-surface-student rounded-xl shadow-sm border border-outline-variant/50 p-6">
+                <h3 class="font-headline-h2 text-xl text-primary m-0 mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">folder_open</span>
+                    Contract Documents
+                </h3>
+                
+                @if (Model.Documents.Count == 0)
+                {
+                    <div class="flex flex-col items-center justify-center py-10 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+                        <span class="material-symbols-outlined text-4xl text-slate-400 mb-2">description</span>
+                        <p class="text-slate-500 text-sm m-0">No documents attached.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach (var document in Model.Documents)
+                        {
+                            <div class="border border-outline-variant/50 rounded-xl p-4 bg-surface-container-lowest hover:border-deep-teal transition-colors group flex flex-col h-full">
+                                <div class="flex justify-between items-start mb-4 gap-2">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center text-deep-teal shrink-0">
+                                            <span class="material-symbols-outlined">@(document.IsImage ? "image" : "picture_as_pdf")</span>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-sm text-on-surface m-0 line-clamp-1" title="@document.Label">@document.Label</p>
+                                            <p class="text-[10px] text-on-surface-variant uppercase tracking-wider mt-1 m-0">@document.Type</p>
+                                        </div>
+                                    </div>
+                                    <div class="shrink-0">
+                                        @if (document.Label == "Signed Contract")
+                                        {
+                                            <a asp-action="DownloadContractDocument" asp-route-id="@Model.ContractId" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-deep-teal hover:text-white flex items-center justify-center text-slate-600 transition-colors no-underline shadow-sm" title="Download PDF">
+                                                <span class="material-symbols-outlined text-[18px]">download</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Content(document.Url)" target="_blank" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-deep-teal hover:text-white flex items-center justify-center text-slate-600 transition-colors no-underline shadow-sm" title="@(document.IsImage ? "View Image" : "Download PDF")">
+                                                <span class="material-symbols-outlined text-[18px]">@(document.IsImage ? "visibility" : "download")</span>
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                                
+                                @if (document.IsImage)
+                                {
+                                    <div class="mt-auto relative rounded-lg overflow-hidden border border-outline-variant/30 h-40 bg-slate-100 group-hover:shadow-sm transition-shadow">
+                                        <img src="@Url.Content(document.Url)" alt="@document.Label" class="w-full h-full object-cover" loading="lazy" />
+                                        <a href="@Url.Content(document.Url)" target="_blank" class="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                            <span class="bg-white/90 text-deep-teal p-2 rounded-full material-symbols-outlined shadow-md">zoom_in</span>
+                                        </a>
+                                    </div>
+                                }
+                                else if (document.Label == "Signed Contract")
+                                {
+                                    <div class="mt-auto h-40 bg-slate-50 rounded-lg border border-outline-variant/30 flex flex-col items-center justify-center text-slate-400 p-4 text-center group-hover:shadow-sm transition-shadow">
+                                        <span class="material-symbols-outlined text-[48px] mb-2 opacity-50">picture_as_pdf</span>
+                                        <p class="text-xs m-0">PDF Document</p>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+@model Sakanak.BLL.DTOs.Matching.ApartmentGroupDto
+@{
+    ViewData["Title"] = "My Roommates";
+    Layout = "_TailwindStudentLayout";
+}
+
+@functions {
+    private static string MatchClass(decimal score) => score >= 80 ? "text-success-green bg-success-green/10" : score >= 60 ? "text-warning-amber bg-warning-amber/10" : "text-slate-500 bg-slate-100";
+    private static string MatchBarClass(decimal score) => score >= 80 ? "bg-success-green" : score >= 60 ? "bg-warning-amber" : "bg-slate-400";
+    private static string MatchIcon(decimal score) => score >= 80 ? "favorite" : score >= 60 ? "thumb_up" : "group";
+}
+
+<div class="animate-slide-up max-w-5xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-2">My Roommates</p>
+            <h2 class="text-headline-h1 font-headline-h1 text-on-surface m-0 mb-1">@Model.GroupName</h2>
+            <div class="flex items-center gap-3 text-on-surface-variant">
+                <span class="flex items-center gap-1 text-sm"><span class="material-symbols-outlined text-sm">location_on</span> @Model.ApartmentAddress</span>
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span class="text-sm font-medium text-deep-teal">@Model.AvailableSeats seat(s) available</span>
+            </div>
+        </div>
+        <div>
+            @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+        </div>
+    </div>
+
+    <!-- Compatibility Overview Panel -->
+    <div class="bg-surface-student rounded-2xl shadow-sm border border-outline-variant/50 p-6 mb-stack-lg">
+        <div class="flex justify-between items-end mb-4">
+            <div>
+                <h3 class="font-headline-h2 text-xl text-primary m-0 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-deep-teal">handshake</span>
+                    Group Compatibility
+                </h3>
+                <p class="text-sm text-on-surface-variant m-0 mt-1">Average compatibility score with all members</p>
+            </div>
+            <div class="text-right">
+                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full @MatchClass(Model.AverageCompatibilityScore) text-sm font-bold shadow-sm">
+                    @Model.AverageCompatibilityScore%
+                    <span class="material-symbols-outlined text-[16px]">@MatchIcon(Model.AverageCompatibilityScore)</span>
+                </span>
+            </div>
+        </div>
+        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+            <div class="@MatchBarClass(Model.AverageCompatibilityScore) h-2.5 rounded-full transition-all duration-1000" style="width: @Model.AverageCompatibilityScore%"></div>
+        </div>
+    </div>
+
+    <!-- Members Grid -->
+    <div class="bg-surface-student rounded-2xl shadow-sm border border-outline-variant/50 p-6">
+        <h3 class="font-headline-h2 text-xl text-primary m-0 mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined text-deep-teal">groups</span>
+            Group Members
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Existing Members -->
+            @foreach (var member in Model.Members)
+            {
+                <div class="p-4 rounded-xl border border-outline-variant/50 hover:shadow-md transition-shadow bg-surface-container-lowest flex flex-col h-full relative">
+                    <div class="absolute top-4 right-4 px-2 py-1 rounded @MatchClass(member.CompatibilityScore) text-[10px] font-bold shadow-sm z-10">
+                        @member.CompatibilityScore% Match
+                    </div>
+                    
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-400 shrink-0">
+                            <span class="material-symbols-outlined text-2xl">person</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-primary m-0 leading-tight pr-12 line-clamp-1">@member.Name</h4>
+                            <p class="text-xs text-on-surface-variant m-0 mt-0.5 line-clamp-1">@member.University</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-3 border-t border-outline-variant/30 mt-auto">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-1">Faculty</p>
+                        <p class="text-xs text-slate-600 font-medium m-0 mb-3">@member.Faculty</p>
+                        
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 m-0 mb-1">Lifestyle</p>
+                        <p class="text-xs text-slate-600 m-0 line-clamp-3 italic">"@member.LifestyleSummary"</p>
+                    </div>
+                </div>
+            }
+            
+            <!-- Empty Seats -->
+            @for (var i = 0; i < Model.AvailableSeats; i++)
+            {
+                <div class="p-6 rounded-xl border-2 border-dashed border-outline-variant/50 bg-slate-50/50 flex flex-col items-center justify-center text-center h-full min-h-[200px]">
+                    <div class="w-12 h-12 rounded-full bg-slate-200/50 flex items-center justify-center text-slate-400 mb-3">
+                        <span class="material-symbols-outlined text-2xl">event_seat</span>
+                    </div>
+                    <p class="text-sm font-bold text-slate-500 m-0">Seat Available</p>
+                    <p class="text-xs text-slate-400 m-0 mt-1 max-w-[200px]">Waiting for a compatible roommate to join the group.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

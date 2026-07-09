@@ -1,0 +1,322 @@
+@inject Sakanak.BLL.Interfaces.INotificationService NotificationService
+@inject Microsoft.AspNetCore.Identity.UserManager<Sakanak.Domain.Entities.ApplicationUser> UserManager
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>@ViewData["Title"] - Sakanak</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@450&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#8fd1d9",
+                        "on-primary-container": "#90d2da",
+                        "error": "#ba1a1a",
+                        "success-green": "#10B981",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#abeef6",
+                        "inverse-surface": "#2e3131",
+                        "on-error-container": "#93000a",
+                        "deep-teal": "#0D5C63",
+                        "outline": "#6f797a",
+                        "sand-light": "#F4F1EA",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container": "#eceeee",
+                        "surface-container-low": "#f2f4f4",
+                        "inverse-primary": "#8fd1d9",
+                        "surface-landlord": "#F8FAFC",
+                        "on-background": "#191c1d",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e1e3e3",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#e5e2db",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#fcb88a",
+                        "on-primary-fixed": "#002023",
+                        "surface-admin": "#F1F5F9",
+                        "tertiary-container": "#784722",
+                        "primary": "#0D5C63",
+                        "surface-tint": "#20686f",
+                        "secondary": "#5f5e59",
+                        "outline-variant": "#bfc8c9",
+                        "danger-red": "#EF4444",
+                        "background": "#f8fafa",
+                        "surface-bright": "#f8fafa",
+                        "on-tertiary-fixed-variant": "#693b17",
+                        "surface-container-lowest": "#ffffff",
+                        "warning-amber": "#F59E0B",
+                        "surface-container-high": "#e6e8e8",
+                        "primary-container": "#0d5c63",
+                        "surface-student": "#FFFFFF",
+                        "secondary-fixed-dim": "#c9c6c0",
+                        "surface": "#f8fafa",
+                        "on-secondary-fixed": "#1c1c18",
+                        "slate-gray": "#475569",
+                        "on-primary-fixed-variant": "#004f55",
+                        "tertiary-fixed-dim": "#fcb889",
+                        "on-secondary-fixed-variant": "#474742",
+                        "on-secondary-container": "#65645f",
+                        "on-surface-variant": "#3f484a",
+                        "secondary-container": "#e5e2db",
+                        "inverse-on-surface": "#eff1f1",
+                        "tertiary": "#5c310d",
+                        "surface-dim": "#d8dada",
+                        "surface-container-highest": "#e1e3e3",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "info-blue": "#3B82F6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "container-max": "1440px",
+                        "row-height-default": "56px",
+                        "row-height-condensed": "40px",
+                        "stack-sm": "0.5rem",
+                        "gutter": "1.5rem",
+                        "edge-margin": "2rem",
+                        "stack-lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Manrope"],
+                        "body-sm": ["Work Sans"],
+                        "title-sm": ["Manrope"],
+                        "body-md": ["Work Sans"],
+                        "headline-md": ["Manrope"],
+                        "label-caps": ["Work Sans"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "450"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #f8fafa;
+            color: #191c1d;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 1.5rem;
+        }
+        .bento-card {
+            background-color: #ffffff;
+            border: 1px solid #bfc8c9;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .btn-interact {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-interact:active {
+            transform: scale(0.95);
+        }
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @@keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden min-h-screen flex flex-col">
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+        bool IsActive(string action) => string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
+
+        int landlordUnreadCount = 0;
+        IReadOnlyList<Sakanak.BLL.DTOs.Notifications.NotificationDto> landlordRecentNotifications = Array.Empty<Sakanak.BLL.DTOs.Notifications.NotificationDto>();
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var landlordUserId = UserManager.GetUserId(User);
+            if (Guid.TryParse(landlordUserId, out var landlordUserGuid))
+            {
+                landlordUnreadCount = await NotificationService.GetUnreadCountAsync(landlordUserGuid);
+                var notifsResult = await NotificationService.GetRecentNotificationsAsync(landlordUserGuid, 5);
+                if (notifsResult.Succeeded) landlordRecentNotifications = notifsResult.Data!;
+            }
+        }
+        
+        var dashboardClass = IsActive("Dashboard") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+        var apartmentsClass = IsActive("MyApartments") || IsActive("ApartmentDetails") || IsActive("OccupiedApartments") || IsActive("ApartmentTenants") || IsActive("CreateApartment") || IsActive("EditApartment") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+        var requestsClass = IsActive("MyRequests") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+        var bookingsClass = IsActive("BookingRequests") || IsActive("ReviewBooking") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+        var contractsClass = IsActive("Contracts") || IsActive("ContractDetails") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+        var paymentsClass = IsActive("Payments") || IsActive("PaymentDetails") ? "text-primary font-bold border-r-4 border-primary bg-surface-container-low" : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high";
+    }
+
+    <!-- Side Navigation Bar -->
+    <aside class="h-screen w-64 fixed left-0 top-0 flex flex-col h-full py-stack-lg bg-surface-container-lowest border-r border-outline-variant z-50">
+        <div class="px-6 mb-10">
+            <h1 class="font-display-lg text-display-lg font-bold text-primary m-0">Sakanak</h1>
+            <p class="font-body-sm text-body-sm text-on-surface-variant m-0">Property Management</p>
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+            <a asp-controller="Landlord" asp-action="Dashboard" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @dashboardClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(IsActive("Dashboard") ? "style=font-variation-settings:'FILL'1;" : "")>dashboard</span>
+                <span class="font-body-md m-0">Dashboard</span>
+            </a>
+            <a asp-controller="Landlord" asp-action="MyApartments" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @apartmentsClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(apartmentsClass.Contains("text-primary") ? "style=font-variation-settings:'FILL'1;" : "")>apartment</span>
+                <span class="font-body-md m-0">Apartments</span>
+            </a>
+            <a asp-controller="Landlord" asp-action="MyRequests" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @requestsClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(requestsClass.Contains("text-primary") ? "style=font-variation-settings:'FILL'1;" : "")>request_quote</span>
+                <span class="font-body-md m-0">Apartment Requests</span>
+            </a>
+            <a asp-controller="Landlord" asp-action="BookingRequests" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @bookingsClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(bookingsClass.Contains("text-primary") ? "style=font-variation-settings:'FILL'1;" : "")>calendar_month</span>
+                <span class="font-body-md m-0">Booking Requests</span>
+            </a>
+            <a asp-controller="Landlord" asp-action="Contracts" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @contractsClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(contractsClass.Contains("text-primary") ? "style=font-variation-settings:'FILL'1;" : "")>description</span>
+                <span class="font-body-md m-0">Contracts</span>
+            </a>
+            <a asp-controller="Landlord" asp-action="Payments" class="flex items-center px-4 py-3 rounded-lg transition-all no-underline @paymentsClass btn-interact">
+                <span class="material-symbols-outlined mr-3" @(paymentsClass.Contains("text-primary") ? "style=font-variation-settings:'FILL'1;" : "")>payments</span>
+                <span class="font-body-md m-0">Payments</span>
+            </a>
+        </nav>
+        <div class="px-4 mt-auto">
+            <a asp-controller="Landlord" asp-action="CreateApartment" class="w-full bg-primary text-on-primary py-3 px-4 rounded-lg flex items-center justify-center font-title-sm hover:opacity-90 active:scale-95 transition-all no-underline">
+                <span class="material-symbols-outlined mr-2">add</span>
+                Add Property
+            </a>
+
+            <div class="border-t border-outline-variant/50 mt-4 pt-3 flex flex-col gap-1">
+                <a asp-controller="Account" asp-action="Settings"
+                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-all no-underline font-body-md">
+                    <span class="material-symbols-outlined text-[20px]">settings</span>
+                    <span>Settings</span>
+                </a>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="w-full m-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-danger-red hover:bg-red-50 transition-all border-0 bg-transparent text-left cursor-pointer font-body-md">
+                        <span class="material-symbols-outlined text-[20px]">logout</span>
+                        <span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-0 right-0 left-64 h-row-height-default flex items-center justify-between px-edge-margin bg-surface-lowest border-b border-outline-variant/50 z-40 bg-white/90 backdrop-blur-md">
+        <div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full w-96 border border-outline-variant/30">
+            <span class="material-symbols-outlined text-outline text-sm mr-2">search</span>
+            <input class="bg-transparent border-none focus:ring-0 text-body-sm w-full outline-none" placeholder="Search properties or tenants..." type="text"/>
+        </div>
+        <div class="flex items-center space-x-6">
+            <!-- Notifications Dropdown -->
+            <div class="relative group">
+                <button class="relative p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors outline-none">
+                    <span class="material-symbols-outlined">notifications</span>
+                    @if (landlordUnreadCount > 0)
+                    {
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-danger-red rounded-full"></span>
+                    }
+                </button>
+                <!-- Dropdown Panel -->
+                <div class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-outline-variant/50 overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div class="px-4 py-3 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-low">
+                        <h4 class="font-bold text-sm text-on-surface m-0">Notifications</h4>
+                        <a asp-controller="Notifications" asp-action="Index" class="text-xs text-primary font-bold hover:underline no-underline">View All</a>
+                    </div>
+                    <div class="max-h-[300px] overflow-y-auto">
+                        @if (landlordRecentNotifications.Count == 0)
+                        {
+                            <div class="px-4 py-6 text-center text-on-surface-variant text-sm">No new notifications.</div>
+                        }
+                        else
+                        {
+                            @foreach (var notif in landlordRecentNotifications)
+                            {
+                                <a asp-controller="Notifications" asp-action="Open" asp-route-id="@notif.NotificationId" class="block px-4 py-3 hover:bg-surface-container-low transition-colors border-b border-outline-variant/10 last:border-0 no-underline @(notif.IsRead ? "opacity-60" : "")">
+                                    <div class="flex gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-[16px]">notifications</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm @(notif.IsRead ? "font-medium" : "font-bold") text-on-surface mb-0.5 leading-tight">@notif.Title</p>
+                                            <p class="text-xs text-on-surface-variant line-clamp-2 leading-tight m-0">@notif.Message</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <a asp-controller="Messages" asp-action="Index" class="relative p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors no-underline">
+                <span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+            </a>
+            <div class="flex items-center space-x-3 cursor-pointer pl-6 border-l border-outline-variant/50">
+                <div class="w-10 h-10 rounded-full bg-deep-teal flex items-center justify-center text-white font-bold shadow-sm">
+                    <span class="material-symbols-outlined">real_estate_agent</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-title-sm text-on-surface leading-tight m-0">@User.Identity?.Name</span>
+                    <span class="text-xs text-on-surface-variant m-0">Landlord</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main class="ml-64 pt-24 pb-12 px-edge-margin min-h-screen flex-1 flex flex-col max-w-[1600px] mx-auto w-full">
+        @await Html.PartialAsync("_AlertMessagesPartial")
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

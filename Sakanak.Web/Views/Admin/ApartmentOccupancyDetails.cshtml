@@ -1,0 +1,109 @@
+@model Sakanak.BLL.DTOs.Apartment.ApartmentOccupancyDto
+@{
+    ViewData["Title"] = "Apartment Occupancy Details";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Occupancy Audit</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">@Model.Address</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">@Model.City &bull; Managed by @Model.LandlordName</p>
+    </div>
+    <a asp-action="ApartmentsOccupancy" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Occupancy List
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Apartment Stats</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-500">Status</span>
+                    @await Html.PartialAsync("_StatusBadgePartial", Model.IsActive ? "Active" : "Inactive")
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-500">Price</span>
+                    <span class="font-semibold text-on-surface">@Model.PricePerMonth.ToString("C0") / month</span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-500">Available Seats</span>
+                    <span class="font-semibold text-on-surface">@Model.AvailableSeats</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-500">Monthly Revenue</span>
+                    <span class="font-black text-deep-teal text-lg">@Model.MonthlyRevenue.ToString("C0")</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-deep-teal/5 border border-deep-teal/10 rounded-xl p-6 shadow-sm">
+            <h3 class="font-headline-md text-sm font-bold text-deep-teal m-0 mb-4 uppercase tracking-wider">Occupancy Status</h3>
+            <div class="mb-2 flex justify-between items-center">
+                <span class="text-sm font-bold text-on-surface">@Model.OccupiedSeats / @Model.TotalSeats seats occupied</span>
+                <span class="text-sm font-bold text-deep-teal">@(Math.Round(Model.OccupancyRate))%</span>
+            </div>
+            <div class="w-full bg-white border border-slate-200 h-3 rounded-full overflow-hidden">
+                <div class="bg-success-green h-full rounded-full transition-all duration-1000 ease-out" style="width: @Model.OccupancyRate%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-2">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm h-full">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Active Tenants</h3>
+            </div>
+            
+            <div class="overflow-x-auto">
+                @if (Model.Tenants.Count == 0)
+                {
+                    <div class="p-8 text-center text-slate-500">
+                        <span class="material-symbols-outlined text-4xl mb-2 opacity-50">group_off</span>
+                        <p class="m-0">No active tenants currently occupy this apartment.</p>
+                    </div>
+                }
+                else
+                {
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50/50 text-slate-500 font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold">Student</th>
+                                <th class="px-6 py-3 font-semibold">University & Faculty</th>
+                                <th class="px-6 py-3 font-semibold">Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach (var tenant in Model.Tenants)
+                            {
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 font-bold flex-shrink-0">
+                                                @tenant.Name.Substring(0, 1)
+                                            </div>
+                                            <span class="font-bold text-on-surface">@tenant.Name</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-semibold text-slate-700">@tenant.University</div>
+                                        <div class="text-xs text-slate-500">@tenant.Faculty</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-slate-700 line-clamp-1" title="@tenant.Email">@tenant.Email</div>
+                                        <div class="text-xs font-mono text-slate-500">@(string.IsNullOrWhiteSpace(tenant.PhoneNumber) ? "No phone" : tenant.PhoneNumber)</div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

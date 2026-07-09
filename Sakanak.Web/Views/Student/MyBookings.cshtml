@@ -1,0 +1,140 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.Web.Models.ViewModels.Student.MyBookingsViewModel
+@{
+    ViewData["Title"] = "My Bookings";
+    Layout = "_TailwindStudentLayout";
+}
+
+<div class="animate-slide-up">
+    <!-- Page Header -->
+    <div class="mb-stack-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+            <h2 class="font-headline-h1 text-headline-h1 text-primary m-0">My Bookings</h2>
+            <p class="font-body-base text-on-surface-variant mt-1 m-0">Manage and track your apartment reservation requests.</p>
+        </div>
+        <a asp-action="SearchApartments" class="bg-deep-teal text-white px-gutter py-3 rounded-lg font-label-sm hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm btn-interact no-underline">
+            <span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+            Find Apartments
+        </a>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="flex gap-8 mb-stack-lg border-b border-outline-variant overflow-x-auto no-scrollbar">
+        <a asp-action="MyBookings" class="font-label-sm pb-3 px-1 transition-all no-underline @(Model.StatusFilter is null ? "text-primary border-b-2 border-primary" : "text-on-surface-variant hover:text-primary")">All</a>
+        @foreach (var status in Enum.GetValues<BookingStatus>())
+        {
+            <a asp-action="MyBookings" asp-route-status="@status" class="font-label-sm pb-3 px-1 transition-all no-underline @(Model.StatusFilter == status ? "text-primary border-b-2 border-primary" : "text-on-surface-variant hover:text-primary")">@status</a>
+        }
+    </div>
+
+    @if (Model.Bookings.Count == 0)
+    {
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center py-20 text-center animate-fade-in bg-white rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mb-6 text-deep-teal">
+                <span class="material-symbols-outlined text-5xl">event_busy</span>
+            </div>
+            <h3 class="text-headline-h2 text-primary m-0 mb-2">No bookings found</h3>
+            <p class="text-on-surface-variant max-w-sm mx-auto m-0 mb-8">Start exploring approved apartments and send your first request to secure your housing.</p>
+            <a asp-action="SearchApartments" class="px-8 py-3 bg-deep-teal text-white rounded-lg font-label-sm hover:opacity-90 transition-all no-underline btn-interact">
+                Browse Apartments
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Booking Cards Grid -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-gutter">
+            @foreach (var booking in Model.Bookings)
+            {
+                var isPending = booking.Status == BookingStatus.Pending.ToString();
+                var isAccepted = booking.Status == BookingStatus.Accepted.ToString();
+                var isRejected = booking.Status == BookingStatus.Rejected.ToString();
+                var isCancelled = booking.Status == BookingStatus.Cancelled.ToString();
+
+                var statusColorClass = isPending ? "text-warning-amber bg-warning-amber bg-opacity-10" :
+                                       isAccepted ? "text-success-green bg-success-green bg-opacity-10" :
+                                       isRejected ? "text-danger-red bg-danger-red bg-opacity-10" :
+                                       "text-slate-gray bg-slate-gray bg-opacity-10";
+
+                var statusIcon = isPending ? "pending" :
+                                 isAccepted ? "check_circle" :
+                                 isRejected ? "cancel" :
+                                 "block";
+
+                var cardOpacityClass = (isRejected || isCancelled) ? "opacity-70 grayscale-[0.2]" : "";
+
+                <div class="booking-card bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow border border-outline-variant p-6 flex flex-col @cardOpacityClass">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex gap-4">
+                            <div class="w-16 h-16 rounded-lg overflow-hidden shrink-0 bg-slate-100 flex items-center justify-center text-slate-400">
+                                @if (!string.IsNullOrWhiteSpace(booking.ApartmentPhotoUrl))
+                                {
+                                    <img src="@Url.Content(booking.ApartmentPhotoUrl)" alt="Apartment" class="w-full h-full object-cover" />
+                                }
+                                else
+                                {
+                                    <span class="material-symbols-outlined">apartment</span>
+                                }
+                            </div>
+                            <div>
+                                <h3 class="font-headline-h2 text-lg text-primary m-0 mb-1 line-clamp-1" title="@booking.ApartmentAddress">@booking.ApartmentAddress</h3>
+                                <p class="font-body-base text-on-surface-variant text-sm flex items-center gap-1 m-0 line-clamp-1">
+                                    <span class="material-symbols-outlined text-sm">location_on</span>
+                                    @booking.ApartmentCity
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-1 px-3 py-1 @statusColorClass rounded-full text-status-chip font-status-chip shrink-0">
+                            <span class="material-symbols-outlined text-xs">@statusIcon</span>
+                            @booking.Status.ToUpper()
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 py-4 border-t border-b border-outline-variant mb-6 mt-2">
+                        <div>
+                            <p class="text-[12px] uppercase tracking-wider text-on-surface-variant m-0 mb-1">Check-in</p>
+                            <p class="font-bold text-primary m-0">@booking.RequestedStartDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                        <div>
+                            <p class="text-[12px] uppercase tracking-wider text-on-surface-variant m-0 mb-1">Check-out</p>
+                            <p class="font-bold text-primary m-0">@booking.RequestedEndDate.ToString("MMM dd, yyyy")</p>
+                        </div>
+                    </div>
+
+                    @if (isRejected && !string.IsNullOrWhiteSpace(booking.RejectionReason))
+                    {
+                        <div class="mb-4 bg-red-50 p-3 rounded-lg border border-red-100">
+                            <p class="text-sm text-danger-red m-0"><span class="font-bold">Reason:</span> @booking.RejectionReason</p>
+                        </div>
+                    }
+
+                    <div class="flex gap-stack-md mt-auto">
+                        <a asp-action="BookingDetails" asp-route-id="@booking.BookingId" class="flex-1 py-2.5 rounded-lg border border-deep-teal text-deep-teal font-label-sm hover:bg-surface-container-low transition-colors text-center no-underline btn-interact">
+                            View Details
+                        </a>
+                        @if (isPending || isAccepted)
+                        {
+                            <form asp-action="CancelBooking" asp-route-id="@booking.BookingId" method="post" class="flex-1">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="w-full py-2.5 rounded-lg border border-danger-red text-danger-red font-label-sm hover:bg-red-50 transition-all active:scale-[0.98]" onclick="return confirm('@(isAccepted ? "Are you sure? This booking was already accepted by the landlord." : "Cancel this booking request?")');">
+                                    Cancel Booking
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+</style>

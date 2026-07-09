@@ -1,0 +1,44 @@
+@model Sakanak.Web.Models.ViewModels.Landlord.SubmitVerificationViewModel
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Submit Verification";
+}
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-stack-lg">
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Landlord Verification</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface m-0 mb-2">Submit Verification Documents</h2>
+        <p class="text-on-surface-variant font-body-md m-0">Upload ID, proof of ownership, business license, or other documents that prove you can list properties.</p>
+    </div>
+
+    <form asp-action="SubmitVerification" method="post" enctype="multipart/form-data" class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-8 shadow-sm">
+        @Html.AntiForgeryToken()
+        
+        <div class="mb-6">
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0 border-b border-outline-variant pb-2">
+                <span class="material-symbols-outlined">upload_file</span>
+                Document Upload
+            </h3>
+            
+            <label asp-for="Documents" class="block font-label-caps text-on-surface-variant mb-2 uppercase"></label>
+            
+            <div class="border-2 border-dashed border-outline-variant rounded-xl p-8 bg-surface-container-low/50 hover:bg-surface-container-low transition-colors text-center cursor-pointer relative">
+                <input asp-for="Documents" type="file" multiple accept=".jpg,.jpeg,.png,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                <span class="material-symbols-outlined text-4xl text-primary mb-2">cloud_upload</span>
+                <p class="font-title-sm text-on-surface m-0">Click or drag files here to upload</p>
+                <p class="text-xs text-on-surface-variant mt-2 m-0">Accepted formats: JPG, PNG, PDF. Maximum 5MB per file.</p>
+            </div>
+            <span asp-validation-for="Documents" class="text-error text-xs mt-2 block"></span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-outline-variant">
+            <button type="submit" class="flex-1 bg-primary text-on-primary py-3 px-6 rounded-lg font-title-sm text-sm hover:opacity-90 active:scale-95 transition-all shadow-sm border-0 cursor-pointer flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">send</span>
+                Submit for Review
+            </button>
+            <a asp-action="VerificationPending" class="flex-1 bg-surface-container-lowest border border-outline-variant text-on-surface py-3 px-6 rounded-lg font-title-sm text-sm hover:bg-surface-container-low active:scale-95 transition-all text-center no-underline">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

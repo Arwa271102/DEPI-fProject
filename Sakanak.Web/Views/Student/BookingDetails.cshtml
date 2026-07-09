@@ -1,0 +1,195 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.BLL.DTOs.Booking.BookingDetailsDto
+@{
+    ViewData["Title"] = "Booking Details";
+    Layout = "_TailwindStudentLayout";
+
+    var isPending = Model.Status == BookingStatus.Pending.ToString();
+    var isAccepted = Model.Status == BookingStatus.Accepted.ToString();
+    var isRejected = Model.Status == BookingStatus.Rejected.ToString();
+    var isCancelled = Model.Status == BookingStatus.Cancelled.ToString();
+
+    var statusColorClass = isPending ? "text-warning-amber bg-warning-amber bg-opacity-10 border-warning-amber/20" :
+                           isAccepted ? "text-success-green bg-success-green bg-opacity-10 border-success-green/20" :
+                           isRejected ? "text-danger-red bg-danger-red bg-opacity-10 border-danger-red/20" :
+                           "text-slate-gray bg-slate-gray bg-opacity-10 border-slate-gray/20";
+
+    var statusIcon = isPending ? "hourglass_empty" :
+                     isAccepted ? "check_circle" :
+                     isRejected ? "cancel" :
+                     "block";
+}
+
+<div class="animate-slide-up">
+    <!-- Header Section -->
+    <div class="mb-stack-lg flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <a asp-action="MyBookings" class="flex items-center gap-1 text-on-surface-variant hover:text-deep-teal mb-2 transition-colors no-underline">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                <span class="text-label-sm font-label-sm">Back to My Bookings</span>
+            </a>
+            <h2 class="text-headline-h1 font-headline-h1 text-on-surface m-0 mb-1">Booking Details</h2>
+            <p class="text-body-base font-body-base text-on-surface-variant m-0">Booking Reference: <span class="font-mono text-primary font-bold">#@Model.BookingId.ToString("D6")</span></p>
+        </div>
+
+        <!-- Status Banner -->
+        <div class="@statusColorClass border px-6 py-4 rounded-xl flex items-center gap-4 animate-in fade-in slide-in-from-top duration-500 shadow-sm shrink-0">
+            <div class="w-12 h-12 rounded-full @(isPending ? "bg-warning-amber" : isAccepted ? "bg-success-green" : isRejected ? "bg-danger-red" : "bg-slate-gray") flex items-center justify-center text-white shrink-0">
+                <span class="material-symbols-outlined">@statusIcon</span>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg leading-tight m-0 mb-1">
+                    @if (isAccepted) { <text>Booking Accepted</text> }
+                    else if (isPending) { <text>Booking Pending</text> }
+                    else if (isRejected) { <text>Booking Declined</text> }
+                    else { <text>Booking Cancelled</text> }
+                </h4>
+                <p class="text-sm opacity-90 m-0">
+                    @if (isAccepted) { <text>Your landlord has approved your request. Next: review roommates and sign contract.</text> }
+                    else if (isPending) { <text>The landlord is reviewing your application.</text> }
+                    else if (isRejected) { <text>We're sorry, the landlord has declined this booking request.</text> }
+                    else { <text>This booking request was cancelled.</text> }
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+        <!-- Left Column: Apartment Summary -->
+        <div class="lg:col-span-2 space-y-gutter">
+            
+            <!-- Apartment Card -->
+            <div class="bg-surface-student rounded-xl shadow-sm overflow-hidden border border-outline-variant/50">
+                <div class="p-4">
+                    <partial name="_ApartmentPhotoGallery" model="Model.PhotoUrls" />
+                </div>
+                <div class="p-card-padding">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <h3 class="text-headline-h1 font-headline-h1 text-on-surface m-0">@Model.ApartmentAddress</h3>
+                                <div class="bg-teal-50 px-2 py-1 rounded-full text-[10px] font-bold text-deep-teal flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[12px]">verified</span>
+                                    <span>Verified</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 text-on-surface-variant mt-1">
+                                <span class="material-symbols-outlined text-sm">location_on</span>
+                                <span class="text-label-sm font-label-sm">@Model.ApartmentCity</span>
+                            </div>
+                        </div>
+                        <div class="text-right shrink-0 ml-4">
+                            <p class="text-headline-h2 font-headline-h2 text-deep-teal m-0">@Model.PricePerMonth.ToString("C0")<span class="text-sm font-normal text-on-surface-variant">/mo</span></p>
+                            @if (Model.CurrentPricePerMonth != Model.PricePerMonth)
+                            {
+                                <p class="text-xs text-on-surface-variant m-0 mt-1 line-through">Current market: @Model.CurrentPricePerMonth.ToString("C0")</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 py-6 border-y border-outline-variant/30 mt-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant material-symbols-outlined shrink-0">chair</span>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0">Seats</p>
+                                <p class="font-semibold text-sm m-0">@Model.AvailableSeats of @Model.TotalSeats Avail.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant material-symbols-outlined shrink-0">real_estate_agent</span>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-wider text-on-surface-variant m-0">Landlord</p>
+                                <p class="font-semibold text-sm m-0 line-clamp-1" title="@Model.LandlordName">@Model.LandlordName</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Message))
+                    {
+                        <div class="mt-6 p-4 bg-surface-container-low rounded-xl border border-outline-variant">
+                            <h4 class="font-bold text-on-surface mb-2 text-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">format_quote</span>
+                                Your Message to Landlord
+                            </h4>
+                            <p class="text-sm text-on-surface-variant m-0 italic">"@Model.Message"</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (isRejected && !string.IsNullOrWhiteSpace(Model.RejectionReason))
+            {
+                <!-- Rejection Reason -->
+                <div class="bg-danger-red/5 rounded-xl shadow-sm p-card-padding border border-danger-red/20">
+                    <h3 class="text-headline-h2 font-headline-h2 text-danger-red flex items-center gap-2 mb-4 m-0">
+                        <span class="material-symbols-outlined">error</span>
+                        Booking Declined
+                    </h3>
+                    <div class="p-4 bg-white rounded-lg border border-danger-red/10 shadow-sm">
+                        <p class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-2 m-0">Reason provided by Landlord</p>
+                        <p class="text-body-base text-on-surface italic m-0">"@Model.RejectionReason"</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <!-- Right Column: Booking Info & Actions -->
+        <div class="space-y-gutter">
+            <!-- Booking Timeline/Dates -->
+            <div class="bg-surface-student rounded-xl shadow-sm p-card-padding border border-outline-variant/50 sticky top-24">
+                <h4 class="font-bold text-on-surface mb-6 flex items-center gap-2 m-0">
+                    <span class="material-symbols-outlined text-deep-teal">event</span>
+                    Booking Schedule
+                </h4>
+                
+                <div class="space-y-6 relative before:absolute before:left-5 before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant/30">
+                    <!-- Date Item -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-3.5 top-0 w-3 h-3 rounded-full bg-deep-teal ring-4 ring-deep-teal/20"></div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Requested Start Date</p>
+                        <p class="text-body-lg font-bold text-on-surface m-0">@Model.RequestedStartDate.ToString("MMMM d, yyyy")</p>
+                        <p class="text-xs text-on-surface-variant m-0 mt-1">Starts in @Model.DaysUntilStart days</p>
+                    </div>
+                    <!-- Date Item -->
+                    <div class="relative pl-12">
+                        <div class="absolute left-3.5 top-0 w-3 h-3 rounded-full bg-outline-variant ring-4 ring-transparent"></div>
+                        <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold m-0 mb-1">Requested End Date</p>
+                        <p class="text-body-lg font-bold text-on-surface m-0">@Model.RequestedEndDate.ToString("MMMM d, yyyy")</p>
+                        <p class="text-xs text-on-surface-variant m-0 mt-1">Requested on @Model.BookingDate.ToLocalTime().ToString("MMM d")</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Cluster -->
+                <div class="mt-8 space-y-3 border-t border-outline-variant/30 pt-6">
+                    
+                    @if (Model.HasActiveContract)
+                    {
+                        <div class="bg-success-green/10 text-success-green p-4 rounded-xl text-sm font-bold border border-success-green/20 text-center shadow-sm">
+                            <span class="material-symbols-outlined block text-[32px] mb-2 mx-auto">assignment_turned_in</span>
+                            This booking has an active paid contract.
+                        </div>
+                    }
+                    else if (isAccepted)
+                    {
+                        <a asp-action="FutureRoommates" asp-route-apartmentId="@Model.ApartmentId" asp-route-bookingId="@Model.BookingId" class="w-full bg-deep-teal text-white py-4 rounded-xl font-bold hover:bg-primary transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-2 group no-underline btn-interact">
+                            <span>Review & Proceed</span>
+                            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                        </a>
+                    }
+                    
+                    @if ((isPending || isAccepted) && !Model.HasActiveContract)
+                    {
+                        <form asp-action="CancelBooking" asp-route-id="@Model.BookingId" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="w-full border border-danger-red text-danger-red py-4 rounded-xl font-bold hover:bg-red-50 transition-all active:scale-[0.98] flex items-center justify-center gap-2 btn-interact" onclick="return confirm('@(isAccepted ? "Are you sure? This booking was already accepted by the landlord." : "Cancel this booking request?")');">
+                                <span class="material-symbols-outlined">cancel</span>
+                                <span>Cancel Booking</span>
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

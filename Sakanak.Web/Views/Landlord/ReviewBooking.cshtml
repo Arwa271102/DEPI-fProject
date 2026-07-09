@@ -1,0 +1,313 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.BLL.DTOs.Booking.BookingDetailsDto
+@{
+    Layout = "_TailwindLandlordLayout";
+    ViewData["Title"] = "Review Booking";
+}
+
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-lg">
+    <div>
+        <p class="text-on-surface-variant text-label-caps uppercase mb-1">Booking Review</p>
+        <h2 class="font-display-lg text-display-lg text-on-surface m-0">@Model.StudentName</h2>
+        <p class="text-on-surface-variant m-0">Requested @Model.ApartmentAddress from <span class="font-data-mono font-bold">@Model.RequestedStartDate.ToString("dd MMM yyyy")</span> to <span class="font-data-mono font-bold">@Model.RequestedEndDate.ToString("dd MMM yyyy")</span>.</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a asp-action="BookingRequests" class="flex items-center gap-2 bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all active:scale-95 no-underline">
+            <span class="font-title-sm">Back to Requests</span>
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+    <!-- Left Column: Student Details & Questionnaire -->
+    <div class="lg:col-span-8 space-y-gutter">
+        <!-- Student Profile Card -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6 flex flex-col md:flex-row gap-6">
+            <div class="shrink-0 flex flex-col items-center text-center w-48">
+                @if (!string.IsNullOrWhiteSpace(Model.StudentPhotoUrl))
+                {
+                    <img src="@Url.Content(Model.StudentPhotoUrl)" alt="Student photo" class="w-32 h-32 rounded-full object-cover border-4 border-surface-container-low shadow-sm mb-4" />
+                }
+                else
+                {
+                    var initials = string.Join("", Model.StudentName.Split(' ').Select(s => s[0])).ToUpper();
+                    <div class="w-32 h-32 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-display-lg text-4xl mb-4 shadow-sm">
+                        @initials
+                    </div>
+                }
+                
+                <a asp-controller="Messages" asp-action="Index" asp-route-otherUserId="@Model.StudentApplicationUserId" class="w-full bg-surface-container-high hover:bg-outline-variant text-on-surface px-4 py-2 rounded-lg font-title-sm text-sm transition-all flex items-center justify-center gap-2 no-underline">
+                    <span class="material-symbols-outlined text-sm">chat</span>
+                    Message
+                </a>
+            </div>
+            
+            <div class="flex-1">
+                <h3 class="font-title-sm text-primary mb-4 m-0 border-b border-outline-variant pb-2">Student Profile</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                    <div>
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Name</p>
+                        <p class="font-body-md text-on-surface m-0 font-medium">@Model.StudentName</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Email</p>
+                        <p class="font-body-md text-on-surface m-0">@Model.StudentEmail</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Phone</p>
+                        <p class="font-body-md text-on-surface m-0 font-data-mono">@(string.IsNullOrWhiteSpace(Model.StudentPhone) ? "Not provided" : Model.StudentPhone)</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">University</p>
+                        <p class="font-body-md text-on-surface m-0">@Model.StudentUniversity</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Faculty</p>
+                        <p class="font-body-md text-on-surface m-0">@Model.StudentFaculty</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle Questionnaire -->
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6">
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0 border-b border-outline-variant pb-2">
+                <span class="material-symbols-outlined">psychology</span>
+                Lifestyle Questionnaire
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">bedtime</span> Sleep Schedule
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.SleepSchedule ?? "Not provided")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">smoking_rooms</span> Smoker
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.IsSmoker.HasValue ? (Model.IsSmoker.Value ? "Yes" : "No") : "Not provided")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">cleaning_services</span> Hygiene Level
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.HygieneLevel?.ToString() ?? "Not provided")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">menu_book</span> Study Habits
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.StudyHabits ?? "Not provided")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">groups</span> Social Preference
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.SocialPreference ?? "Not provided")</p>
+                </div>
+                
+                <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant border-opacity-50">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">wc</span> Gender Preference
+                    </p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@(Model.GenderPreference ?? "Not provided")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Booking Details & Actions -->
+    <div class="lg:col-span-4 space-y-gutter">
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden p-6 relative">
+            <div class="absolute top-6 right-6">
+                @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+            </div>
+            
+            <h3 class="font-title-sm text-primary mb-4 flex items-center gap-2 m-0 border-b border-outline-variant pb-2">
+                <span class="material-symbols-outlined">event</span>
+                Booking Details
+            </h3>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-1">Apartment</p>
+                    <p class="font-body-md text-on-surface m-0 font-medium">@Model.ApartmentAddress</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+                        <p class="text-[10px] font-label-caps text-on-surface-variant uppercase mb-1">Check In</p>
+                        <p class="font-data-mono text-sm font-bold text-on-surface m-0">@Model.RequestedStartDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                    <div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant">
+                        <p class="text-[10px] font-label-caps text-on-surface-variant uppercase mb-1">Check Out</p>
+                        <p class="font-data-mono text-sm font-bold text-on-surface m-0">@Model.RequestedEndDate.ToString("MMM dd, yyyy")</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center bg-surface-container-highest p-3 rounded-lg border border-outline-variant">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase m-0">Price / Month</p>
+                    <p class="font-data-mono text-lg font-bold text-primary m-0">@Model.PricePerMonth.ToString("C0")</p>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <p class="text-[11px] font-label-caps text-on-surface-variant uppercase m-0">Available Seats</p>
+                    <p class="font-body-md text-on-surface font-medium m-0">@Model.AvailableSeats</p>
+                </div>
+                
+                @if (!string.IsNullOrWhiteSpace(Model.Message))
+                {
+                    <div class="border-t border-outline-variant pt-4 mt-2">
+                        <p class="text-[11px] font-label-caps text-on-surface-variant uppercase mb-2 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">format_quote</span> Student Message
+                        </p>
+                        <p class="font-body-md text-on-surface m-0 italic bg-surface-container-low p-3 rounded-lg border-l-2 border-primary">@Model.Message</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Actions block -->
+            <div class="border-t border-outline-variant pt-4">
+                @if (Model.Status == BookingStatus.Pending.ToString())
+                {
+                    <div class="mb-3">
+                        <button type="button" onclick="document.getElementById('acceptBookingModal').classList.remove('hidden'); document.getElementById('acceptBookingModal').classList.add('flex');"
+                                class="w-full bg-primary text-on-primary py-3 rounded-lg font-title-sm shadow-sm hover:opacity-90 active:scale-95 transition-all flex items-center justify-center gap-2 border-0 cursor-pointer">
+                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            Accept Booking
+                        </button>
+                    </div>
+
+                    <form id="rejectPendingForm" asp-action="RejectBooking" asp-route-id="@Model.BookingId" method="post" class="bg-error/5 p-4 rounded-lg border border-error/20">
+                        @Html.AntiForgeryToken()
+                        <p class="text-[11px] font-label-caps text-error uppercase mb-2">Rejection Reason</p>
+                        <textarea id="rejectPendingReason" name="reason" rows="3" minlength="10" maxlength="500" class="w-full bg-surface-container-lowest border border-outline-variant focus:border-error focus:ring-1 focus:ring-error rounded-lg p-2 text-sm mb-3 resize-none" placeholder="Provide a reason for rejection..." required></textarea>
+                        <button type="button" onclick="submitRejectForm('rejectPendingForm','rejectPendingReason','rejectBookingModal')"
+                                class="w-full border border-error text-error bg-transparent py-2 rounded-lg font-title-sm text-sm hover:bg-error/10 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">cancel</span>
+                            Reject Booking
+                        </button>
+                    </form>
+                }
+                else if (Model.Status == BookingStatus.Accepted.ToString())
+                {
+                    <div class="bg-primary-container/20 text-on-surface p-3 rounded-lg border border-primary/20 flex items-start gap-2 mb-4">
+                        <span class="material-symbols-outlined text-primary text-sm mt-0.5">info</span>
+                        <span class="text-sm">Accepted on @Model.AcceptedAt?.ToLocalTime().ToString("dd MMM yyyy").</span>
+                    </div>
+
+                    <form id="rejectAcceptedForm" asp-action="RejectBooking" asp-route-id="@Model.BookingId" method="post" class="bg-error/5 p-4 rounded-lg border border-error/20 mt-4">
+                        @Html.AntiForgeryToken()
+                        <p class="text-[11px] font-label-caps text-error uppercase mb-2">Reject Accepted Booking Reason</p>
+                        <textarea id="rejectAcceptedReason" name="reason" rows="3" minlength="20" maxlength="500" class="w-full bg-surface-container-lowest border border-outline-variant focus:border-error focus:ring-1 focus:ring-error rounded-lg p-2 text-sm mb-3 resize-none" placeholder="Provide a detailed reason..." required></textarea>
+                        <button type="button" onclick="submitRejectForm('rejectAcceptedForm','rejectAcceptedReason','rejectAcceptedModal')"
+                                class="w-full border border-error text-error bg-transparent py-2 rounded-lg font-title-sm text-sm hover:bg-error/10 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">warning</span>
+                            Reject Accepted Booking
+                        </button>
+                    </form>
+                }
+                else if (Model.Status == BookingStatus.Rejected.ToString())
+                {
+                    <div class="bg-error-container/50 text-on-surface p-4 rounded-lg border border-error/20">
+                        <p class="text-[11px] font-label-caps text-error uppercase mb-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">cancel</span> Rejection Reason
+                        </p>
+                        <p class="text-sm m-0">@Model.RejectionReason</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ── Accept Booking Modal ── *@
+<div id="acceptBookingModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-success-green/5">
+            <span class="material-symbols-outlined text-success-green text-[28px]" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <h2 class="font-headline-md text-lg font-bold text-on-surface m-0">Accept Booking?</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-slate-600 text-sm m-0">This will notify the student their booking has been accepted. You can still reject it afterwards if needed.</p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('acceptBookingModal').classList.add('hidden'); document.getElementById('acceptBookingModal').classList.remove('flex');"
+                    class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+            <form asp-action="AcceptBooking" asp-route-id="@Model.BookingId" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="px-4 py-2 bg-success-green text-white rounded-lg font-bold hover:bg-success-green/90 border-0 cursor-pointer">Yes, Accept</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* ── Reject (Pending) Booking Modal ── *@
+<div id="rejectBookingModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-danger-red/5">
+            <span class="material-symbols-outlined text-danger-red text-[28px]">cancel</span>
+            <h2 class="font-headline-md text-lg font-bold text-on-surface m-0">Reject Booking?</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-slate-600 text-sm m-0">The student will be notified with your rejection reason.</p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('rejectBookingModal').classList.add('hidden'); document.getElementById('rejectBookingModal').classList.remove('flex');"
+                    class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+            <button type="button" id="confirmRejectBtn" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Yes, Reject</button>
+        </div>
+    </div>
+</div>
+
+@* ── Reject Accepted Booking Modal ── *@
+<div id="rejectAcceptedModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-warning-amber/5">
+            <span class="material-symbols-outlined text-warning-amber text-[28px]">warning</span>
+            <h2 class="font-headline-md text-lg font-bold text-on-surface m-0">Reject Accepted Booking?</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-slate-600 text-sm m-0">This booking was already <strong>accepted</strong>. Rejecting it will notify the student and cancel any related contract. This cannot be undone.</p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('rejectAcceptedModal').classList.add('hidden'); document.getElementById('rejectAcceptedModal').classList.remove('flex');"
+                    class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+            <button type="button" id="confirmRejectAcceptedBtn" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Yes, Reject</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let _pendingFormId = null;
+
+        function submitRejectForm(formId, textareaId, modalId) {
+            const textarea = document.getElementById(textareaId);
+            if (!textarea || !textarea.value.trim() || textarea.value.trim().length < parseInt(textarea.getAttribute('minlength') || 10)) {
+                textarea.classList.add('border-error');
+                textarea.focus();
+                return;
+            }
+            _pendingFormId = formId;
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        document.getElementById('confirmRejectBtn')?.addEventListener('click', () => {
+            if (_pendingFormId) document.getElementById(_pendingFormId)?.submit();
+        });
+
+        document.getElementById('confirmRejectAcceptedBtn')?.addEventListener('click', () => {
+            if (_pendingFormId) document.getElementById(_pendingFormId)?.submit();
+        });
+    </script>
+}

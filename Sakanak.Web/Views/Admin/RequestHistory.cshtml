@@ -1,0 +1,123 @@
+@model Sakanak.Web.Models.ViewModels.Admin.RequestHistoryViewModel
+@{
+    ViewData["Title"] = "Request History";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+@functions {
+    private string SortArrow(string sortBy)
+    {
+        if (!Model.SortBy.Equals(sortBy, StringComparison.OrdinalIgnoreCase))
+        {
+            return string.Empty;
+        }
+        return Model.Descending ? "↓" : "↑";
+    }
+}
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Audit Trail</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">Apartment Request History</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">Full history of all apartment listing requests.</p>
+    </div>
+    <a asp-action="Dashboard" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+    </a>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm animate-slide-up" style="animation-delay: 0.1s">
+    <div class="p-4 border-b border-slate-200 bg-slate-50">
+        <form method="get" class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="flex-1 md:flex-none md:w-48">
+                <label class="block text-xs font-bold text-slate-500 mb-1">Status</label>
+                    <select name="status" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-deep-teal outline-none">
+                    <option value="">All statuses</option>
+                    <option value="Pending" selected="@(Model.StatusFilter == "Pending" ? "selected" : null)">Pending</option>
+                    <option value="Approved" selected="@(Model.StatusFilter == "Approved" ? "selected" : null)">Approved</option>
+                    <option value="Rejected" selected="@(Model.StatusFilter == "Rejected" ? "selected" : null)">Rejected</option>
+                    <option value="Cancelled" selected="@(Model.StatusFilter == "Cancelled" ? "selected" : null)">Cancelled</option>
+                </select>
+            </div>
+            <div class="flex-1 md:flex-none md:w-48">
+                <label class="block text-xs font-bold text-slate-500 mb-1">City</label>
+                <input type="text" name="city" value="@Model.CityFilter" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-deep-teal outline-none" placeholder="Filter by city" />
+            </div>
+            <div class="flex-1 md:flex-none md:w-48">
+                <label class="block text-xs font-bold text-slate-500 mb-1">Landlord</label>
+                <input type="text" name="landlord" value="@Model.LandlordFilter" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-deep-teal outline-none" placeholder="Name or email" />
+            </div>
+            <div class="flex gap-2">
+                <input type="hidden" name="sortBy" value="@Model.SortBy" />
+                <input type="hidden" name="desc" value="@Model.Descending.ToString().ToLowerInvariant()" />
+                <input type="hidden" name="pageSize" value="@Model.Pagination.PageSize" />
+                <button type="submit" class="bg-deep-teal text-white px-6 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity border-0 cursor-pointer">Filter</button>
+                <a asp-action="RequestHistory" class="bg-white border border-slate-200 text-slate-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-slate-50 transition-colors no-underline flex items-center justify-center">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="overflow-x-auto">
+        @if (Model.Requests.Count == 0)
+        {
+            <div class="p-8 text-center text-slate-500">
+                <span class="material-symbols-outlined text-4xl mb-2 opacity-50">history</span>
+                <p class="m-0">No request history available yet.</p>
+            </div>
+        }
+        else
+        {
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="RequestHistory" asp-route-status="@Model.StatusFilter" asp-route-city="@Model.CityFilter" asp-route-landlord="@Model.LandlordFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="apartment" asp-route-desc="@(Model.SortBy.Equals("apartment", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Apartment <span class="text-deep-teal">@Html.Raw(SortArrow("apartment"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="RequestHistory" asp-route-status="@Model.StatusFilter" asp-route-city="@Model.CityFilter" asp-route-landlord="@Model.LandlordFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="landlord" asp-route-desc="@(Model.SortBy.Equals("landlord", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Landlord <span class="text-deep-teal">@Html.Raw(SortArrow("landlord"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="RequestHistory" asp-route-status="@Model.StatusFilter" asp-route-city="@Model.CityFilter" asp-route-landlord="@Model.LandlordFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="createdat" asp-route-desc="@(Model.SortBy.Equals("createdat", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Submitted <span class="text-deep-teal">@Html.Raw(SortArrow("createdat"))</span>
+                            </a>
+                        </th>
+                        <th class="px-6 py-3 font-semibold whitespace-nowrap">
+                            <a class="text-slate-500 no-underline hover:text-deep-teal flex items-center gap-1" asp-action="RequestHistory" asp-route-status="@Model.StatusFilter" asp-route-city="@Model.CityFilter" asp-route-landlord="@Model.LandlordFilter" asp-route-pageSize="@Model.Pagination.PageSize" asp-route-page="1" asp-route-sortBy="status" asp-route-desc="@(Model.SortBy.Equals("status", StringComparison.OrdinalIgnoreCase) ? !Model.Descending : false)">
+                                Status <span class="text-deep-teal">@Html.Raw(SortArrow("status"))</span>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                @foreach (var request in Model.Requests)
+                {
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-on-surface line-clamp-1">@request.ApartmentAddress</div>
+                            <div class="text-xs text-slate-500">@request.City</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-on-surface">@request.LandlordName</div>
+                            <div class="text-xs text-slate-500 line-clamp-1">@request.LandlordEmail</div>
+                        </td>
+                        <td class="px-6 py-4 text-slate-600">@request.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td class="px-6 py-4">@await Html.PartialAsync("_StatusBadgePartial", request.Status)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+    
+    @if (Model.Requests.Count > 0)
+    {
+        <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <partial name="_PaginationPartial" model="Model.Pagination" />
+        </div>
+    }
+</div>

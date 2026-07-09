@@ -1,0 +1,246 @@
+@using Sakanak.Domain.Enums
+@model Sakanak.BLL.DTOs.Contract.ContractDetailsDto
+@{
+    ViewData["Title"] = "Review Contract";
+}
+
+@await Html.PartialAsync("_AlertMessagesPartial")
+
+<div class="mb-8 flex justify-between items-end animate-slide-up">
+    <div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Contract Review</p>
+        <h2 class="font-headline-h1 text-headline-h1 text-on-surface m-0">@Model.ApartmentAddress</h2>
+        <p class="text-slate-500 font-body-base m-0 mt-1">@Model.StudentName &bull; @Model.StartDate.ToString("dd MMM yyyy") - @Model.EndDate.ToString("dd MMM yyyy")</p>
+    </div>
+    <a asp-action="PendingContracts" class="bg-white border border-slate-200 text-deep-teal px-4 py-2 rounded-lg font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-colors shadow-sm no-underline">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span> Back to Pending
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-slide-up" style="animation-delay: 0.1s">
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Uploaded Documents</h3>
+            </div>
+            <div class="p-6">
+                @foreach (var document in Model.Documents)
+                {
+                    <div class="border border-slate-200 rounded-xl p-4 mb-4 bg-slate-50/50">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-deep-teal/10 rounded-lg flex items-center justify-center text-deep-teal">
+                                    <span class="material-symbols-outlined">description</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface text-sm m-0">@document.Label</p>
+                                    <p class="text-xs text-slate-500 font-semibold m-0 mt-1 uppercase">@document.Type</p>
+                                </div>
+                            </div>
+                            <div>
+                                @if (document.Label == "Signed Contract")
+                                {
+                                    <a asp-action="DownloadContractDocument" asp-route-id="@Model.ContractId" class="text-deep-teal bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-bold no-underline hover:bg-slate-50 transition-colors flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[18px]">download</span> Download PDF
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Content(document.Url)" target="_blank" class="text-deep-teal bg-white border border-slate-200 px-4 py-2 rounded-lg text-sm font-bold no-underline hover:bg-slate-50 transition-colors flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[18px]">open_in_new</span> @(document.IsImage ? "View Image" : "Download PDF")
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        @if (document.IsImage)
+                        {
+                            <div class="mt-4 border border-slate-200 rounded-lg overflow-hidden bg-white">
+                                <img src="@Url.Content(document.Url)" alt="@document.Label" class="w-full h-auto max-h-[400px] object-contain" />
+                            </div>
+                        }
+                    </div>
+                }
+                
+                <div class="bg-info-blue/10 border border-info-blue/20 text-info-blue p-4 rounded-xl text-sm font-semibold flex gap-3 mt-6">
+                    <span class="material-symbols-outlined shrink-0 text-info-blue">fact_check</span>
+                    <p class="m-0">Checklist: verify signatures, clear ID photos, matching student identity, and dates within the accepted booking period.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-1 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Details</h3>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                    <span class="text-xs font-bold text-slate-500">Status</span>
+                    @await Html.PartialAsync("_StatusBadgePartial", Model.Status)
+                </div>
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Student</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.StudentName</p>
+                    <p class="text-xs text-slate-500 m-0">@Model.StudentEmail</p>
+                </div>
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">University</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.StudentUniversity - @Model.StudentFaculty</p>
+                </div>
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Landlord</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.LandlordName</p>
+                    <p class="text-xs text-slate-500 m-0">@Model.LandlordEmail</p>
+                </div>
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Apartment</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.ApartmentAddress</p>
+                    <p class="text-xs text-slate-500 m-0">@Model.ApartmentCity</p>
+                </div>
+                
+                <div>
+                    <p class="text-xs font-bold text-slate-500 mb-1">Booking dates</p>
+                    <p class="font-semibold text-on-surface m-0">@Model.BookingStartDate.ToString("dd MMM yyyy") - @Model.BookingEndDate.ToString("dd MMM yyyy")</p>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Status == ContractStatus.PendingApproval.ToString())
+        {
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm sticky top-24">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 class="font-headline-md text-lg font-bold text-on-surface m-0">Decision</h3>
+                </div>
+                <div class="p-6">
+                    <div class="mb-4">
+                        <button type="button" onclick="document.getElementById('approveContractModal').classList.remove('hidden'); document.getElementById('approveContractModal').classList.add('flex');"
+                                class="w-full bg-success-green hover:bg-success-green/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer border-0">
+                            <span class="material-symbols-outlined">check_circle</span>
+                            Approve Contract
+                        </button>
+                    </div>
+
+                    <hr class="border-t border-slate-200 my-4" />
+
+                    <button type="button" onclick="document.getElementById('rejectContractModal').classList.remove('hidden'); document.getElementById('rejectContractModal').classList.add('flex');"
+                            class="w-full bg-white border border-danger-red text-danger-red hover:bg-danger-red hover:text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined">cancel</span>
+                        Reject Contract
+                    </button>
+                </div>
+            </div>
+        }
+        
+        @if (Model.Status == ContractStatus.PendingApproval.ToString() || Model.Status == ContractStatus.Approved.ToString())
+        {
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div class="p-6">
+                    <button type="button" onclick="document.getElementById('cancelModal').classList.remove('hidden'); document.getElementById('cancelModal').classList.add('flex');" class="w-full bg-danger-red text-white font-bold py-3 px-4 rounded-lg hover:bg-danger-red/90 transition-colors cursor-pointer border-0 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">gpp_bad</span> Cancel Contract
+                    </button>
+                </div>
+            </div>
+        }
+        else if (Model.Status == ContractStatus.Cancelled.ToString())
+        {
+            <div class="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-sm border-l-4 border-l-slate-400">
+                <div class="p-6">
+                    <h3 class="font-headline-md text-lg font-bold text-on-surface m-0 mb-3">Cancelled Details</h3>
+                    @if (!string.IsNullOrWhiteSpace(Model.CancellationReason))
+                    {
+                        <p class="text-sm font-bold text-slate-500 mb-1">Reason</p>
+                        <p class="text-sm text-on-surface mb-3">@Model.CancellationReason</p>
+                    }
+                    @if (Model.CancellationDate.HasValue)
+                    {
+                        <p class="text-sm font-bold text-slate-500 mb-1">Cancelled At</p>
+                        <p class="text-sm text-on-surface m-0">@Model.CancellationDate.Value.ToLocalTime().ToString("dd MMM yyyy HH:mm")</p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Tailwind Modal for Cancel -->
+<div id="cancelModal" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 overflow-hidden animate-slide-up">
+        <form asp-action="CancelContract" asp-route-id="@Model.ContractId" method="post">
+            @Html.AntiForgeryToken()
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h2 class="font-headline-md text-xl font-bold text-on-surface m-0">Cancel Contract</h2>
+                <button type="button" onclick="document.getElementById('cancelModal').classList.add('hidden'); document.getElementById('cancelModal').classList.remove('flex');" class="text-slate-400 hover:text-slate-600 border-0 bg-transparent cursor-pointer">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <div class="bg-warning-amber/10 border border-warning-amber/20 text-warning-amber p-4 rounded-xl text-sm font-semibold flex gap-3 mb-6">
+                    <span class="material-symbols-outlined shrink-0 text-warning-amber">warning</span>
+                    <p class="m-0">This will notify both the student and landlord. This action cannot be undone.</p>
+                </div>
+            
+                <label class="block text-sm font-bold text-on-surface mb-2">Cancellation Reason</label>
+                <textarea name="reason" minlength="10" maxlength="500" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-danger-red focus:border-danger-red outline-none text-sm transition-all" rows="4" placeholder="Enter reason (minimum 10 characters)..." required></textarea>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('cancelModal').classList.add('hidden'); document.getElementById('cancelModal').classList.remove('flex');" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Close</button>
+                <button type="submit" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Confirm Cancellation</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* ── Approve Contract Modal ── *@
+<div id="approveContractModal" class="fixed inset-0 z-[200] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden animate-slide-up">
+        <div class="px-6 py-4 border-b border-slate-200 flex items-center gap-3 bg-success-green/5">
+            <span class="material-symbols-outlined text-success-green text-[28px]" style="font-variation-settings:'FILL' 1;">check_circle</span>
+            <h2 class="font-headline-md text-lg font-bold text-on-surface m-0">Approve Contract?</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-slate-600 text-sm m-0">This will approve the contract for <strong>@Model.ApartmentAddress</strong> and mark it as Active.</p>
+        </div>
+        <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+            <button type="button" onclick="document.getElementById('approveContractModal').classList.add('hidden'); document.getElementById('approveContractModal').classList.remove('flex');"
+                    class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+            <form asp-action="ApproveContract" asp-route-id="@Model.ContractId" method="post" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="px-4 py-2 bg-success-green text-white rounded-lg font-bold hover:bg-success-green/90 border-0 cursor-pointer">Yes, Approve</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* ── Reject Contract Modal ── *@
+<div id="rejectContractModal" class="fixed inset-0 z-[200] bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 overflow-hidden animate-slide-up">
+        <form asp-action="RejectContract" asp-route-id="@Model.ContractId" method="post">
+            @Html.AntiForgeryToken()
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h2 class="font-headline-md text-xl font-bold text-on-surface m-0">Reject Contract</h2>
+                <button type="button" onclick="document.getElementById('rejectContractModal').classList.add('hidden'); document.getElementById('rejectContractModal').classList.remove('flex');"
+                        class="text-slate-400 hover:text-slate-600 border-0 bg-transparent cursor-pointer">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6">
+                <label class="block text-sm font-bold text-on-surface mb-2">Rejection Reason</label>
+                <textarea name="reason" minlength="10" maxlength="500" rows="4"
+                          class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-danger-red focus:border-danger-red outline-none text-sm transition-all"
+                          required placeholder="Explain why the contract is rejected..."></textarea>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                <button type="button" onclick="document.getElementById('rejectContractModal').classList.add('hidden'); document.getElementById('rejectContractModal').classList.remove('flex');"
+                        class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 cursor-pointer">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-danger-red text-white rounded-lg font-bold hover:bg-danger-red/90 border-0 cursor-pointer">Reject Contract</button>
+            </div>
+        </form>
+    </div>
+</div>
