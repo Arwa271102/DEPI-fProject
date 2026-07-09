@@ -12,7 +12,7 @@
 [![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF?style=for-the-badge&logo=stripe)](https://stripe.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
 
-[🌐 Live Demo](http://sakanak-001-site1.jtempurl.com) · [📋 Report a Bug](https://github.com/Arwa271102/DEPI-fProject/issues)
+[🌐 Live Demo](http://sakanak.runasp.net) · [📋 Report a Bug](https://github.com/Arwa271102/DEPI-fProject/issues)
 
 </div>
 
